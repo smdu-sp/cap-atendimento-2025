@@ -2,15 +2,13 @@
 
 'use client';
 
-import { BadgeCheck, ChevronsUpDown, LogOut } from 'lucide-react';
+import { ChevronsUpDown, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
 	DropdownMenu,
 	DropdownMenuContent,
-	DropdownMenuGroup,
 	DropdownMenuItem,
-	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
@@ -21,6 +19,7 @@ import {
 	useSidebar,
 } from '@/components/ui/sidebar';
 import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 // import { useRouter } from "next/navigation";
 
 export function NavUser() {
@@ -72,31 +71,28 @@ export function NavUser() {
 							side={isMobile ? 'bottom' : 'top'}
 							align='center'
 							sideOffset={4}>
-							<DropdownMenuLabel className='p-0 font-normal'>
-								<div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
-									<Avatar className='h-8 w-8 rounded-full aspect-square'>
-										<AvatarImage src={session.data.usuario.avatar} />
-										<AvatarFallback className='rounded-full'>
-											{abreviaNome(session.data.usuario.nome)}
-										</AvatarFallback>
-									</Avatar>
-									<div className='grid flex-1 text-left text-sm leading-tight'>
-										<span className='truncate font-semibold'>
-											{reduzNome(session.data.usuario.nome)}
-										</span>
-										<span className='truncate text-xs'>
-											{session.data.usuario.email}
-										</span>
+							<DropdownMenuItem
+								asChild
+								className='p-0 font-normal'>
+								<Link href='perfil'>
+									<div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
+										<Avatar className='h-8 w-8 rounded-full aspect-square'>
+											<AvatarImage src={session.data.usuario.avatar} />
+											<AvatarFallback className='rounded-full'>
+												{abreviaNome(session.data.usuario.nome)}
+											</AvatarFallback>
+										</Avatar>
+										<div className='grid flex-1 text-left text-sm leading-tight'>
+											<span className='truncate font-semibold'>
+												{reduzNome(session.data.usuario.nome)}
+											</span>
+											<span className='truncate text-xs'>
+												{session.data.usuario.email}
+											</span>
+										</div>
 									</div>
-								</div>
-							</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuGroup>
-								<DropdownMenuItem>
-									<BadgeCheck />
-									Minha conta
-								</DropdownMenuItem>
-							</DropdownMenuGroup>
+								</Link>
+							</DropdownMenuItem>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem
 								variant='destructive'

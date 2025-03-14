@@ -9,6 +9,7 @@ export default function Perfil() {
 	const { data: session } = useSession();
 	return (
 		<div>
+			<h1 className='font-bold text-4xl'>Perfil</h1>
 			<Avatar className='h-40 w-40 '>
 				<AvatarImage
 					src={session?.usuario.avatar}

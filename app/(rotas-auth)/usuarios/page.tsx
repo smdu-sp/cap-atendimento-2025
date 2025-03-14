@@ -60,8 +60,10 @@ async function Usuarios({
 		}
 	}
 
-	return ([
-		<div className='max-w-7xl w-full relative h-full'>
+	return [
+		<div
+			key={1}
+			className='max-w-7xl w-full relative h-full'>
 			<Card>
 				<CardHeader>
 					<CardTitle className='text-4xl font-bold'>Usuários</CardTitle>
@@ -86,8 +88,10 @@ async function Usuarios({
 				</CardContent>
 			</Card>
 		</div>,
-		<div className='absolute bottom-5 right-5 hover:scale-110'>
+		<div
+			key={2}
+			className='absolute bottom-5 right-5 hover:scale-110'>
 			<ModalUpdateAndCreate isUpdating={false} />
-		</div>
-	]);
+		</div>,
+	];
 }

@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
-// import { Lato } from "next/font/google";
-import "./globals.css";
+/** @format */
 
-import { AuthProvider } from "@/providers/AuthProvider";
-import { ThemeProvider } from "@/providers/ThemeProvider";
-import { Toaster } from "@/components/ui/sonner";
+import type { Metadata } from 'next';
+// import { Lato } from "next/font/google";
+import './globals.css';
+
+import { AuthProvider } from '@/providers/AuthProvider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
+import { Toaster } from '@/components/ui/sonner';
 
 // const lato = Lato({
 //   subsets: ["latin"],
@@ -14,25 +16,31 @@ import { Toaster } from "@/components/ui/sonner";
 // });
 
 export const metadata: Metadata = {
-  title: "Outorga Onerosa - Relatórios",
-  description: "Relatórios de Outorga Onerosa.",
+	title: 'Atendimento',
+	description: 'CAP - Atendimento',
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <html lang="pt-BR" suppressHydrationWarning>
-      <body className={`antialised`}>
-        <AuthProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {children}
-            <Toaster richColors />
-          </ThemeProvider>
-        </AuthProvider>
-      </body>
-    </html>
-  );
+	return (
+		<html
+			lang='pt-BR'
+			suppressHydrationWarning>
+			<body className={`antialised`}>
+				<AuthProvider>
+					<ThemeProvider
+						attribute='class'
+						defaultTheme='system'
+						enableSystem
+						disableTransitionOnChange>
+						{children}
+						<Toaster richColors />
+					</ThemeProvider>
+				</AuthProvider>
+			</body>
+		</html>
+	);
 }
