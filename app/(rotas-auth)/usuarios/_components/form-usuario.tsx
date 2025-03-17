@@ -116,7 +116,6 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 				if (resp.ok) {
 					toast.success('Usuário Criado', { description: resp.status });
 				}
-				
 			}
 		});
 	}
@@ -175,6 +174,7 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 								<FormDescription>Insira a URL do seu avatar</FormDescription>
 								<FormControl>
 									<Input
+										disabled
 										placeholder='URL de avatar'
 										{...field}
 									/>

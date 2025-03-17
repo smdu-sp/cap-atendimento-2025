@@ -33,13 +33,13 @@ export default function ModalUpdateAndCreate({
 					} group transition-all ease-linear duration-200`}>
 					{isUpdating ? (
 						<SquarePen
-							size={24}
+							size={28}
 							className='text-primary group-hover:text-white group'
 						/>
 					) : (
 						<Plus
-							size={24}
-							className=' text-white group'
+							size={28}
+							className='text-white group'
 						/>
 					)}
 				</Button>

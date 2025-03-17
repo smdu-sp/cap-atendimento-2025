@@ -1,19 +1,12 @@
 /** @format */
 
 import DataTable, { TableSkeleton } from '@/components/data-table';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import { columns } from './_components/columns';
 import Pagination from '@/components/pagination';
-import { Suspense } from 'react';
-import { IPaginadoUsuario, IUsuario } from '@/types/usuario';
 import { auth } from '@/lib/auth/auth';
 import * as usuario from '@/services/usuario';
+import { IPaginadoUsuario, IUsuario } from '@/types/usuario';
+import { Suspense } from 'react';
+import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
 
 export default function UsuariosSuspense({
@@ -60,18 +53,12 @@ async function Usuarios({
 		}
 	}
 
-	return [
-		<div
-			key={1}
-			className='max-w-7xl w-full relative h-full'>
-			<Card>
-				<CardHeader>
-					<CardTitle className='text-4xl font-bold'>Usuários</CardTitle>
-					<CardDescription>
-						Gerenciamento e consulta de usuários
-					</CardDescription>
-				</CardHeader>
-				<CardContent className='flex flex-col gap-10'>
+	return (
+		<>
+			<div className='max-w-7xl mx-auto w-full relative h-full'>
+				<h1 className='text-4xl font-bold'>Usuários</h1>
+
+				<div className='flex flex-col gap-10 mt-10'>
 					{dados && (
 						<DataTable
 							columns={columns}
@@ -85,13 +72,11 @@ async function Usuarios({
 							pagina={+pagina}
 						/>
 					)}
-				</CardContent>
-			</Card>
-		</div>,
-		<div
-			key={2}
-			className='absolute bottom-5 right-5 hover:scale-110'>
-			<ModalUpdateAndCreate isUpdating={false} />
-		</div>,
-	];
+				</div>
+			</div>
+			<div className='absolute bottom-5 right-5 hover:scale-110'>
+				<ModalUpdateAndCreate isUpdating={false} />
+			</div>
+		</>
+	);
 }
