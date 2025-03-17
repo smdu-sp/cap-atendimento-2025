@@ -39,7 +39,7 @@ export function AppSidebar({
 							onClick={toggleSidebar}>
 							<MiniLogo />
 							<div className='grid flex-1 text-left text-sm leading-tight'>
-								<span className='truncate font-semibold'>
+								<span className='truncate font-semibold text-xs '>
 									Atendimento ao Público
 								</span>
 							</div>
