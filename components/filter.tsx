@@ -14,7 +14,7 @@ export function Filter() {
 			<AgendamentoPorMotivo />
 			<AgendamentoPorCoordenadoria />
 			<AgendamentoPorData />
-			<Button className='w-fit ml-5'>
+			<Button className='w-fit'>
 				Atualizar <RefreshCw />
 			</Button>
 		</div>

@@ -51,6 +51,7 @@ export function AgendamentoPorProcesso() {
 							<FormLabel>Processo</FormLabel>
 							<FormControl>
 								<Input
+									className='bg-background'
 									{...field}
 									placeholder='Buscar por processo'
 								/>

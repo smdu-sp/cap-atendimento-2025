@@ -29,7 +29,7 @@ export default function RootLayout({
 		<html
 			lang='pt-BR'
 			suppressHydrationWarning>
-			<body className={`${sora.className} antialised`}>
+			<body className={`${sora.className} antialised `}>
 				<AuthProvider>
 					<ThemeProvider
 						attribute='class'

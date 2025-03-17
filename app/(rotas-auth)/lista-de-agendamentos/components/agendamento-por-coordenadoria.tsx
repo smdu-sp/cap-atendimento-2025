@@ -14,13 +14,17 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 
 const FormSchema = z.object({
-	coordenadoria: z.string({
-		required_error: 'A cpf is required.',
-	}),
+	coordenadoria: z.string(),
 });
 
 export function AgendamentoPorCoordenadoria() {
@@ -47,14 +51,32 @@ export function AgendamentoPorCoordenadoria() {
 					control={form.control}
 					name='coordenadoria'
 					render={({ field }) => (
-						<FormItem className='flex flex-col'>
+						<FormItem className='flex flex-col '>
 							<FormLabel>Coordenadoria</FormLabel>
-							<FormControl>
-								<Input
-									{...field}
-									placeholder='Buscar por Coordenadoria'
-								/>
-							</FormControl>
+							<Select
+								onValueChange={field.onChange}
+								defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger className='w-60 text-nowrap bg-background'>
+										<SelectValue placeholder='Selecione a coordenadoria' />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem
+										value='all'
+										className='text-nowrap'>
+										Todas as coordenadorias
+									</SelectItem>
+									<SelectItem value='RESID'>RESID</SelectItem>
+									<SelectItem value='SERVIN'>SERVIN</SelectItem>
+									<SelectItem value='GTEC'>GTEC</SelectItem>
+									<SelectItem value='PARHIS'>PARHIS</SelectItem>
+									<SelectItem value='CAP'>CAP</SelectItem>
+									<SelectItem value='COMIN'>COMIN</SelectItem>
+									<SelectItem value='CONTRU'>CONTRU</SelectItem>
+									<SelectItem value='CAEPP'>CAEPP</SelectItem>
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}

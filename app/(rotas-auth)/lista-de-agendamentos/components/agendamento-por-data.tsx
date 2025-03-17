@@ -26,6 +26,7 @@ import {
 	PopoverTrigger,
 } from '@/components/ui/popover';
 import { toast } from 'sonner';
+import { ptBR } from 'date-fns/locale';
 
 const FormSchema = z.object({
 	dataInicial: z.date({
@@ -36,7 +37,7 @@ const FormSchema = z.object({
 	}),
 });
 
-export function AgendamentoPorData() {
+export function AgendamentoPorData({ onlyInicial }: { onlyInicial?: boolean }) {
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 	});
@@ -55,10 +56,10 @@ export function AgendamentoPorData() {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className='flex items-end gap-5 w-52'>
+				className='flex items-end gap-5 '>
 				<FormField
 					control={form.control}
-					name='dataFinal'
+					name='dataInicial'
 					render={({ field }) => (
 						<FormItem className='flex flex-col'>
 							<FormLabel>Data Inicial</FormLabel>
@@ -72,7 +73,7 @@ export function AgendamentoPorData() {
 												!field.value && 'text-muted-foreground',
 											)}>
 											{field.value ? (
-												format(field.value, 'PPP')
+												format(field.value, 'PPP', { locale: ptBR })
 											) : (
 												<span>Escolha uma data</span>
 											)}
@@ -98,6 +99,50 @@ export function AgendamentoPorData() {
 						</FormItem>
 					)}
 				/>
+				{!onlyInicial && (
+					<FormField
+						control={form.control}
+						name='dataFinal'
+						render={({ field }) => (
+							<FormItem className='flex flex-col'>
+								<FormLabel>Data Final</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant={'outline'}
+												className={cn(
+													'w-[240px] pl-3 text-left font-normal',
+													!field.value && 'text-muted-foreground',
+												)}>
+												{field.value ? (
+													format(field.value, 'PPP', { locale: ptBR })
+												) : (
+													<span>Escolha uma data</span>
+												)}
+												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent
+										className='w-auto p-0'
+										align='start'>
+										<Calendar
+											mode='single'
+											selected={field.value}
+											onSelect={field.onChange}
+											disabled={(date) =>
+												date > new Date() || date < new Date('1900-01-01')
+											}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				)}
 			</form>
 		</Form>
 	);

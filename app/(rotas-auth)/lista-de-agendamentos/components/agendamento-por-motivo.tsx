@@ -51,6 +51,7 @@ export function AgendamentoPorMotivo() {
 							<FormLabel>Motivo</FormLabel>
 							<FormControl>
 								<Input
+									className='bg-background'
 									{...field}
 									placeholder='Buscar por Motivo'
 								/>

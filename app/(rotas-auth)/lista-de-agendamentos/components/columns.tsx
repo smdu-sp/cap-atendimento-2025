@@ -27,7 +27,7 @@ export const columns: ColumnDef<IProcesso>[] = [
 		accessorKey: 'datainicio',
 		header: 'Data Inicial',
 		cell: ({ row }) => (
-			<p className='text-center text-xs'>
+			<p className=' text-xs'>
 				{row.original.datainicio.toLocaleString('pt-BR', {
 					year: 'numeric',
 					month: '2-digit',
@@ -42,7 +42,7 @@ export const columns: ColumnDef<IProcesso>[] = [
 		accessorKey: 'datainicio',
 		header: 'Horário Inicial',
 		cell: ({ row }) => (
-			<p className='text-center text-xs'>
+			<p className=' text-xs'>
 				{row.original.datainicio.toLocaleString('pt-BR', {
 					hour: '2-digit',
 					minute: '2-digit',
@@ -55,15 +55,5 @@ export const columns: ColumnDef<IProcesso>[] = [
 	{
 		accessorKey: 'motivo',
 		header: 'Motivo',
-	},
-	{
-		accessorKey: 'rg',
-		header: 'RG',
-		cell: ({ row }) => <p className=' text-xs'>{row.original.rg}</p>,
-	},
-	{
-		accessorKey: 'cpf',
-		header: 'CPF',
-		cell: ({ row }) => <p className=' text-xs'>{row.original.cpf}</p>,
 	},
 ];

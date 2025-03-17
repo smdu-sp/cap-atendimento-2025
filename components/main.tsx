@@ -93,7 +93,7 @@ export default function Main({
 			<SidebarProvider>
 				<AppSidebar data={{ menuUsuario, menuAdmin }} />
 				<SidebarInset>
-					<header className='h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 hidden sm:flex'>
+					<header className='h-16 bg-muted dark:bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 hidden sm:flex'>
 						<div className='flex items-center gap-2 px-4'>
 							<SidebarTrigger className='-ml-1 md:hidden' />
 							<Separator
@@ -109,8 +109,8 @@ export default function Main({
 							</Breadcrumb>
 						</div>
 					</header>
-					<div className='flex flex-1 flex-col gap-4 p-4 sm:pt-0 relative items-center w-full'>
-						<div className='min-h-100 w-full max-w-7xl flex-1 md:min-h-min pt-10 sm:pt-0'>
+					<div className='flex flex-1 flex-col gap-4 p-4 sm:pt-0 relative items-center w-full bg-muted dark:bg-background'>
+						<div className='min-h-100 w-full  flex-1 md:min-h-min pt-10 sm:pt-0'>
 							{children}
 						</div>
 					</div>

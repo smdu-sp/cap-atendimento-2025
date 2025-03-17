@@ -1,42 +1,38 @@
 /** @format */
 
-import React from 'react';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from './ui/card';
+import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
 
-export default function BigNumbers() {
+export default function BigNumbers({ numbers }: { numbers: number[] }) {
 	return (
 		<ul className='flex items-center justify-between gap-5'>
 			<li className='w-full'>
 				<Card>
 					<CardHeader>
-						<CardTitle className='text-2xl'>4894</CardTitle>
+						<CardTitle className='text-2xl'>
+							{numbers[0].toLocaleString('pt-BR')}
+						</CardTitle>
 						<CardDescription>Agendamentos neste Ano</CardDescription>
 					</CardHeader>
-					<CardContent></CardContent>
 				</Card>
 			</li>
 			<li className='w-full'>
 				<Card>
 					<CardHeader>
-						<CardTitle className='text-2xl'>196</CardTitle>
+						<CardTitle className='text-2xl'>
+							{numbers[1].toLocaleString('pt-BR')}
+						</CardTitle>
 						<CardDescription>Agendamentos nesta Semana</CardDescription>
 					</CardHeader>
-					<CardContent></CardContent>
 				</Card>
 			</li>
 			<li className='w-full'>
 				<Card>
 					<CardHeader>
-						<CardTitle className='text-2xl'>15</CardTitle>
+						<CardTitle className='text-2xl'>
+							{numbers[2].toLocaleString('pt-BR')}
+						</CardTitle>
 						<CardDescription>Agendamentos Hoje</CardDescription>
 					</CardHeader>
-					<CardContent></CardContent>
 				</Card>
 			</li>
 		</ul>

@@ -51,6 +51,7 @@ export function AgendamentoPorHorario() {
 							<FormLabel>Horário Inicial</FormLabel>
 							<FormControl>
 								<Input
+									className='w-full bg-background'
 									{...field}
 									type='time'
 									placeholder='Horário Inicial'></Input>
