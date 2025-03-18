@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Area, AreaChart, CartesianGrid, XAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, LabelList, XAxis } from 'recharts';
 
 import {
 	Card,
@@ -37,7 +37,7 @@ export function AgendamentoNoTempo() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle>Agendamentos</CardTitle>
+				<CardTitle className='text-2xl'>Agendamentos</CardTitle>
 				<CardDescription>
 					Número de agendamentos no tempo definido
 				</CardDescription>
@@ -52,7 +52,27 @@ export function AgendamentoNoTempo() {
 						margin={{
 							left: 12,
 							right: 12,
+							top: 20,
 						}}>
+						<defs>
+							<linearGradient
+								id='fillDesktop'
+								x1='0'
+								y1='0'
+								x2='0'
+								y2='1'>
+								<stop
+									offset='5%'
+									stopColor='var(--color-Agendamentos)'
+									stopOpacity={0.8}
+								/>
+								<stop
+									offset='95%'
+									stopColor='var(--color-Agendamentos)'
+									stopOpacity={0.1}
+								/>
+							</linearGradient>
+						</defs>
 						<CartesianGrid vertical={false} />
 						<XAxis
 							dataKey='month'
@@ -68,10 +88,16 @@ export function AgendamentoNoTempo() {
 						<Area
 							dataKey='Agendamentos'
 							type='natural'
-							fill='var(--color-Agendamentos)'
-							fillOpacity={0.4}
-							stroke='var(--color-Agendamentos)'
-						/>
+							fillOpacity={0.8}
+							fill='url(#fillDesktop)'
+							stroke='var(--color-Agendamentos)'>
+							<LabelList
+								position='top'
+								offset={8}
+								className='fill-foreground'
+								fontSize={12}
+							/>
+						</Area>
 					</AreaChart>
 				</ChartContainer>
 			</CardContent>

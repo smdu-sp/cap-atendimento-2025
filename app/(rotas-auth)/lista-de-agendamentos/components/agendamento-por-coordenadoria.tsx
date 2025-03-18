@@ -75,6 +75,18 @@ export function AgendamentoPorCoordenadoria() {
 									<SelectItem value='COMIN'>COMIN</SelectItem>
 									<SelectItem value='CONTRU'>CONTRU</SelectItem>
 									<SelectItem value='CAEPP'>CAEPP</SelectItem>
+									<SelectItem value='ASCOM'>ASCOM</SelectItem>
+									<SelectItem value='ATECC'>ATECC</SelectItem>
+									<SelectItem value='ATIC'>ATIC</SelectItem>
+									<SelectItem value='CASE'>CASE</SelectItem>
+									<SelectItem value='DEUSO'>DEUSO</SelectItem>
+									<SelectItem value='GAB'>COMIN</SelectItem>
+									<SelectItem value='GAB_CI'>GAB/CI</SelectItem>
+									<SelectItem value='GEOINFO'>GEOINFO</SelectItem>
+									<SelectItem value='LICEN'>LICEN</SelectItem>
+									<SelectItem value='PLANURB'>PLANURB</SelectItem>
+									<SelectItem value='STEL'>STEL</SelectItem>
+									<SelectItem value='URB'>URB</SelectItem>
 								</SelectContent>
 							</Select>
 							<FormMessage />

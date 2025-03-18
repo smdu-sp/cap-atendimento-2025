@@ -13,11 +13,9 @@ export default function Home() {
 			<div className='flex flex-col gap-5 my-10'>
 				<Filter />
 				<BigNumbers numbers={[4898, 178, 17]} />
-				<div className='grid grid-cols-2 gap-5'>
+				<div className='grid gap-5'>
 					<AgendamentosPorMotivo />
 					<AgendamentosPorCoordenadoria />
-				</div>
-				<div>
 					<AgendamentoNoTempo />
 				</div>
 			</div>

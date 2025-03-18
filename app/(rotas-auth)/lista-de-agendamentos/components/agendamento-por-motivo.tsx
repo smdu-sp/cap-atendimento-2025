@@ -14,7 +14,13 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 
 const FormSchema = z.object({
@@ -49,13 +55,43 @@ export function AgendamentoPorMotivo() {
 					render={({ field }) => (
 						<FormItem className='flex flex-col'>
 							<FormLabel>Motivo</FormLabel>
-							<FormControl>
-								<Input
-									className='bg-background'
-									{...field}
-									placeholder='Buscar por Motivo'
-								/>
-							</FormControl>
+							<Select
+								onValueChange={field.onChange}
+								defaultValue={field.value}>
+								<FormControl>
+									<SelectTrigger className='w-60 text-nowrap bg-background'>
+										<SelectValue placeholder='Selecione o Motivo' />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem
+										value='all'
+										className='text-nowrap'>
+										Todas os motivos
+									</SelectItem>
+									<SelectItem value='COMUNICADO'>
+										Atendimento Técnico - Comunicado
+									</SelectItem>
+									<SelectItem value='RECURSO'>
+										Atendimento Técnico - Recurso
+									</SelectItem>
+									<SelectItem value='CONSULTA'>
+										Sala Arthur Saboya (Consulta Pré-Projeto)
+									</SelectItem>
+									<SelectItem value='P-ENT/RET'>
+										Protocolo (Entrega / Retirada de Documentos Físicos)
+									</SelectItem>
+									<SelectItem value='P-COM/INDEF'>
+										Protocolo (Comunicado / Indeferimento)
+									</SelectItem>
+									<SelectItem value='N-FSP'>
+										Notificação - Função Social da Propriedade
+									</SelectItem>
+									<SelectItem value='VI'>Visita Institucional</SelectItem>
+									<SelectItem value='EVENTO'>Evento</SelectItem>
+									<SelectItem value='VPF'>Vistas a Processo Físico</SelectItem>
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}

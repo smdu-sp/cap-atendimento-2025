@@ -14,7 +14,7 @@ export function FilterAgendamento() {
 	return (
 		<div className='flex flex-col gap-4 w-full'>
 			<div className='flex items-end flex-wrap gap-5 w-full'>
-				<AgendamentoPorData onlyInicial={true} />
+				<AgendamentoPorData />
 				<AgendamentoPorHorario />
 				<AgendamentoPorCoordenadoria />
 				<AgendamentoPorMotivo />

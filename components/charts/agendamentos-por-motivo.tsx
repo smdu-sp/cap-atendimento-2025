@@ -2,7 +2,7 @@
 
 'use client';
 
-import { Label, Pie, PieChart } from 'recharts';
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts';
 
 import {
 	Card,
@@ -14,107 +14,104 @@ import {
 import {
 	ChartConfig,
 	ChartContainer,
-	ChartLegend,
-	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
-import React from 'react';
 const chartData = [
-	{ browser: 'chrome', Agendamentos: 275, fill: 'var(--color-chrome)' },
-	{ browser: 'safari', Agendamentos: 200, fill: 'var(--color-safari)' },
-	{ browser: 'firefox', Agendamentos: 187, fill: 'var(--color-firefox)' },
-	{ browser: 'edge', Agendamentos: 173, fill: 'var(--color-edge)' },
-	{ browser: 'other', Agendamentos: 90, fill: 'var(--color-other)' },
+	{ motivo: 'COMUNICADO', Agendamentos: 275, fill: 'var(--color-COMUNICADO)' },
+	{ motivo: 'RECURSO', Agendamentos: 200, fill: 'var(--color-RECURSO)' },
+	{ motivo: 'CONSULTA', Agendamentos: 187, fill: 'var(--color-CONSULTA)' },
+	{ motivo: 'ENT_RET', Agendamentos: 173, fill: 'var(--color-ENT_RET)' },
+	{ motivo: 'COM_INDEF', Agendamentos: 90, fill: 'var(--color-COM_INDEF)' },
+	{ motivo: 'N_FSP', Agendamentos: 90, fill: 'var(--color-N_FSP)' },
+	{ motivo: 'VI', Agendamentos: 90, fill: 'var(--color-VI)' },
+	{ motivo: 'VPF', Agendamentos: 90, fill: 'var(--color-VPF)' },
+	{ motivo: 'EVENTO', Agendamentos: 90, fill: 'var(--color-EVENTO)' },
 ];
 
 const chartConfig = {
 	Agendamentos: {
 		label: 'Agendamentos',
 	},
-	chrome: {
-		label: 'Motivo 1',
+	COMUNICADO: {
+		label: 'Atendimento Técnico - Comunicado',
 		color: 'hsl(var(--chart-1))',
 	},
-	safari: {
-		label: 'Motivo 2',
+	RECURSO: {
+		label: 'Atendimento Técnico - Recurso',
 		color: 'hsl(var(--chart-2))',
 	},
-	firefox: {
-		label: 'Motivo 3',
+	CONSULTA: {
+		label: 'Sala Arthur Saboya (Consulta Pré-Projeto)',
 		color: 'hsl(var(--chart-3))',
 	},
-	edge: {
-		label: 'Motivo 4',
+	ENT_RET: {
+		label: 'Protocolo (Entrega / Retirada de Documentos Físicos)',
 		color: 'hsl(var(--chart-4))',
 	},
-	other: {
-		label: 'Motivo 5',
+	COM_INDEF: {
+		label: 'Protocolo (Comunicado / Indeferimento)',
 		color: 'hsl(var(--chart-5))',
+	},
+	N_FSP: {
+		label: 'Notificação - Função Social da Propriedade',
+		color: 'hsl(var(--chart-6))',
+	},
+	VI: {
+		label: 'Visita Institucional',
+		color: 'hsl(var(--chart-7))',
+	},
+	VPF: {
+		label: 'Vistas a Processo Físico',
+		color: 'hsl(var(--chart-8))',
+	},
+	EVENTO: {
+		label: 'Evento',
+		color: 'hsl(var(--chart-9))',
 	},
 } satisfies ChartConfig;
 
 export function AgendamentosPorMotivo() {
-	const totalVisitors = React.useMemo(() => {
-		return chartData.reduce((acc, curr) => acc + curr.Agendamentos, 0);
-	}, []);
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-start pb-0'>
-				<CardTitle>Agendamentos Por Motivo</CardTitle>
+				<CardTitle className='text-xl'>Agendamentos Por Motivo</CardTitle>
 				<CardDescription>Número de agendamentos por motivo</CardDescription>
 			</CardHeader>
 			<CardContent className='flex-1 pb-0'>
 				<ChartContainer
 					config={chartConfig}
-					className='mx-auto aspect-square max-h-[300px]'>
-					<PieChart>
+					className='mx-auto aspect-square w-full max-h-[300px] flex items-center justify-center'>
+					<BarChart
+						accessibilityLayer
+						data={chartData}
+						margin={{
+							top: 20,
+						}}>
 						<ChartTooltip
 							cursor={false}
-							content={
-								<ChartTooltipContent
-									nameKey='browser'
-									indicator='line'
-								/>
-							}
+							content={<ChartTooltipContent indicator='line' />}
 						/>
-						<Pie
+						<CartesianGrid vertical={false} />
+						<XAxis
+							dataKey='motivo'
+							tickLine={false}
+							tickMargin={10}
+							axisLine={false}
+						/>
+						<Bar
 							data={chartData}
-							dataKey='Agendamentos'
-							innerRadius={60}
-							strokeWidth={5}>
-							<Label
-								content={({ viewBox }) => {
-									if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-										return (
-											<text
-												x={viewBox.cx}
-												y={viewBox.cy}
-												textAnchor='middle'
-												dominantBaseline='middle'>
-												<tspan
-													x={viewBox.cx}
-													y={viewBox.cy}
-													className='fill-foreground text-3xl font-bold'>
-													{totalVisitors.toLocaleString()}
-												</tspan>
-												<tspan
-													x={viewBox.cx}
-													y={(viewBox.cy || 0) + 24}
-													className='fill-muted-foreground'>
-													Agendamentos
-												</tspan>
-											</text>
-										);
-									}
-								}}
+							radius={8}
+							strokeWidth={2}
+							dataKey='Agendamentos'>
+							<LabelList
+								position='top'
+								offset={8}
+								className='fill-foreground'
+								fontSize={12}
 							/>
-						</Pie>
-						<ChartLegend
-							content={<ChartLegendContent nameKey='browser' />}
-							className='-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center'
-						/>
-					</PieChart>
+						</Bar>
+					</BarChart>
 				</ChartContainer>
 			</CardContent>
 		</Card>
