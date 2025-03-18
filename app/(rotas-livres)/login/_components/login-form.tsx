@@ -21,6 +21,7 @@ import { z } from 'zod';
 import Logo from './logo';
 import { signIn } from 'next-auth/react';
 import { toast } from 'sonner';
+import { Loader2 } from 'lucide-react';
 // import { useRouter } from "next/navigation"
 
 const formSchema = z.object({
@@ -48,21 +49,11 @@ export function LoginForm() {
 
 	async function onSubmit({ login, senha }: z.infer<typeof formSchema>) {
 		try {
-			signIn('credentials', { login, senha }).then(
-				(value) => {
-					console.log(value);
-				},
-				(error) => {
-					console.log(error);
-				},
-			);
-			// if (logado) {
-			//     toast.error('Login ou senha inválidos');
-			// } else {
-			//     router.refresh();
-			//     router.push('/');
-			//     toast.success('Usuário Logado com sucesso');
-			// }
+			const resp = await signIn('credentials', { login, senha });
+			if (!resp?.ok) {
+				toast.error('Não foi possível realizar o login.');
+			}
+			toast.success('Login realizado com sucesso.');
 		} catch (e) {
 			console.log(e);
 			toast.error('Não foi possível realizar o login.');
@@ -118,9 +109,16 @@ export function LoginForm() {
 						/>
 					</div>
 					<Button
+						disabled={form.formState.isSubmitting || form.formState.isLoading}
 						type='submit'
-						className='w-full'>
-						Entrar
+						className='w-full disabled:opacity-50'>
+						{form.formState.isSubmitting || form.formState.isLoading ? (
+							<>
+								Entrar <Loader2 className='animate-spin' />
+							</>
+						) : (
+							'Entrar'
+						)}
 					</Button>
 				</div>
 			</form>

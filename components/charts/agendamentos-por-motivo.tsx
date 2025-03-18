@@ -21,16 +21,16 @@ import {
 } from '@/components/ui/chart';
 import React from 'react';
 const chartData = [
-	{ browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-	{ browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-	{ browser: 'firefox', visitors: 187, fill: 'var(--color-firefox)' },
-	{ browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-	{ browser: 'other', visitors: 90, fill: 'var(--color-other)' },
+	{ browser: 'chrome', Agendamentos: 275, fill: 'var(--color-chrome)' },
+	{ browser: 'safari', Agendamentos: 200, fill: 'var(--color-safari)' },
+	{ browser: 'firefox', Agendamentos: 187, fill: 'var(--color-firefox)' },
+	{ browser: 'edge', Agendamentos: 173, fill: 'var(--color-edge)' },
+	{ browser: 'other', Agendamentos: 90, fill: 'var(--color-other)' },
 ];
 
 const chartConfig = {
-	visitors: {
-		label: 'Visitors',
+	Agendamentos: {
+		label: 'Agendamentos',
 	},
 	chrome: {
 		label: 'Motivo 1',
@@ -56,7 +56,7 @@ const chartConfig = {
 
 export function AgendamentosPorMotivo() {
 	const totalVisitors = React.useMemo(() => {
-		return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+		return chartData.reduce((acc, curr) => acc + curr.Agendamentos, 0);
 	}, []);
 	return (
 		<Card className='flex flex-col'>
@@ -71,11 +71,16 @@ export function AgendamentosPorMotivo() {
 					<PieChart>
 						<ChartTooltip
 							cursor={false}
-							content={<ChartTooltipContent />}
+							content={
+								<ChartTooltipContent
+									nameKey='browser'
+									indicator='line'
+								/>
+							}
 						/>
 						<Pie
 							data={chartData}
-							dataKey='visitors'
+							dataKey='Agendamentos'
 							innerRadius={60}
 							strokeWidth={5}>
 							<Label
@@ -97,7 +102,7 @@ export function AgendamentosPorMotivo() {
 													x={viewBox.cx}
 													y={(viewBox.cy || 0) + 24}
 													className='fill-muted-foreground'>
-													Visitors
+													Agendamentos
 												</tspan>
 											</text>
 										);

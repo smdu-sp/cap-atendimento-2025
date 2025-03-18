@@ -30,7 +30,7 @@ const chartData = [
 
 const chartConfig = {
 	visitors: {
-		label: 'Visitors',
+		label: 'Agendamentos',
 	},
 	chrome: {
 		label: 'Saúde',
@@ -73,7 +73,12 @@ export function AgendamentosPorCoordenadoria() {
 					<PieChart>
 						<ChartTooltip
 							cursor={false}
-							content={<ChartTooltipContent />}
+							content={
+								<ChartTooltipContent
+									nameKey='browser'
+									indicator='line'
+								/>
+							}
 						/>
 						<Pie
 							data={chartData}
@@ -99,7 +104,7 @@ export function AgendamentosPorCoordenadoria() {
 													x={viewBox.cx}
 													y={(viewBox.cy || 0) + 24}
 													className='fill-muted-foreground'>
-													Visitors
+													Agendamentos
 												</tspan>
 											</text>
 										);

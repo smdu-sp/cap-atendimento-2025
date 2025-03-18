@@ -18,17 +18,17 @@ import {
 	ChartTooltipContent,
 } from '@/components/ui/chart';
 const chartData = [
-	{ month: 'January', desktop: 186 },
-	{ month: 'February', desktop: 305 },
-	{ month: 'March', desktop: 237 },
-	{ month: 'April', desktop: 73 },
-	{ month: 'May', desktop: 209 },
-	{ month: 'June', desktop: 214 },
+	{ month: 'January', Agendamentos: 186 },
+	{ month: 'February', Agendamentos: 305 },
+	{ month: 'March', Agendamentos: 237 },
+	{ month: 'April', Agendamentos: 73 },
+	{ month: 'May', Agendamentos: 209 },
+	{ month: 'June', Agendamentos: 214 },
 ];
 
 const chartConfig = {
-	desktop: {
-		label: 'Desktop',
+	Agendamentos: {
+		label: 'Agendamentos',
 		color: 'hsl(var(--chart-1))',
 	},
 } satisfies ChartConfig;
@@ -66,11 +66,11 @@ export function AgendamentoNoTempo() {
 							content={<ChartTooltipContent indicator='line' />}
 						/>
 						<Area
-							dataKey='desktop'
+							dataKey='Agendamentos'
 							type='natural'
-							fill='var(--color-desktop)'
+							fill='var(--color-Agendamentos)'
 							fillOpacity={0.4}
-							stroke='var(--color-desktop)'
+							stroke='var(--color-Agendamentos)'
 						/>
 					</AreaChart>
 				</ChartContainer>
