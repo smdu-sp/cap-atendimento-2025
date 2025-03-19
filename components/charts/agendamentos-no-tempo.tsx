@@ -37,7 +37,7 @@ export function AgendamentoNoTempo() {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className='text-2xl'>Agendamentos</CardTitle>
+				<CardTitle className='text-xl'>Agendamentos</CardTitle>
 				<CardDescription>
 					Número de agendamentos no tempo definido
 				</CardDescription>

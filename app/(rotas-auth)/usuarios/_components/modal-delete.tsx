@@ -10,7 +10,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import * as usuario from '@/services/usuario';
+import * as usuario from '@/services/usuarios';
 import { Check, Loader2, Trash2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { toast } from 'sonner';

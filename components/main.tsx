@@ -3,11 +3,6 @@
 'use client';
 
 import { AppSidebar } from '@/components/sidebar/app-sidebar';
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbList,
-} from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
 import {
 	SidebarInset,
@@ -22,6 +17,7 @@ import {
 	Users,
 } from 'lucide-react';
 import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
+import Breadcrumbs from './breadcrumbs';
 import { DrawerMenu } from './drawer-menu';
 import { ModeToggle } from './toggle-theme';
 
@@ -100,13 +96,7 @@ export default function Main({
 								orientation='vertical'
 								className='mr-2 h-4 md:ml-[-16px]'
 							/>
-							<Breadcrumb>
-								<BreadcrumbList>
-									<BreadcrumbItem className='hidden md:block'>
-										<House size={16} />
-									</BreadcrumbItem>
-								</BreadcrumbList>
-							</Breadcrumb>
+							<Breadcrumbs />
 						</div>
 					</header>
 					<div className='flex flex-1 flex-col gap-4 p-4 sm:pt-0 relative items-center w-full bg-muted dark:bg-background'>

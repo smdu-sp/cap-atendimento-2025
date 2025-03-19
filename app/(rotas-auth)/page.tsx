@@ -9,7 +9,7 @@ import { Filter } from '@/components/filter';
 export default function Home() {
 	return (
 		<div className=' w-full relative px-4 md:px-8 '>
-			<h1 className='text-4xl font-bold'>Home</h1>
+			<h1 className='text-4xl font-bold mt-5'>Home</h1>
 			<div className='flex flex-col gap-5 my-10'>
 				<Filter />
 				<BigNumbers numbers={[4898, 178, 17]} />

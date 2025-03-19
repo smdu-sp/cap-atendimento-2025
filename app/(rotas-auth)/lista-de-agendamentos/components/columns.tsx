@@ -1,10 +1,11 @@
 /** @format */
 
 'use client';
-import { IProcesso } from '@/types/processo';
+
+import { IAgendamento } from '@/types/agendamentos';
 import { ColumnDef } from '@tanstack/react-table';
 
-export const columns: ColumnDef<IProcesso>[] = [
+export const columns: ColumnDef<IAgendamento>[] = [
 	{
 		accessorKey: 'municipe',
 		header: 'Munícipe',
@@ -12,6 +13,11 @@ export const columns: ColumnDef<IProcesso>[] = [
 	{
 		accessorKey: 'tecnico',
 		header: 'Técnico',
+		cell: ({ row }) => (
+			<p className=' text-xs overflow-hidden text-ellipsis'>
+				{row.original.tecnico?.nome}
+			</p>
+		),
 	},
 	{
 		accessorKey: 'processo',
@@ -21,39 +27,57 @@ export const columns: ColumnDef<IProcesso>[] = [
 	{
 		accessorKey: 'coordenadoria',
 		header: 'Coordenadoria',
-	},
-	{
-		id: 'datainicio-1',
-		accessorKey: 'datainicio',
-		header: 'Data Inicial',
 		cell: ({ row }) => (
-			<p className=' text-xs'>
-				{row.original.datainicio.toLocaleString('pt-BR', {
-					year: 'numeric',
-					month: '2-digit',
-					day: '2-digit',
-					timeZone: 'America/Sao_Paulo',
-				})}
+			<p className='text-nowrap text-xs overflow-hidden text-ellipsis'>
+				{row.original.coordenadoria?.sigla}
 			</p>
 		),
 	},
 	{
+		id: 'datainicio-1',
+		accessorKey: 'dataInicio',
+		header: 'Data Inicial',
+		cell: ({ row }) => {
+			const data = new Date(row.original.dataInicio);
+			return (
+				<p className='text-xs'>{data && data.toLocaleDateString('pt-BR')}</p>
+			);
+		},
+	},
+	{
 		id: 'datainicio-2',
-		accessorKey: 'datainicio',
+		accessorKey: 'dataInicio',
 		header: 'Horário Inicial',
+		cell: ({ row }) => {
+			const data = new Date(row.original.dataInicio);
+			return (
+				<p className='text-xs'>{data && data.toLocaleTimeString('pt-BR')}</p>
+			);
+		},
+	},
+	{
+		accessorKey: 'resumo',
+		header: () => <p className='text-center'>Resumo</p>,
 		cell: ({ row }) => (
-			<p className=' text-xs'>
-				{row.original.datainicio.toLocaleString('pt-BR', {
-					hour: '2-digit',
-					minute: '2-digit',
-					second: '2-digit',
-					timeZone: 'America/Sao_Paulo',
-				})}
+			<p
+				title={
+					row.original.resumo && row.original.resumo?.length > 50
+						? row.original.resumo
+						: ''
+				}
+				className='text-nowrap w-fit text-xs overflow-hidden text-ellipsis'>
+				{row.original.resumo?.substring(0, 50)}
+				{row.original.resumo && row.original.resumo?.length > 50 && '...'}
 			</p>
 		),
 	},
 	{
 		accessorKey: 'motivo',
-		header: 'Motivo',
+		header: () => <p className='text-center'>Motivo</p>,
+		cell: ({ row }) => (
+			<p className='text-nowrap text-center text-xs overflow-hidden text-ellipsis'>
+				{row.original.motivo?.texto}
+			</p>
+		),
 	},
 ];

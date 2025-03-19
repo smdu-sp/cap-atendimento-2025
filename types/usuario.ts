@@ -1,18 +1,23 @@
 /** @format */
 
-import { IPermissao } from "./permissao";
-
 export interface IUsuario {
 	id: string;
 	nome: string;
 	login: string;
 	email: string;
-	permissoes: IPermissao[];
+	permissao: IPermissao;
 	avatar?: string;
 	status: boolean;
-	ultimologin: Date;
+	ultimoLogin: Date;
 	criadoEm: Date;
-	atualizadoEm?: Date;
+	atualizadoEm: Date;
+}
+
+export enum IPermissao {
+	DEV,
+	TEC,
+	ADM,
+	USR,
 }
 
 export interface ICreateUsuario {
@@ -20,14 +25,15 @@ export interface ICreateUsuario {
 	email: string;
 	login: string;
 	avatar?: string;
-	permissoes?: string[];
+	permissao?: IPermissao;
+	status?: boolean;
 }
 
 export interface IUpdateUsuario {
 	id?: string;
 	status?: boolean;
 	avatar?: string;
-	permissoes?: string[];
+	permissao?: IPermissao;
 }
 
 export interface IPaginadoUsuario {
@@ -46,18 +52,25 @@ export interface INovoUsuario {
 export interface IRespostaUsuario {
 	ok: boolean;
 	error: string | null;
-	data: INovoUsuario | IUsuario | IUsuario[] | IPaginadoUsuario | { autorizado: boolean } | { desativado: boolean } | null;
+	data:
+		| INovoUsuario
+		| IUsuario
+		| IUsuario[]
+		| IPaginadoUsuario
+		| { autorizado: boolean }
+		| { desativado: boolean }
+		| null;
 	status: number;
 }
 
 export interface IUsuarioSession {
-	sub: string
-	nome: string
-	login: string
-	email: string
-	permissao: string
-	status: number,
-	avatar?: string
-	iat: number,
-	exp: number
+	sub: string;
+	nome: string;
+	login: string;
+	email: string;
+	permissao: IPermissao;
+	status: number;
+	avatar?: string;
+	iat: number;
+	exp: number;
 }

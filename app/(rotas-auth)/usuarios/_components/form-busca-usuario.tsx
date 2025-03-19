@@ -13,7 +13,7 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import * as usuarios from '@/services/usuario';
+import * as usuarios from '@/services/usuarios';
 import { IUsuario } from '@/types/usuario';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Loader2 } from 'lucide-react';
@@ -43,7 +43,6 @@ export default function FormBuscaUsuario() {
 		}
 		const { login } = values;
 		const resp = await usuarios.buscarNovo(login, token);
-		
 
 		if (resp.error) {
 			toast.error('Algo deu errado', { description: resp.error });
@@ -53,7 +52,6 @@ export default function FormBuscaUsuario() {
 			const usuario = resp.data as IUsuario;
 			toast.success('Usuário encontrado', { description: usuario.nome });
 		}
-
 	}
 
 	return (

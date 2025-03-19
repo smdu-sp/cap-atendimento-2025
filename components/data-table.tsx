@@ -34,9 +34,11 @@ export default function DataTable<TData, TValue>({
 	});
 	return (
 		<Table className='bg-background dark:bg-muted/50 '>
-			<TableHeader className='bg-primary'>
+			<TableHeader className='bg-primary hover:bg-primary'>
 				{table.getHeaderGroups().map((headerGroup) => (
-					<TableRow key={headerGroup.id}>
+					<TableRow
+						className='hover:bg-primary'
+						key={headerGroup.id}>
 						{headerGroup.headers.map((header) => {
 							return (
 								<TableHead

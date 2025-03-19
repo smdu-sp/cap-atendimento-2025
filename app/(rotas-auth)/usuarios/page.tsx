@@ -3,13 +3,13 @@
 import DataTable, { TableSkeleton } from '@/components/data-table';
 import Pagination from '@/components/pagination';
 import { auth } from '@/lib/auth/auth';
-import * as usuario from '@/services/usuario';
+import * as usuario from '@/services/usuarios';
 import { IPaginadoUsuario, IUsuario } from '@/types/usuario';
 import { Suspense } from 'react';
 import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
 
-export default function UsuariosSuspense({
+export default async function UsuariosSuspense({
 	searchParams,
 }: {
 	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -30,6 +30,7 @@ async function Usuarios({
 	let ok = false;
 	const { busca = '' } = await searchParams;
 	let dados: IUsuario[] = [];
+	
 	const session = await auth();
 	if (session && session.access_token) {
 		const response = await usuario.buscarTudo(
@@ -55,10 +56,10 @@ async function Usuarios({
 
 	return (
 		<>
-			<div className='max-w-7xl mx-auto w-full relative h-full'>
-				<h1 className='text-4xl font-bold'>Usuários</h1>
+			<div className='mx-auto w-full relative h-full px-4 md:px-8'>
+				<h1 className='text-4xl font-bold mt-5'>Usuários</h1>
 
-				<div className='flex flex-col gap-10 mt-10'>
+				<div className='flex flex-col gap-10 my-10'>
 					{dados && (
 						<DataTable
 							columns={columns}

@@ -1,3 +1,0 @@
-export {
-    criar
-} from './criar';
