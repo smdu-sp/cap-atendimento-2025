@@ -11,7 +11,7 @@ export default function BigNumbers({ numbers }: { numbers: number[] }) {
 						<CardTitle className='text-2xl'>
 							{numbers[0].toLocaleString('pt-BR')}
 						</CardTitle>
-						<CardDescription>Agendamentos neste Ano</CardDescription>
+						<CardDescription>Total de agendamentos neste Ano</CardDescription>
 					</CardHeader>
 				</Card>
 			</li>
@@ -21,7 +21,9 @@ export default function BigNumbers({ numbers }: { numbers: number[] }) {
 						<CardTitle className='text-2xl'>
 							{numbers[1].toLocaleString('pt-BR')}
 						</CardTitle>
-						<CardDescription>Agendamentos nesta Semana</CardDescription>
+						<CardDescription>
+							Total de agendamentos nesta Semana
+						</CardDescription>
 					</CardHeader>
 				</Card>
 			</li>
@@ -31,7 +33,7 @@ export default function BigNumbers({ numbers }: { numbers: number[] }) {
 						<CardTitle className='text-2xl'>
 							{numbers[2].toLocaleString('pt-BR')}
 						</CardTitle>
-						<CardDescription>Agendamentos Hoje</CardDescription>
+						<CardDescription>Total de agendamentos Hoje</CardDescription>
 					</CardHeader>
 				</Card>
 			</li>

@@ -8,6 +8,7 @@ import { FilterAgendamento } from './components/filter-agendamento';
 import { Separator } from '@/components/ui/separator';
 import { buscarTudo } from '@/services/agendamentos';
 import { IAgendamento, IPaginadoAgendamento } from '@/types/agendamentos';
+import ModalImportacao from './components/dropdown-options';
 export default async function ListaAgendamentoPage({
 	searchParams,
 }: {
@@ -52,6 +53,9 @@ export default async function ListaAgendamentoPage({
 						limite={+limite}
 					/>
 				)}
+			</div>
+			<div className='absolute bottom-5 right-5 hover:scale-110 z-50'>
+				<ModalImportacao />
 			</div>
 		</div>
 	);

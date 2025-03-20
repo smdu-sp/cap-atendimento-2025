@@ -4,11 +4,10 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
-import { Link, RefreshCw, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import Image from 'next/image';
+import { Check, Link, RefreshCw } from 'lucide-react';
+import { useState } from 'react';
 
 interface AvatarUploaderProps {
 	avatarUrl: string;
@@ -38,37 +37,36 @@ export function AvatarUploader({
 			setInputUrl('');
 		};
 
-		img.onerror = () => {
-			alert('URL de imagem inválida. Por favor, tente outra URL.');
-			setIsValidating(false);
-		};
+	
 
 		img.src = inputUrl;
 	};
 
 	const resetAvatar = () => {
-		onAvatarChange('/placeholder.svg?height=200&width=200');
+		onAvatarChange('');
 	};
 
 	return (
 		<div className='flex flex-col items-center'>
 			<div className='relative'>
 				<div className='relative w-52 h-52 rounded-full overflow-hidden border-4 border-primary/30 transition-colors duration-300'>
-					<Image
-						width={160}
-						height={160}
-						src={avatarUrl || '/placeholder.svg'}
-						alt='Avatar do usuário'
-						className='w-full h-full object-cover placeholder:hidden '
-					/>
-
-					{/* Overlay on hover */}
-					<div className='absolute inset-0 bg-muted/10 flex items-center justify-center'>
-						<div className='text-white text-center'>
-							<Link className='w-8 h-8 mx-auto mb-2 text-foreground' />
-							<p className='text-sm text-foreground'>Alterar URL</p>
+					{avatarUrl ? (
+						/*  eslint-disable-next-line @next/next/no-img-element */
+						<img
+							width={160}
+							height={160}
+							src={avatarUrl}
+							alt='Avatar do usuário'
+							className='w-full h-full object-cover placeholder:hidden '
+						/>
+					) : (
+						<div className='absolute inset-0 bg-muted/10 flex items-center justify-center'>
+							<div className='text-center text-primary'>
+								<Link className='w-8 h-8 mx-auto mb-2 ' />
+								<p className='text-sm'>Alterar URL</p>
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
 
 				{/* Glowing effect */}
@@ -106,7 +104,6 @@ export function AvatarUploader({
 			) : (
 				<div className='mt-6 flex gap-2'>
 					<Button
-						variant='outline'
 						size='sm'
 						className='flex items-center gap-1'
 						onClick={() => setShowUrlInput(true)}>
@@ -117,7 +114,7 @@ export function AvatarUploader({
 					<Button
 						variant='outline'
 						size='sm'
-						className='flex items-center gap-1 text-destructive'
+						className='flex items-center gap-1 text-destructive hover:text-destructive'
 						onClick={resetAvatar}>
 						<RefreshCw className='h-4 w-4' />
 						<span>Resetar</span>

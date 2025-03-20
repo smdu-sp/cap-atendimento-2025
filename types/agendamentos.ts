@@ -41,10 +41,29 @@ export interface ICreateAgendamento {
 	dataInicio: Date;
 	dataFim: Date;
 }
+export interface IDashboardAgendamento {
+	coordenadorias: IChart[];
+	motivos: IChart[];
+	total: number;
+	totalMes: number;
+	totalDia: number;
+	totalAno: number;
+	agendamentosMes: IChart[];
+}
+
+export interface IChart {
+	label: string;
+	value: number;
+}
 
 export interface IRespostaAgendamento {
 	ok: boolean;
 	error: string | null;
-	data: IAgendamento | IAgendamento[] | IPaginadoAgendamento | null;
+	data:
+		| IAgendamento
+		| IAgendamento[]
+		| IPaginadoAgendamento
+		| IDashboardAgendamento
+		| null;
 	status: number;
 }

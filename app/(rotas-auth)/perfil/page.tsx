@@ -21,12 +21,12 @@ export default function Perfil() {
 		login: 'carolmendes',
 		socialName: 'Carol',
 		permission: 'Editor',
-		avatarUrl: '/placeholder.svg?height=200&width=200',
+		avatarUrl: '',
 	});
 
 	const [socialName, setSocialName] = useState(userData.socialName);
 	const [avatarUrl, setAvatarUrl] = useState(userData.avatarUrl);
-
+	console.log(avatarUrl);
 	return (
 		<div className='mx-auto px-4 md:px-8 w-full'>
 			<h1 className='font-bold text-4xl mt-5'>Perfil</h1>
@@ -39,7 +39,7 @@ export default function Perfil() {
 					</CardHeader>
 					<CardContent className='bg-card rounded-xl flex justify-center items-center p-6 mb-5 h-full'>
 						<AvatarUploader
-							avatarUrl={avatarUrl}
+							avatarUrl={avatarUrl ?? ''}
 							onAvatarChange={setAvatarUrl}
 						/>
 					</CardContent>
@@ -101,7 +101,7 @@ export default function Perfil() {
 					].map((activity, index) => (
 						<div
 							key={index}
-							className='flex justify-start gap-5 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+							className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
 							<span>{activity.action}:</span>
 							<span className='text-sm text-muted-foreground'>
 								{activity.time}

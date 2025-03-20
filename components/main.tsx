@@ -9,13 +9,7 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from '@/components/ui/sidebar';
-import {
-	CalendarSearch,
-	FileUp,
-	House,
-	LucideProps,
-	Users,
-} from 'lucide-react';
+import { CalendarSearch, House, LucideProps, Users } from 'lucide-react';
 import { ForwardRefExoticComponent, ReactNode, RefAttributes } from 'react';
 import Breadcrumbs from './breadcrumbs';
 import { DrawerMenu } from './drawer-menu';
@@ -65,12 +59,6 @@ const menuAdmin: IMenu[] = [
 		titulo: 'Usuários',
 		url: '/usuarios',
 		permissao: 'usuario_buscar_tudo',
-	},
-	{
-		icone: FileUp,
-		titulo: 'Importar CSV',
-		url: '/importar-csv',
-		permissao: 'permissao_buscar_tudo',
 	},
 ];
 
