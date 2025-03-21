@@ -28,12 +28,14 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { criar } from '@/services/agendamentos/server-functions/criar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -44,8 +46,16 @@ const formSchema = z.object({
 	motivoId: z.string(),
 	coordenadoriaId: z.string(),
 	tecnicoId: z.string(),
-	dataInicio: z.date().nullable(),
-	dataFim: z.date().nullable(),
+	dateRange: z.object({
+		from: z.date(),
+		to: z.date(),
+	}),
+	startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+		message: 'Horário deve estar no formato HH:MM',
+	}),
+	endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+		message: 'Horário deve estar no formato HH:MM',
+	}),
 	resumo: z.string(),
 });
 
@@ -56,35 +66,61 @@ export default function FormAgendamento() {
 		defaultValues: {
 			coordenadoriaId: '',
 			cpf: '',
-			dataFim: null,
-			dataInicio: null,
+			dateRange: { from: undefined, to: undefined },
 			motivoId: '',
 			municipe: '',
 			processo: '',
-			resumo: '',
 			rg: '',
 			tecnicoId: '',
+			resumo: '',
+			startTime: '',
+			endTime: '',
 		},
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
+		const {
+			coordenadoriaId,
+			dateRange,
+			motivoId,
+			municipe,
+			processo,
+			tecnicoId,
+			cpf,
+			rg,
+		} = values;
+		form.setValue(
+			'resumo',
+			`Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
+		);
+		if (!dateRange) {
+			toast.error('Data não selecionada');
+			return;
+		}
+		startTransition(async () => {
+			setTimeout(async () => {
+				const resp = await criar({
+					coordenadoriaId,
+					dataInicio: dateRange.from,
+					dataFim: dateRange.to,
+					motivoId,
+					municipe,
+					processo,
+					tecnicoId,
+					cpf,
+					resumo: `Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
+					rg,
+				});
 
-		startTransition(() => {
-			form.setValue(
-				'resumo',
-				`Motivo: ${form.getValues('motivoId')}; Munícipe: ${form.getValues(
-					'municipe',
-				)}; RG:${form.getValues('rg')}; CPF:${form.getValues(
-					'cpf',
-				)}; Técnico:${form.getValues(
-					'tecnicoId',
-				)}; Coordenadoria: ${form.getValues(
-					'coordenadoriaId',
-				)}; Processo:${form.getValues('processo')}`,
-			);
-			console.log(values);
+				if (!resp.ok) {
+					console.log(resp.error);
+					toast.error('Agendamento não cadastrado');
+				} else {
+					toast.success('Agendamento cadastrado com sucesso');
+				}
+			}, 1000);
 		});
 	}
 
@@ -265,27 +301,39 @@ export default function FormAgendamento() {
 							</FormItem>
 						)}
 					/>
-				</div>
-				<div className='flex w-full items-center justify-between gap-5 mb-5'>
 					<FormField
 						control={form.control}
-						name='dataInicio'
+						name='dateRange'
 						render={({ field }) => (
 							<FormItem className='flex flex-col'>
-								<FormLabel>Data Início</FormLabel>
+								<FormLabel>Data</FormLabel>
 								<Popover>
 									<PopoverTrigger asChild>
 										<FormControl>
 											<Button
 												variant={'outline'}
 												className={cn(
-													'w-56 pl-3 text-left font-normal',
+													'w-full pl-3 text-left font-normal',
 													!field.value && 'text-muted-foreground',
 												)}>
-												{field.value ? (
-													format(field.value, 'PPP', { locale: ptBR })
+												{field.value?.from ? (
+													field.value.to ? (
+														<>
+															{format(field.value.from, 'dd/MM/yyyy', {
+																locale: ptBR,
+															})}{' '}
+															-{' '}
+															{format(field.value.to, 'dd/MM/yyyy', {
+																locale: ptBR,
+															})}
+														</>
+													) : (
+														format(field.value.from, 'dd/MM/yyyy', {
+															locale: ptBR,
+														})
+													)
 												) : (
-													<span>Escolha uma data</span>
+													<span>Selecione um período</span>
 												)}
 												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
 											</Button>
@@ -295,61 +343,52 @@ export default function FormAgendamento() {
 										className='w-auto p-0'
 										align='start'>
 										<Calendar
-											locale={ptBR}
-											mode='single'
-											selected={field.value as Date}
+											mode='range'
+											selected={field.value}
 											onSelect={field.onChange}
-											disabled={(date) =>
-												date > new Date() || date < new Date('1900-01-01')
-											}
-											initialFocus
+											locale={ptBR}
+											numberOfMonths={2}
 										/>
 									</PopoverContent>
 								</Popover>
-
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
+				</div>
+				<div className='flex w-full items-center justify-between gap-5 mb-5'>
 					<FormField
 						control={form.control}
-						name='dataFim'
+						name='startTime'
 						render={({ field }) => (
-							<FormItem className='flex flex-col'>
-								<FormLabel>Data Final</FormLabel>
-								<Popover>
-									<PopoverTrigger asChild>
-										<FormControl>
-											<Button
-												variant={'outline'}
-												className={cn(
-													'w-56 pl-3 text-left font-normal',
-													!field.value && 'text-muted-foreground',
-												)}>
-												{field.value ? (
-													format(field.value, 'PPP', { locale: ptBR })
-												) : (
-													<span>Escolha uma data</span>
-												)}
-												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-											</Button>
-										</FormControl>
-									</PopoverTrigger>
-									<PopoverContent
-										className='w-auto p-0'
-										align='start'>
-										<Calendar
-											locale={ptBR}
-											mode='single'
-											selected={field.value as Date}
-											onSelect={field.onChange}
-											disabled={(date) =>
-												date > new Date() || date < new Date('1900-01-01')
-											}
-											initialFocus
-										/>
-									</PopoverContent>
-								</Popover>
+							<FormItem>
+								<FormLabel>Horário Inicial</FormLabel>
+								<FormControl>
+									<Input
+										className='w-56'
+										placeholder='HH:MM'
+										{...field}
+										type='time'
+									/>
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name='endTime'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Horário Final</FormLabel>
+								<FormControl>
+									<Input
+										className='w-56'
+										placeholder='HH:MM'
+										{...field}
+										type='time'
+									/>
+								</FormControl>
 
 								<FormMessage />
 							</FormItem>

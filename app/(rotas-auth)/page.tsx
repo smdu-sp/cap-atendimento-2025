@@ -36,7 +36,6 @@ export default async function Home({
 	}
 
 	const data = resp.data as IDashboardAgendamento;
-	console.log('DASHBOARD DATA', resp.data);
 
 	if (!data) {
 		return (
