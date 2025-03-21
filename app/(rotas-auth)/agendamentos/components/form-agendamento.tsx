@@ -3,6 +3,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { DialogClose } from '@/components/ui/dialog';
 import {
 	Form,
@@ -14,6 +15,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from '@/components/ui/popover';
+import {
 	Select,
 	SelectContent,
 	SelectItem,
@@ -21,8 +27,11 @@ import {
 	SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { CalendarIcon, Loader2 } from 'lucide-react';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -35,21 +44,46 @@ const formSchema = z.object({
 	motivoId: z.string(),
 	coordenadoriaId: z.string(),
 	tecnicoId: z.string(),
-	dataInicio: z.date(),
-	dataFim: z.date(),
-	resumo: z.string().optional(),
+	dataInicio: z.date().nullable(),
+	dataFim: z.date().nullable(),
+	resumo: z.string(),
 });
 
 export default function FormAgendamento() {
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
+		defaultValues: {
+			coordenadoriaId: '',
+			cpf: '',
+			dataFim: null,
+			dataInicio: null,
+			motivoId: '',
+			municipe: '',
+			processo: '',
+			resumo: '',
+			rg: '',
+			tecnicoId: '',
+		},
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
+
 		startTransition(() => {
+			form.setValue(
+				'resumo',
+				`Motivo: ${form.getValues('motivoId')}; Munícipe: ${form.getValues(
+					'municipe',
+				)}; RG:${form.getValues('rg')}; CPF:${form.getValues(
+					'cpf',
+				)}; Técnico:${form.getValues(
+					'tecnicoId',
+				)}; Coordenadoria: ${form.getValues(
+					'coordenadoriaId',
+				)}; Processo:${form.getValues('processo')}`,
+			);
 			console.log(values);
 		});
 	}
@@ -220,13 +254,103 @@ export default function FormAgendamento() {
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value='1'>Técnico 1</SelectItem>
-										<SelectItem value='2'>Técnico 2</SelectItem>
-										<SelectItem value='3'>Técnico 3</SelectItem>
-										<SelectItem value='4'>Técnico 4</SelectItem>
-										<SelectItem value='5'>Técnico 5</SelectItem>
+										<SelectItem value='t1'>Técnico 1</SelectItem>
+										<SelectItem value='t2'>Técnico 2</SelectItem>
+										<SelectItem value='t3'>Técnico 3</SelectItem>
+										<SelectItem value='t4'>Técnico 4</SelectItem>
+										<SelectItem value='t5'>Técnico 5</SelectItem>
 									</SelectContent>
 								</Select>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+				</div>
+				<div className='flex w-full items-center justify-between gap-5 mb-5'>
+					<FormField
+						control={form.control}
+						name='dataInicio'
+						render={({ field }) => (
+							<FormItem className='flex flex-col'>
+								<FormLabel>Data Início</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant={'outline'}
+												className={cn(
+													'w-56 pl-3 text-left font-normal',
+													!field.value && 'text-muted-foreground',
+												)}>
+												{field.value ? (
+													format(field.value, 'PPP', { locale: ptBR })
+												) : (
+													<span>Escolha uma data</span>
+												)}
+												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent
+										className='w-auto p-0'
+										align='start'>
+										<Calendar
+											locale={ptBR}
+											mode='single'
+											selected={field.value as Date}
+											onSelect={field.onChange}
+											disabled={(date) =>
+												date > new Date() || date < new Date('1900-01-01')
+											}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={form.control}
+						name='dataFim'
+						render={({ field }) => (
+							<FormItem className='flex flex-col'>
+								<FormLabel>Data Final</FormLabel>
+								<Popover>
+									<PopoverTrigger asChild>
+										<FormControl>
+											<Button
+												variant={'outline'}
+												className={cn(
+													'w-56 pl-3 text-left font-normal',
+													!field.value && 'text-muted-foreground',
+												)}>
+												{field.value ? (
+													format(field.value, 'PPP', { locale: ptBR })
+												) : (
+													<span>Escolha uma data</span>
+												)}
+												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+											</Button>
+										</FormControl>
+									</PopoverTrigger>
+									<PopoverContent
+										className='w-auto p-0'
+										align='start'>
+										<Calendar
+											locale={ptBR}
+											mode='single'
+											selected={field.value as Date}
+											onSelect={field.onChange}
+											disabled={(date) =>
+												date > new Date() || date < new Date('1900-01-01')
+											}
+											initialFocus
+										/>
+									</PopoverContent>
+								</Popover>
+
 								<FormMessage />
 							</FormItem>
 						)}
