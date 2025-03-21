@@ -40,6 +40,7 @@ export interface ICreateAgendamento {
 	tecnicoId: string;
 	dataInicio: Date;
 	dataFim: Date;
+	resumo?: String;
 }
 export interface IDashboardAgendamento {
 	coordenadorias: IChart[];
