@@ -23,8 +23,8 @@ export default async function Home({
 	const resp = await dashboard(
 		motivoId.toString(),
 		coordenadoriaId.toString(),
-		String(dataInicio),
-		String(dataFim),
+		dataInicio ? String(dataInicio) : '',
+		dataFim ? String(dataFim) : '',
 	);
 
 	if (!resp || !resp.ok) {
@@ -36,7 +36,7 @@ export default async function Home({
 	}
 
 	const data = resp.data as IDashboardAgendamento;
-	console.log(resp.data);
+	console.log('DASHBOARD DATA', resp.data);
 
 	if (!data) {
 		return (

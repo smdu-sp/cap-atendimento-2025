@@ -26,7 +26,7 @@ export default function Perfil() {
 
 	const [socialName, setSocialName] = useState(userData.socialName);
 	const [avatarUrl, setAvatarUrl] = useState(userData.avatarUrl);
-	console.log(avatarUrl);
+
 	return (
 		<div className='mx-auto px-4 md:px-8 w-full'>
 			<h1 className='font-bold text-4xl mt-5'>Perfil</h1>

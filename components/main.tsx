@@ -48,8 +48,8 @@ const menuUsuario: IMenu[] = [
 	// },
 	{
 		icone: CalendarSearch,
-		titulo: 'Lista de agendamentos',
-		url: '/lista-de-agendamentos',
+		titulo: 'Agendamentos',
+		url: '/agendamentos',
 	},
 ];
 
