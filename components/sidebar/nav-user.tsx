@@ -56,12 +56,16 @@ export async function NavUser() {
 								<Avatar className='h-8 w-8 rounded-full aspect-square'>
 									<AvatarImage src={session.usuario.avatar} />
 									<AvatarFallback className='rounded-full'>
-										{abreviaNome(session.usuario.nome)}
+										{abreviaNome(
+											session.usuario.nomeSocial || session.usuario.nome,
+										)}
 									</AvatarFallback>
 								</Avatar>
 								<div className='grid flex-1 text-left text-sm leading-tight'>
 									<span className='truncate font-semibold'>
-										{reduzNome(session.usuario.nome)}
+										{reduzNome(
+											session.usuario.nomeSocial || session.usuario.nome,
+										)}
 									</span>
 								</div>
 								<ChevronsUpDown className='ml-auto size-4' />
