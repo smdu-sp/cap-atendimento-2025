@@ -1,9 +1,5 @@
 /** @format */
 
-'use client';
-
-import { NavMain } from './nav-main';
-import { NavUser } from './nav-user';
 import {
 	Sidebar,
 	SidebarFooter,
@@ -12,21 +8,19 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 	SidebarRail,
-	useSidebar,
 } from '@/components/ui/sidebar';
-import MiniLogo from './mini-logo';
 import { ComponentProps } from 'react';
-import { IMenu } from '../main';
+import MiniLogo from './mini-logo';
+import { NavMain } from './nav-main';
+import { NavUser } from './nav-user';
+
 import { ArrowLeftFromLineIcon } from 'lucide-react';
 
 export function AppSidebar({
-	data,
 	props,
 }: {
-	data: { menuUsuario: IMenu[]; menuAdmin: IMenu[] };
 	props?: ComponentProps<typeof Sidebar>;
 }) {
-	const { toggleSidebar } = useSidebar();
 	return (
 		<Sidebar
 			collapsible='icon'
@@ -34,9 +28,7 @@ export function AppSidebar({
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton
-							size='lg'
-							onClick={toggleSidebar}>
+						<SidebarMenuButton size='lg'>
 							<MiniLogo />
 							<div className='grid flex-1 text-left text-sm leading-tight'>
 								<span className='truncate font-semibold text-xs '>
@@ -48,7 +40,7 @@ export function AppSidebar({
 					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
-			<NavMain data={data} />
+			<NavMain />
 			<SidebarFooter>
 				<NavUser />
 			</SidebarFooter>

@@ -1,8 +1,12 @@
 /** @format */
 
-'use client';
-
-import { ChevronRight } from 'lucide-react';
+import {
+	CalendarSearch,
+	ChevronRight,
+	House,
+	LucideProps,
+	Users,
+} from 'lucide-react';
 
 import {
 	Collapsible,
@@ -20,24 +24,54 @@ import {
 	SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 import Link from '../link';
-import { IMenu } from '../main';
+import { ForwardRefExoticComponent, RefAttributes } from 'react';
 
-export function NavMain({
-	data,
-}: {
-	data: {
-		menuUsuario?: IMenu[];
-		menuAdmin?: IMenu[];
-	};
-}) {
+export function NavMain() {
+	interface IMenu {
+		icone: ForwardRefExoticComponent<
+			Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
+		>;
+		titulo: string;
+		url?: string;
+		permissao?: string;
+		subItens?: ISubMenu[];
+	}
+
+	interface ISubMenu {
+		titulo: string;
+		url: string;
+	}
+
+	const menuUsuario: IMenu[] = [
+		{
+			icone: House,
+			titulo: 'Página Inicial',
+			url: '/',
+		},
+
+		{
+			icone: CalendarSearch,
+			titulo: 'Agendamentos',
+			url: '/agendamentos',
+		},
+	];
+
+	const menuAdmin: IMenu[] = [
+		{
+			icone: Users,
+			titulo: 'Usuários',
+			url: '/usuarios',
+			permissao: 'usuario_buscar_tudo',
+		},
+	];
 	return (
 		<SidebarContent>
 			<SidebarGroup className='space-y-2'>
-				{data.menuUsuario && (
+				{menuUsuario && (
 					<>
 						<SidebarGroupLabel>Geral</SidebarGroupLabel>
 						<SidebarMenu>
-							{data.menuUsuario.map((item: IMenu) =>
+							{menuUsuario.map((item: IMenu) =>
 								item.subItens ? (
 									<Collapsible
 										key={item.titulo}
@@ -83,11 +117,11 @@ export function NavMain({
 						</SidebarMenu>
 					</>
 				)}
-				{data.menuAdmin && (
+				{menuAdmin && (
 					<>
 						<SidebarGroupLabel>Administração</SidebarGroupLabel>
 						<SidebarMenu>
-							{data.menuAdmin.map((item) =>
+							{menuAdmin.map((item) =>
 								item.subItens ? (
 									<Collapsible
 										key={item.titulo}

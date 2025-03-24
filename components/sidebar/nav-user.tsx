@@ -1,8 +1,6 @@
 /** @format */
 
-'use client';
-
-import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { ChevronsUpDown } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -16,16 +14,16 @@ import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	useSidebar,
 } from '@/components/ui/sidebar';
-import { signOut, useSession } from 'next-auth/react';
+import { auth } from '@/lib/auth/auth';
 import Link from 'next/link';
+import BtnSignOut from '../btn-signout';
 // import { useRouter } from "next/navigation";
 
-export function NavUser() {
-	const { isMobile } = useSidebar();
+export async function NavUser() {
+	// const { isMobile } = useSidebar();
 	// const router = useRouter();
-	const session = useSession();
+	const session = await auth();
 
 	function abreviaNome(nome: string): string {
 		const nomes = nome.split(' ');
@@ -36,15 +34,18 @@ export function NavUser() {
 	}
 
 	function reduzNome(nome: string): string {
-		if (nome.length <= 20) return nome;
+		if (nome.length <= 20) {
+			return nome;
+		}
 		const nomes = nome.split(' ');
 		return `${nomes[0]} ${nomes[nomes.length - 1]}`;
 	}
 
+	console.log('SESSION', session);
+
 	return (
 		session &&
-		session.data &&
-		session.data.usuario && (
+		session.usuario && (
 			<SidebarMenu>
 				<SidebarMenuItem>
 					<DropdownMenu>
@@ -53,14 +54,14 @@ export function NavUser() {
 								size='lg'
 								className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'>
 								<Avatar className='h-8 w-8 rounded-full aspect-square'>
-									<AvatarImage src={session.data.usuario.avatar} />
+									<AvatarImage src={session.usuario.avatar} />
 									<AvatarFallback className='rounded-full'>
-										{abreviaNome(session.data.usuario.nome)}
+										{abreviaNome(session.usuario.nome)}
 									</AvatarFallback>
 								</Avatar>
 								<div className='grid flex-1 text-left text-sm leading-tight'>
 									<span className='truncate font-semibold'>
-										{reduzNome(session.data.usuario.nome)}
+										{reduzNome(session.usuario.nome)}
 									</span>
 								</div>
 								<ChevronsUpDown className='ml-auto size-4' />
@@ -68,7 +69,6 @@ export function NavUser() {
 						</DropdownMenuTrigger>
 						<DropdownMenuContent
 							className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
-							side={isMobile ? 'bottom' : 'top'}
 							align='center'
 							sideOffset={4}>
 							<DropdownMenuItem
@@ -76,31 +76,33 @@ export function NavUser() {
 								className='p-0 font-normal'>
 								<Link href='perfil'>
 									<div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
-										<Avatar className='h-8 w-8 rounded-full aspect-square'>
-											<AvatarImage src={session.data.usuario.avatar} />
+										<Avatar className='h-8 w-8 rounded-full'>
+											<AvatarImage
+												className='size-full object-contain'
+												src={session.usuario.avatar}
+											/>
 											<AvatarFallback className='rounded-full'>
-												{abreviaNome(session.data.usuario.nome)}
+												{abreviaNome(
+													session.usuario.nomeSocial || session.usuario.nome,
+												)}
 											</AvatarFallback>
 										</Avatar>
 										<div className='grid flex-1 text-left text-sm leading-tight'>
 											<span className='truncate font-semibold'>
-												{reduzNome(session.data.usuario.nome)}
+												{reduzNome(
+													session.usuario.nomeSocial || session.usuario.nome,
+												)}
 											</span>
 											<span className='truncate text-xs'>
-												{session.data.usuario.email}
+												{session.usuario.email}
 											</span>
 										</div>
 									</div>
 								</Link>
 							</DropdownMenuItem>
 							<DropdownMenuSeparator />
-							<DropdownMenuItem
-								variant='destructive'
-								onClick={async () => {
-									await signOut({ redirect: true, redirectTo: '/login' });
-								}}>
-								<LogOut className='text-destructive' />
-								Sair
+							<DropdownMenuItem asChild>
+								<BtnSignOut />
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>

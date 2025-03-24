@@ -22,7 +22,7 @@ import { z } from 'zod';
 
 const formSchema = z.object({
 	avatar: z.string().optional(),
-	username: z.string().min(2).max(50),
+	nomeSocial: z.string().min(2).max(50),
 	nome: z.string().min(2).max(50),
 	login: z.string(),
 	email: z.string().email(),
@@ -40,7 +40,7 @@ export default function FormProfile({ user, id }: FormProfileProps) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			username: user.nome || '',
+			nomeSocial: user.nomeSocial || '',
 			avatar: user.avatar || '',
 			email: user.email || '',
 			nome: user.nome || '',
@@ -53,15 +53,15 @@ export default function FormProfile({ user, id }: FormProfileProps) {
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		startTransition(async () => {
 			console.log(values);
-			const { username } = values;
+			const { nomeSocial } = values;
 			try {
-				const resp = await atualizar(id, { nomeSocial: username });
+				const resp = await atualizar(id, { nomeSocial: nomeSocial });
 
 				if (!resp.ok) {
+					console.log(resp);
 					console.log(resp.error);
 					toast.error('Algo deu errado');
 				} else {
-					console.log(resp);
 					toast.success('Usuário atualizado com sucesso');
 				}
 			} catch (error) {
@@ -80,7 +80,7 @@ export default function FormProfile({ user, id }: FormProfileProps) {
 				className='space-y-5'>
 				<FormField
 					control={form.control}
-					name='username'
+					name='nomeSocial'
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Nome de usuário</FormLabel>

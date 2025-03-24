@@ -1,5 +1,7 @@
 /** @format */
 
+import { AvatarUploader } from '@/components/avatar-uploader';
+import { Badge } from '@/components/ui/badge';
 import {
 	Card,
 	CardContent,
@@ -7,33 +9,20 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import FormProfile from './components/form-profile';
 import { auth } from '@/lib/auth/auth';
-import { buscarPorId } from '@/services/usuarios';
-import { redirect } from 'next/navigation';
+import { buscarMeuUsuario } from '@/services/usuarios/query-functions/meu-usuario';
 import { IUsuario } from '@/types/usuario';
-import { AvatarUploader } from '@/components/avatar-uploader';
-import { Badge } from '@/components/ui/badge';
+import { redirect } from 'next/navigation';
+import FormProfile from './components/form-profile';
 
 export default async function Perfil() {
-	// const [userData] = useState({
-	// 	name: 'Carolina Mendes',
-	// 	email: 'carolina.mendes@exemplo.com',
-	// 	login: 'carolmendes',
-	// 	socialName: 'Carol',
-	// 	permission: 'Editor',
-	// 	avatarUrl: '',
-	// });
-
-	// const [avatarUrl, setAvatarUrl] = useState(userData.avatarUrl);
-
 	const session = await auth();
 
 	if (!session) {
 		redirect('/login');
 	}
 
-	const data = await buscarPorId(session?.usuario.sub, session?.access_token);
+	const data = await buscarMeuUsuario(session?.access_token);
 	const { data: user, ok, error } = data;
 	if (!ok || !user) {
 		console.log(error);
@@ -43,19 +32,19 @@ export default async function Perfil() {
 	const userData = user as Partial<IUsuario>;
 
 	return (
-		<div className='mx-auto px-4 md:px-8 w-full'>
+		<div className='mx-auto px-0 md:px-8 w-full'>
 			<h1 className='font-bold text-4xl mt-5'>Perfil</h1>
 
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-10'>
 				{/* Avatar section */}
 				<Card className='md:col-span-1 h-full '>
 					<CardHeader>
-						<CardTitle className='text-xl flex items-center gap-5 justify-between'>
+						<CardTitle className='text-base md:text-xl flex items-center gap-5 justify-between'>
 							{userData.nome}
 							<Badge>{userData.permissao}</Badge>
 						</CardTitle>
 					</CardHeader>
-					<CardContent className='bg-card rounded-xl flex justify-center items-center p-6 mb-5 h-full'>
+					<CardContent className='bg-card rounded-xl flex justify-center items-center mb-5 h-full'>
 						<AvatarUploader
 							avatarUrl={userData.avatar ?? ''}
 							id={session?.usuario.sub}
@@ -67,7 +56,9 @@ export default async function Perfil() {
 				<div className='md:col-span-2'>
 					<Card>
 						<CardHeader>
-							<CardTitle className='text-xl'>Informações Pessoais</CardTitle>
+							<CardTitle className='text-base md:text-xl'>
+								Informações Pessoais
+							</CardTitle>
 							<CardDescription>
 								Apenas o nome social pode ser editado
 							</CardDescription>
@@ -83,26 +74,28 @@ export default async function Perfil() {
 			</div>
 			<Card>
 				<CardHeader>
-					<CardTitle className='text-xl'>Atividade Recente</CardTitle>
+					<CardTitle className='text-base md:text-xl'>
+						Atividade Recente
+					</CardTitle>
 				</CardHeader>
 				<CardContent>
 					{userData.ultimoLogin &&
 						userData.criadoEm &&
 						userData.atualizadoEm && (
 							<>
-								<div className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+								<div className='flex flex-col md:flex-row justify-start md:gap-3 md:items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
 									<span>Usuário criado em:</span>
 									<span className='text-sm text-muted-foreground'>
 										{new Date(userData?.criadoEm).toLocaleString('pt-BR')}
 									</span>
 								</div>
-								<div className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+								<div className='flex flex-col md:flex-row justify-start md:gap-3 md:items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
 									<span>Usuário atualizado em:</span>
 									<span className='text-sm text-muted-foreground'>
 										{new Date(userData.atualizadoEm).toLocaleString('pt-BR')}
 									</span>
 								</div>
-								<div className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+								<div className='flex flex-col md:flex-row justify-start md:gap-3 md:items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
 									<span>Último Login:</span>
 									<span className='text-sm text-muted-foreground'>
 										{new Date(userData.ultimoLogin).toLocaleString('pt-BR')}

@@ -7,15 +7,21 @@ import { DialogClose } from '@/components/ui/dialog';
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/components/ui/select';
 import * as usuario from '@/services/usuarios';
-import { IUsuario } from '@/types/usuario';
+import { IPermissao, IUsuario } from '@/types/usuario';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
@@ -28,7 +34,7 @@ const formSchemaUsuario = z.object({
 	nome: z.string(),
 	login: z.string(),
 	email: z.string().email(),
-	avatar: z.string().optional(),
+	permissao: z.enum(['DEV', 'TEC', 'ADM', 'USR']),
 });
 
 const formSchema = z.object({
@@ -48,7 +54,8 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 			email: user?.email || '',
 			login: user?.login || '',
 			nome: user?.nome || '',
-			avatar: user?.avatar || '',
+			permissao:
+				(user?.permissao as unknown as 'DEV' | 'TEC' | 'ADM' | 'USR') ?? 'USR',
 		},
 	});
 
@@ -85,11 +92,9 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 
 	async function onSubmitUser(values: z.infer<typeof formSchemaUsuario>) {
 		startTransition(async () => {
-			if (isUpdating && user?.id && values?.avatar) {
-				const avatar = values.avatar;
-
+			if (isUpdating && user?.id) {
 				const resp = await usuario.atualizar(user?.id, {
-					avatar: avatar,
+					permissao: values.permissao as unknown as IPermissao,
 				});
 
 				if (resp.error) {
@@ -101,15 +106,20 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 						...session,
 						usuario: {
 							...session?.usuario,
-							avatar: avatar,
+							permissao: IPermissao,
 						},
 					});
 
 					toast.success('Usuário Atualizado', { description: resp.status });
 				}
 			} else {
-				const { email, login, nome, avatar } = values;
-				const resp = await usuario.criar({ email, login, nome, avatar });
+				const { email, login, nome, permissao } = values;
+				const resp = await usuario.criar({
+					email,
+					login,
+					nome,
+					permissao: permissao as unknown as IPermissao,
+				});
 				if (resp.error) {
 					toast.error('Algo deu errado', { description: resp.error });
 				}
@@ -167,24 +177,6 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 					className='space-y-4'>
 					<FormField
 						control={formUsuario.control}
-						name='avatar'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Avatar</FormLabel>
-								<FormDescription>Insira a URL do seu avatar</FormDescription>
-								<FormControl>
-									<Input
-										disabled
-										placeholder='URL de avatar'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={formUsuario.control}
 						name='login'
 						render={({ field }) => (
 							<FormItem>
@@ -231,6 +223,31 @@ export default function FormUsuario({ isUpdating, user }: FormUsuarioProps) {
 										{...field}
 									/>
 								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						control={formUsuario.control}
+						name='permissao'
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Permissão</FormLabel>
+								<Select
+									onValueChange={field.onChange}
+									defaultValue={field.value}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder={'Defina a permissão'} />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										<SelectItem value='DEV'>Desenvolvedor</SelectItem>
+										<SelectItem value='TEC'>Técnico</SelectItem>
+										<SelectItem value='ADM'>Administrador</SelectItem>
+										<SelectItem value='USR'>Usuário</SelectItem>
+									</SelectContent>
+								</Select>
 								<FormMessage />
 							</FormItem>
 						)}

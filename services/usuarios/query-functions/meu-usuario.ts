@@ -2,17 +2,17 @@
 
 import { IRespostaUsuario, IUsuario } from "@/types/usuario";
 
-export async function buscarMeuUsuario(id: string, access_token: string): Promise<IRespostaUsuario> {
-  if (!id || id === '')
-    return {
-      ok: false,
-      error: 'Não foi possível buscar o usuário, ID vazio.',
-      data: null,
-      status: 400,
-    };
+export async function buscarMeuUsuario( access_token: string): Promise<IRespostaUsuario> {
+  if (!access_token || access_token === '')
+		return {
+			ok: false,
+			error: 'Não foi possível buscar o usuário, Token inválido.',
+			data: null,
+			status: 400,
+		};
   const baseURL = process.env.NEXT_PUBLIC_API_URL;
   try {
-    const usuarios = await fetch(`${baseURL}usuarios/buscar-por-id/${id}`, {
+    const usuarios = await fetch(`${baseURL}eu`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
