@@ -41,8 +41,6 @@ export async function NavUser() {
 		return `${nomes[0]} ${nomes[nomes.length - 1]}`;
 	}
 
-	console.log('SESSION', session);
-
 	return (
 		session &&
 		session.usuario && (
