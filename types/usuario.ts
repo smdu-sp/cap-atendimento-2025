@@ -11,6 +11,7 @@ export interface IUsuario {
 	ultimoLogin: Date;
 	criadoEm: Date;
 	atualizadoEm: Date;
+	nomeSocial?: string;
 }
 
 export enum IPermissao {
@@ -27,11 +28,13 @@ export interface ICreateUsuario {
 	avatar?: string;
 	permissao?: IPermissao;
 	status?: boolean;
+	nomeSocial?: string;
 }
 
 export interface IUpdateUsuario {
 	id?: string;
 	status?: boolean;
+	nomeSocial?: string;
 	avatar?: string;
 	permissao?: IPermissao;
 }
@@ -68,6 +71,7 @@ export interface IUsuarioSession {
 	nome: string;
 	login: string;
 	email: string;
+	nomeSocial?: string;
 	permissao: IPermissao;
 	status: number;
 	avatar?: string;

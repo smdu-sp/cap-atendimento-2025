@@ -26,6 +26,7 @@ export async function atualizar(
 	const dataResponse = await response.json();
 	if (response.status === 200) {
 		revalidateTag('users');
+		revalidateTag('user-by-id');
 		return {
 			ok: true,
 			error: null,

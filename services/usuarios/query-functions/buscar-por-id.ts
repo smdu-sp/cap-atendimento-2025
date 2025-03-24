@@ -1,8 +1,11 @@
 /** @format */
 
-import { IRespostaUsuario, IUsuario } from "@/types/usuario";
+import { IRespostaUsuario, IUsuario } from '@/types/usuario';
 
-export async function buscarPorId(id: string, access_token: string): Promise<IRespostaUsuario> {
+export async function buscarPorId(
+	id: string,
+	access_token: string,
+): Promise<IRespostaUsuario> {
 	if (!id || id === '')
 		return {
 			ok: false,
@@ -18,6 +21,7 @@ export async function buscarPorId(id: string, access_token: string): Promise<IRe
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${access_token}`,
 			},
+			next: { tags: ['user-by-id'] },
 		});
 		const data = await usuarios.json();
 		if (usuarios.status === 200)

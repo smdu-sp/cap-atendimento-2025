@@ -8,42 +8,40 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Check, Link, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { atualizar } from '@/services/usuarios';
 
 interface AvatarUploaderProps {
 	avatarUrl: string;
-	onAvatarChange: (url: string) => void;
+	id: string;
 }
 
-export function AvatarUploader({
-	avatarUrl,
-	onAvatarChange,
-}: AvatarUploaderProps) {
+export function AvatarUploader({ avatarUrl, id }: AvatarUploaderProps) {
 	const [inputUrl, setInputUrl] = useState('');
 	const [isValidating, setIsValidating] = useState(false);
 	const [showUrlInput, setShowUrlInput] = useState(false);
 
-	const handleUrlSubmit = (e: React.FormEvent) => {
+	const handleUrlSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!inputUrl.trim()) return;
 
 		setIsValidating(true);
+		try {
+			const resp = await atualizar(id, { avatar: inputUrl });
 
-		// Simular validação da URL
-		const img = new window.Image();
-		img.onload = () => {
-			onAvatarChange(inputUrl);
+			if (!resp.ok) {
+				console.log(resp.error);
+				toast.error('Algo deu errado');
+			} else {
+				console.log(resp);
+				toast.success('Avatar atualizado com sucesso');
+			}
+		} catch (error) {
+			console.log(error);
+			toast.error('Algo deu errado');
+		} finally {
 			setIsValidating(false);
-			setShowUrlInput(false);
-			setInputUrl('');
-		};
-
-	
-
-		img.src = inputUrl;
-	};
-
-	const resetAvatar = () => {
-		onAvatarChange('');
+		}
 	};
 
 	return (
@@ -68,9 +66,6 @@ export function AvatarUploader({
 						</div>
 					)}
 				</div>
-
-				{/* Glowing effect */}
-				<div className='absolute -inset-1 bg-gradient-to-r from-primary via-primary/50 to-primary rounded-full blur opacity-30 -z-10'></div>
 			</div>
 
 			{showUrlInput ? (
@@ -109,15 +104,6 @@ export function AvatarUploader({
 						onClick={() => setShowUrlInput(true)}>
 						<Link className='h-4 w-4' />
 						<span>Definir URL</span>
-					</Button>
-
-					<Button
-						variant='outline'
-						size='sm'
-						className='flex items-center gap-1 text-destructive hover:text-destructive'
-						onClick={resetAvatar}>
-						<RefreshCw className='h-4 w-4' />
-						<span>Resetar</span>
 					</Button>
 				</div>
 			)}

@@ -1,9 +1,5 @@
 /** @format */
 
-'use client';
-
-import { AvatarUploader } from '@/components/avatar-uploader';
-import { ProfileField } from '@/components/profile-field';
 import {
 	Card,
 	CardContent,
@@ -11,21 +7,40 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { Mail, Shield, User, UserCheck } from 'lucide-react';
-import { useState } from 'react';
+import FormProfile from './components/form-profile';
+import { auth } from '@/lib/auth/auth';
+import { buscarPorId } from '@/services/usuarios';
+import { redirect } from 'next/navigation';
+import { IUsuario } from '@/types/usuario';
+import { AvatarUploader } from '@/components/avatar-uploader';
+import { Badge } from '@/components/ui/badge';
 
-export default function Perfil() {
-	const [userData] = useState({
-		name: 'Carolina Mendes',
-		email: 'carolina.mendes@exemplo.com',
-		login: 'carolmendes',
-		socialName: 'Carol',
-		permission: 'Editor',
-		avatarUrl: '',
-	});
+export default async function Perfil() {
+	// const [userData] = useState({
+	// 	name: 'Carolina Mendes',
+	// 	email: 'carolina.mendes@exemplo.com',
+	// 	login: 'carolmendes',
+	// 	socialName: 'Carol',
+	// 	permission: 'Editor',
+	// 	avatarUrl: '',
+	// });
 
-	const [socialName, setSocialName] = useState(userData.socialName);
-	const [avatarUrl, setAvatarUrl] = useState(userData.avatarUrl);
+	// const [avatarUrl, setAvatarUrl] = useState(userData.avatarUrl);
+
+	const session = await auth();
+
+	if (!session) {
+		redirect('/login');
+	}
+
+	const data = await buscarPorId(session?.usuario.sub, session?.access_token);
+	const { data: user, ok, error } = data;
+	if (!ok || !user) {
+		console.log(error);
+		return <div>Usuário não encontrado</div>;
+	}
+
+	const userData = user as Partial<IUsuario>;
 
 	return (
 		<div className='mx-auto px-4 md:px-8 w-full'>
@@ -35,12 +50,15 @@ export default function Perfil() {
 				{/* Avatar section */}
 				<Card className='md:col-span-1 h-full '>
 					<CardHeader>
-						<CardTitle className='text-xl'>{userData.socialName}</CardTitle>
+						<CardTitle className='text-xl flex items-center gap-5 justify-between'>
+							{userData.nome}
+							<Badge>{userData.permissao}</Badge>
+						</CardTitle>
 					</CardHeader>
 					<CardContent className='bg-card rounded-xl flex justify-center items-center p-6 mb-5 h-full'>
 						<AvatarUploader
-							avatarUrl={avatarUrl ?? ''}
-							onAvatarChange={setAvatarUrl}
+							avatarUrl={userData.avatar ?? ''}
+							id={session?.usuario.sub}
 						/>
 					</CardContent>
 				</Card>
@@ -55,32 +73,9 @@ export default function Perfil() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent className='space-y-4'>
-							<ProfileField
-								icon={<UserCheck className='h-5 w-5 text-primary' />}
-								label='Nome Social'
-								value={socialName}
-								onChange={(e) => setSocialName(e.target.value)}
-								editable={true}
-							/>
-							<ProfileField
-								icon={<User className='h-5 w-5 text-primary' />}
-								label='Nome'
-								value={userData.name}
-								editable={false}
-							/>
-
-							<ProfileField
-								icon={<Mail className='h-5 w-5 text-primary' />}
-								label='Email'
-								value={userData.email}
-								editable={false}
-							/>
-							<ProfileField
-								icon={<Shield className='h-5 w-5 text-primary' />}
-								label='Permissão'
-								value={userData.permission}
-								editable={false}
-								badge={true}
+							<FormProfile
+								user={userData}
+								id={session?.usuario.sub}
 							/>
 						</CardContent>
 					</Card>
@@ -91,23 +86,30 @@ export default function Perfil() {
 					<CardTitle className='text-xl'>Atividade Recente</CardTitle>
 				</CardHeader>
 				<CardContent>
-					{[
-						{ action: 'Login realizado', time: 'Hoje, 10:45' },
-						{ action: 'Perfil atualizado', time: 'Ontem, 15:30' },
-						{
-							action: 'Documento editado',
-							time: '23/03/2025, 09:15',
-						},
-					].map((activity, index) => (
-						<div
-							key={index}
-							className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
-							<span>{activity.action}:</span>
-							<span className='text-sm text-muted-foreground'>
-								{activity.time}
-							</span>
-						</div>
-					))}
+					{userData.ultimoLogin &&
+						userData.criadoEm &&
+						userData.atualizadoEm && (
+							<>
+								<div className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+									<span>Usuário criado em:</span>
+									<span className='text-sm text-muted-foreground'>
+										{new Date(userData?.criadoEm).toLocaleString('pt-BR')}
+									</span>
+								</div>
+								<div className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+									<span>Usuário atualizado em:</span>
+									<span className='text-sm text-muted-foreground'>
+										{new Date(userData.atualizadoEm).toLocaleString('pt-BR')}
+									</span>
+								</div>
+								<div className='flex justify-start gap-3 items-center p-2 rounded-lg bg-background/50 hover:bg-background/80 transition-colors'>
+									<span>Último Login:</span>
+									<span className='text-sm text-muted-foreground'>
+										{new Date(userData.ultimoLogin).toLocaleString('pt-BR')}
+									</span>
+								</div>
+							</>
+						)}
 				</CardContent>
 			</Card>
 		</div>
