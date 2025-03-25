@@ -1,7 +1,7 @@
 /** @format */
 
 import { ICoordenadoria } from './coordenadoria';
-import { IMotivo } from './motivos';
+import { IMotivo } from './motivo';
 import { IUsuario } from './usuario';
 
 export interface IAgendamento {

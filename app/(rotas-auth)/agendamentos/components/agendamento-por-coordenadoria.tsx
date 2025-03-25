@@ -21,13 +21,13 @@ export function AgendamentoPorCoordenadoria({ enviarDados }: FilterEnviaDados) {
 	}, [coordenadoria]);
 
 	return (
-		<div className='flex items-end gap-5'>
-			<div className='flex flex-col '>
+		<div className='flex items-end gap-5 w-full'>
+			<div className='flex flex-col w-full'>
 				<p>Coordenadoria</p>
 				<Select
 					onValueChange={setCoordenadoria}
 					defaultValue={coordenadoria}>
-					<SelectTrigger className='w-60 text-nowrap bg-background'>
+					<SelectTrigger className='w-full md:w-60 text-nowrap bg-background'>
 						<SelectValue placeholder='Selecione a coordenadoria' />
 					</SelectTrigger>
 

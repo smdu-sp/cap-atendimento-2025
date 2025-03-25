@@ -10,7 +10,7 @@ import { Toaster } from '@/components/ui/sonner';
 
 const sora = Sora({
 	subsets: ['latin'],
-	weight: ['100', '300', '400', '700', '800'],
+	weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
 	display: 'swap',
 	adjustFontFallback: false,
 });

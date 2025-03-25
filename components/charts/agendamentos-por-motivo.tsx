@@ -18,17 +18,18 @@ import {
 	ChartTooltipContent,
 } from '@/components/ui/chart';
 import { IChart } from '@/types/agendamentos';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AgendamentosPorMotivoProps {
 	motivos: IChart[];
 }
 
 export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
-	console.log(motivos);
-	let chartConfig: any = {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const chartConfig: any = {
 		Agendamentos: {
 			label: 'Agendamentos',
-		}
+		},
 	} satisfies ChartConfig;
 
 	motivos.sort((a, b) => b.value - a.value);
@@ -39,26 +40,6 @@ export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
 		};
 	});
 
-	// const chartConfig2 = motivos.map((item, index) => {
-	// 	return {
-	// 		Agendamentos: {
-	// 			label: 'Agendamentos',
-	// 		},
-	// 		[item.label]: {
-	// 			label: item.label,
-	// 			color: `hsl(var(--chart-${index + 1}))`,
-	// 		},
-	// 	} satisfies ChartConfig;
-	// });
-
-	// const chartData2 = motivos.map((item) => {
-	// 	return {
-	// 		motivo: item.label,
-	// 		agendamentos: item.value,
-	// 		fill: `var(--color-${item.label})`,
-	// 	};
-	// });
-
 	const chartData = motivos.map((item, index) => {
 		return {
 			motivo: item.label,
@@ -66,6 +47,7 @@ export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
 			fill: `hsl(var(--chart-${index + 1}))`,
 		};
 	});
+	const isMobile = useIsMobile();
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-start pb-0'>
@@ -91,6 +73,8 @@ export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
 							dataKey='motivo'
 							tickLine={false}
 							tickMargin={10}
+							fontSize={'8px'}
+							hide={isMobile}
 							axisLine={false}
 						/>
 						<Bar

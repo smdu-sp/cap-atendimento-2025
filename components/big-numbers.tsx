@@ -4,7 +4,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from './ui/card';
 
 export default function BigNumbers({ numbers }: { numbers: number[] }) {
 	return (
-		<ul className='flex items-center justify-between gap-5'>
+		<ul className='flex flex-col md:flex-row items-center justify-between gap-5'>
 			<li className='w-full'>
 				<Card>
 					<CardHeader>

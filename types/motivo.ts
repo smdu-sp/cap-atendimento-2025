@@ -10,3 +10,10 @@ export interface IMotivo {
 	atualizadoEm: Date;
 	agendamentos?: IAgendamento[];
 }
+
+export interface IRespostaMotivo {
+	ok: boolean;
+	error: string | null;
+	data: IMotivo[] | null;
+	status: number;
+}

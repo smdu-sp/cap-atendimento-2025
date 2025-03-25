@@ -9,10 +9,18 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { FilterEnviaDados } from '@/types/filter-enviar-dados';
+import { IMotivo } from '@/types/motivo';
 import { useEffect, useState } from 'react';
 
-export function AgendamentoPorMotivo({ enviarDados }: FilterEnviaDados) {
+interface AgendamentoPorMotivoProps {
+	motivos: IMotivo[];
+	enviarDados: (id: string, valor: string) => void;
+}
+
+export function AgendamentoPorMotivo({
+	enviarDados,
+	motivos,
+}: AgendamentoPorMotivoProps) {
 	const [motivo, setMotivo] = useState('all');
 
 	useEffect(() => {
@@ -21,13 +29,13 @@ export function AgendamentoPorMotivo({ enviarDados }: FilterEnviaDados) {
 	}, [motivo]);
 
 	return (
-		<div className='flex items-end gap-5'>
-			<div className='flex flex-col'>
+		<div className='flex items-end gap-5 w-full'>
+			<div className='flex flex-col w-full'>
 				<p>Motivo</p>
 				<Select
 					onValueChange={setMotivo}
 					defaultValue={motivo}>
-					<SelectTrigger className='w-60 text-nowrap bg-background'>
+					<SelectTrigger className='w-full md:w-60 text-nowrap bg-background'>
 						<SelectValue placeholder='Selecione o Motivo' />
 					</SelectTrigger>
 					<SelectContent>
@@ -36,27 +44,15 @@ export function AgendamentoPorMotivo({ enviarDados }: FilterEnviaDados) {
 							className='text-nowrap'>
 							Todas os motivos
 						</SelectItem>
-						<SelectItem value='COMUNICADO'>
-							Atendimento Técnico - Comunicado
-						</SelectItem>
-						<SelectItem value='RECURSO'>
-							Atendimento Técnico - Recurso
-						</SelectItem>
-						<SelectItem value='CONSULTA'>
-							Sala Arthur Saboya (Consulta Pré-Projeto)
-						</SelectItem>
-						<SelectItem value='P-ENT/RET'>
-							Protocolo (Entrega / Retirada de Documentos Físicos)
-						</SelectItem>
-						<SelectItem value='P-COM/INDEF'>
-							Protocolo (Comunicado / Indeferimento)
-						</SelectItem>
-						<SelectItem value='N-FSP'>
-							Notificação - Função Social da Propriedade
-						</SelectItem>
-						<SelectItem value='VI'>Visita Institucional</SelectItem>
-						<SelectItem value='EVENTO'>Evento</SelectItem>
-						<SelectItem value='VPF'>Vistas a Processo Físico</SelectItem>
+						{motivos.map((item) => {
+							return (
+								<SelectItem
+									key={item.id}
+									value={item.id}>
+									{item.texto}
+								</SelectItem>
+							);
+						})}
 					</SelectContent>
 				</Select>
 			</div>

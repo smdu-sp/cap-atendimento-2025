@@ -71,18 +71,15 @@ export async function NavUser() {
 						</DropdownMenuTrigger>
 						<DropdownMenuContent
 							className='w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg'
-							align='center'
+							align='start'
 							sideOffset={4}>
 							<DropdownMenuItem
 								asChild
-								className='p-0 font-normal'>
+								className='p-1 font-normal'>
 								<Link href='perfil'>
 									<div className='flex items-center gap-2 px-1 py-1.5 text-left text-sm'>
 										<Avatar className='h-8 w-8 rounded-full'>
-											<AvatarImage
-												className='size-full object-contain'
-												src={session.usuario.avatar}
-											/>
+											<AvatarImage src={session.usuario.avatar} />
 											<AvatarFallback className='rounded-full'>
 												{abreviaNome(
 													session.usuario.nomeSocial || session.usuario.nome,

@@ -32,15 +32,15 @@ export function AgendamentoPorData({ enviarDados }: FilterEnviaDados) {
 	}, [data]);
 
 	return (
-		<div className='flex items-end gap-5 '>
-			<div className='flex flex-col'>
+		<div className='flex items-end gap-5 w-full'>
+			<div className='flex flex-col w-full'>
 				<p>Data</p>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button
 							variant={'outline'}
 							className={cn(
-								'w-[260px] pl-3 text-left font-normal text-muted-foreground',
+								'w-full md:w-[260px] pl-3 text-left font-normal text-muted-foreground',
 								!data && 'text-muted-foreground',
 							)}>
 							{data?.from ? (

@@ -2,7 +2,7 @@
 
 import { IAgendamento } from '@/types/agendamentos';
 import { ICoordenadoria } from '@/types/coordenadoria';
-import { IMotivo } from '@/types/motivos';
+import { IMotivo } from '@/types/motivo';
 import { IPermissao, IUsuario } from '@/types/usuario';
 
 export const data: IAgendamento[] = Array.from({ length: 30 }, (_, index) => {
