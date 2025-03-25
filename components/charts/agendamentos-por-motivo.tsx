@@ -25,47 +25,19 @@ interface AgendamentosPorMotivoProps {
 
 export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
 	console.log(motivos);
-	const chartConfig = {
+	let chartConfig: any = {
 		Agendamentos: {
 			label: 'Agendamentos',
-		},
-		COMUNICADO: {
-			label: 'Atendimento Técnico - Comunicado',
-			color: 'hsl(var(--chart-1))',
-		},
-		RECURSO: {
-			label: 'Atendimento Técnico - Recurso',
-			color: 'hsl(var(--chart-2))',
-		},
-		CONSULTA: {
-			label: 'Sala Arthur Saboya (Consulta Pré-Projeto)',
-			color: 'hsl(var(--chart-3))',
-		},
-		ENT_RET: {
-			label: 'Protocolo (Entrega / Retirada de Documentos Físicos)',
-			color: 'hsl(var(--chart-4))',
-		},
-		COM_INDEF: {
-			label: 'Protocolo (Comunicado / Indeferimento)',
-			color: 'hsl(var(--chart-5))',
-		},
-		N_FSP: {
-			label: 'Notificação - Função Social da Propriedade',
-			color: 'hsl(var(--chart-6))',
-		},
-		VI: {
-			label: 'Visita Institucional',
-			color: 'hsl(var(--chart-7))',
-		},
-		VPF: {
-			label: 'Vistas a Processo Físico',
-			color: 'hsl(var(--chart-8))',
-		},
-		EVENTO: {
-			label: 'Evento',
-			color: 'hsl(var(--chart-9))',
-		},
+		}
 	} satisfies ChartConfig;
+
+	motivos.sort((a, b) => b.value - a.value);
+	motivos.forEach((item, index) => {
+		chartConfig[item.label] = {
+			label: item.label,
+			color: `hsl(var(--chart-${index + 1}))`,
+		};
+	});
 
 	// const chartConfig2 = motivos.map((item, index) => {
 	// 	return {
@@ -86,21 +58,14 @@ export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
 	// 		fill: `var(--color-${item.label})`,
 	// 	};
 	// });
-	const chartData = [
-		{
-			motivo: 'COMUNICADO',
-			Agendamentos: 275,
-			fill: 'var(--color-COMUNICADO)',
-		},
-		{ motivo: 'RECURSO', Agendamentos: 200, fill: 'var(--color-RECURSO)' },
-		{ motivo: 'CONSULTA', Agendamentos: 187, fill: 'var(--color-CONSULTA)' },
-		{ motivo: 'ENT_RET', Agendamentos: 173, fill: 'var(--color-ENT_RET)' },
-		{ motivo: 'COM_INDEF', Agendamentos: 90, fill: 'var(--color-COM_INDEF)' },
-		{ motivo: 'N_FSP', Agendamentos: 90, fill: 'var(--color-N_FSP)' },
-		{ motivo: 'VI', Agendamentos: 90, fill: 'var(--color-VI)' },
-		{ motivo: 'VPF', Agendamentos: 90, fill: 'var(--color-VPF)' },
-		{ motivo: 'EVENTO', Agendamentos: 90, fill: 'var(--color-EVENTO)' },
-	];
+
+	const chartData = motivos.map((item, index) => {
+		return {
+			motivo: item.label,
+			Agendamentos: item.value,
+			fill: `hsl(var(--chart-${index + 1}))`,
+		};
+	});
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-start pb-0'>
