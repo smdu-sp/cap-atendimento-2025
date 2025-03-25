@@ -15,6 +15,7 @@ import { atualizar } from '@/services/usuarios';
 import { IUsuario } from '@/types/usuario';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RefreshCcw } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -36,6 +37,7 @@ interface FormProfileProps {
 
 export default function FormProfile({ user, id }: FormProfileProps) {
 	const [isPending, startTransition] = useTransition();
+	const { data: session, update } = useSession();
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -62,15 +64,28 @@ export default function FormProfile({ user, id }: FormProfileProps) {
 					console.log(resp.error);
 					toast.error('Algo deu errado');
 				} else {
+					if (session?.usuario && resp.data) {
+						const dataResp = resp.data as IUsuario;
+						// Você precisará ajustar isso de acordo com a estrutura da sua sessão e da resposta da API
+						const updateSession = await update({
+							...session,
+							usuario: {
+								...session?.usuario,
+								nomeSocial: dataResp.nomeSocial,
+							},
+						});
+						console.log('Sessão atualizada:', updateSession); // Para depuração
+					}
+
 					toast.success('Usuário atualizado com sucesso');
 				}
 			} catch (error) {
 				console.log(error);
 				toast.error('Algo deu errado');
+			} finally {
+				window.location.reload();
 			}
 		});
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
 	}
 
 	return (

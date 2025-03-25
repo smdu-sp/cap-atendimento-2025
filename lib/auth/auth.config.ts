@@ -34,9 +34,13 @@ export default {
 	callbacks: {
 		async jwt({ token, user, trigger, session }) {
 			if (trigger === 'update' && session) {
-				if (session.usuario.avatar) {
+				if (session.usuario) {
 					// eslint-disable-next-line @typescript-eslint/no-explicit-any
 					(token.user as any).usuario.avatar = session.usuario.avatar;
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					(token.user as any).usuario.permissao = session.usuario.permissao;
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					(token.user as any).usuario.nomeSocial = session.usuario.nomeSocial;
 					return token;
 				}
 			}

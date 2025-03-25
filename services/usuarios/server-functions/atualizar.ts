@@ -3,7 +3,7 @@
 'use server';
 
 import { auth } from '@/lib/auth/auth';
-import { revalidateTag } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { IRespostaUsuario, IUpdateUsuario, IUsuario } from '@/types/usuario';
 
@@ -32,6 +32,7 @@ export async function atualizar(
 		if (response.status === 200) {
 			revalidateTag('users');
 			revalidateTag('user-by-id');
+			revalidatePath('/');
 			return {
 				ok: true,
 				error: null,

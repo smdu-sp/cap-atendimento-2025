@@ -10,6 +10,8 @@ import { Check, Link, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { atualizar } from '@/services/usuarios';
+import { useSession } from 'next-auth/react';
+import { IUsuario } from '@/types/usuario';
 
 interface AvatarUploaderProps {
 	avatarUrl: string;
@@ -20,6 +22,7 @@ export function AvatarUploader({ avatarUrl, id }: AvatarUploaderProps) {
 	const [inputUrl, setInputUrl] = useState('');
 	const [isValidating, setIsValidating] = useState(false);
 	const [showUrlInput, setShowUrlInput] = useState(false);
+	const { data: session, update } = useSession();
 
 	const handleUrlSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -33,9 +36,25 @@ export function AvatarUploader({ avatarUrl, id }: AvatarUploaderProps) {
 				console.log(resp.error);
 				toast.error('Algo deu errado');
 			} else {
-				console.log(resp);
-				toast.success('Avatar atualizado com sucesso');
+				if (session?.usuario && resp.data) {
+					const dataResp = resp.data as IUsuario;
+					// Você precisará ajustar isso de acordo com a estrutura da sua sessão e da resposta da API
+					const updateSession = await update({
+						...session,
+						usuario: {
+							...session?.usuario,
+							avatar: dataResp.avatar,
+						},
+					});
+					console.log('Sessão atualizada:', updateSession); // Para depuração
+				}
+				window.location.reload();
 			}
+			// Se você tiver uma função específica para atualizar a sessão
+			// await updateSession(updatedSession);
+
+			console.log(resp);
+			toast.success('Avatar atualizado com sucesso');
 		} catch (error) {
 			console.log(error);
 			toast.error('Algo deu errado');
