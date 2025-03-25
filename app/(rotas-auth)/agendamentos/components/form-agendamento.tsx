@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { criar } from '@/services/agendamentos/server-functions/criar';
+// import { criar } from '@/services/agendamentos/server-functions/criar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -39,17 +39,29 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
-	municipe: z.string(),
+	municipe: z.string({
+		coerce: true,
+		required_error: 'Este campo é obrigatório',
+	}),
 	rg: z.string().optional(),
 	cpf: z.string().optional(),
-	processo: z.string(),
-	motivoId: z.string(),
-	coordenadoriaId: z.string(),
-	tecnicoId: z.string(),
-	dateRange: z.object({
-		from: z.date(),
-		to: z.date(),
+	processo: z.string({
+		coerce: true,
+		required_error: 'Este campo é obrigatório',
 	}),
+	motivoId: z.string({
+		coerce: true,
+		required_error: 'Este campo é obrigatório',
+	}),
+	coordenadoriaId: z.string({
+		coerce: true,
+		message: 'Este campo é obrigatório',
+	}),
+	tecnicoId: z.string({
+		coerce: true,
+		required_error: 'Este campo é obrigatório',
+	}),
+	data: z.date({ coerce: true, message: 'Este campo é obrigatório' }),
 	startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
 		message: 'Horário deve estar no formato HH:MM',
 	}),
@@ -66,7 +78,7 @@ export default function FormAgendamento() {
 		defaultValues: {
 			coordenadoriaId: '',
 			cpf: '',
-			dateRange: { from: undefined, to: undefined },
+			data: new Date(),
 			motivoId: '',
 			municipe: '',
 			processo: '',
@@ -81,9 +93,12 @@ export default function FormAgendamento() {
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
+
 		const {
 			coordenadoriaId,
-			dateRange,
+			data,
+			startTime,
+			endTime,
 			motivoId,
 			municipe,
 			processo,
@@ -91,39 +106,36 @@ export default function FormAgendamento() {
 			cpf,
 			rg,
 		} = values;
+
+		const dataInicio = new Date(
+			data.getFullYear(),
+			data.getMonth(),
+			data.getDate(),
+			+startTime.split(':')[0],
+			+startTime.split(':')[1],
+		);
+
+		const dataFim = new Date(
+			data.getFullYear(),
+			data.getMonth(),
+			data.getDate(),
+			+endTime.split(':')[0],
+			+endTime.split(':')[1],
+		);
+
 		form.setValue(
 			'resumo',
 			`Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
 		);
-		if (!dateRange) {
-			toast.error('Data não selecionada');
-			return;
-		}
-		startTransition(async () => {
-			setTimeout(async () => {
-				const resp = await criar({
-					coordenadoriaId,
-					dataInicio: dateRange.from,
-					dataFim: dateRange.to,
-					motivoId,
-					municipe,
-					processo,
-					tecnicoId,
-					cpf,
-					resumo: `Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
-					rg,
-				});
 
-				if (!resp.ok) {
-					console.log(resp.error);
-					toast.error('Agendamento não cadastrado');
-				} else {
-					toast.success('Agendamento cadastrado com sucesso');
-				}
-			}, 1000);
+		console.log({ dataInicio, dataFim });
+
+		startTransition(() => {
+			toast.success('seus dados', {
+				description: `${coordenadoriaId} - ${data}-${motivoId}-${municipe}-${tecnicoId}-${dataInicio} - ${dataFim}`,
+			});
 		});
 	}
-
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
@@ -132,10 +144,11 @@ export default function FormAgendamento() {
 						control={form.control}
 						name='municipe'
 						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Munícipe</FormLabel>
-								<FormControl>
+							<FormItem aria-required>
+								<FormLabel aria-required>Munícipe</FormLabel>
+								<FormControl aria-required>
 									<Input
+										required
 										placeholder='Nome do munícipe'
 										{...field}
 									/>
@@ -184,6 +197,7 @@ export default function FormAgendamento() {
 								<FormLabel>Nº do Processo</FormLabel>
 								<FormControl>
 									<Input
+										required
 										placeholder='Número do processo'
 										{...field}
 									/>
@@ -199,6 +213,7 @@ export default function FormAgendamento() {
 							<FormItem>
 								<FormLabel>Coordenadoria</FormLabel>
 								<Select
+									required
 									onValueChange={field.onChange}
 									defaultValue={field.value}>
 									<FormControl>
@@ -240,6 +255,7 @@ export default function FormAgendamento() {
 							<FormItem>
 								<FormLabel>Motivo</FormLabel>
 								<Select
+									required
 									onValueChange={field.onChange}
 									defaultValue={field.value}>
 									<FormControl>
@@ -282,11 +298,15 @@ export default function FormAgendamento() {
 							<FormItem>
 								<FormLabel>Técnico</FormLabel>
 								<Select
+									required
 									onValueChange={field.onChange}
 									defaultValue={field.value}>
 									<FormControl>
 										<SelectTrigger className='w-full text-nowrap bg-background'>
-											<SelectValue placeholder='Selecione o técnico' />
+											<SelectValue
+												defaultValue={undefined}
+												placeholder='Selecione o técnico'
+											/>
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
@@ -303,7 +323,7 @@ export default function FormAgendamento() {
 					/>
 					<FormField
 						control={form.control}
-						name='dateRange'
+						name='data'
 						render={({ field }) => (
 							<FormItem className='flex flex-col'>
 								<FormLabel>Data</FormLabel>
@@ -313,27 +333,13 @@ export default function FormAgendamento() {
 											<Button
 												variant={'outline'}
 												className={cn(
-													'w-full pl-3 text-left font-normal',
+													'w-[240px] pl-3 text-left font-normal text-foreground',
 													!field.value && 'text-muted-foreground',
 												)}>
-												{field.value?.from ? (
-													field.value.to ? (
-														<>
-															{format(field.value.from, 'dd/MM/yyyy', {
-																locale: ptBR,
-															})}{' '}
-															-{' '}
-															{format(field.value.to, 'dd/MM/yyyy', {
-																locale: ptBR,
-															})}
-														</>
-													) : (
-														format(field.value.from, 'dd/MM/yyyy', {
-															locale: ptBR,
-														})
-													)
+												{field.value ? (
+													format(field.value, 'PPP', { locale: ptBR })
 												) : (
-													<span>Selecione um período</span>
+													<span>Escolha uma data</span>
 												)}
 												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
 											</Button>
@@ -343,11 +349,13 @@ export default function FormAgendamento() {
 										className='w-auto p-0'
 										align='start'>
 										<Calendar
-											mode='range'
+											mode='single'
 											selected={field.value}
 											onSelect={field.onChange}
-											locale={ptBR}
-											numberOfMonths={2}
+											disabled={(date) =>
+												date < new Date() || date < new Date('1900-01-01')
+											}
+											initialFocus
 										/>
 									</PopoverContent>
 								</Popover>

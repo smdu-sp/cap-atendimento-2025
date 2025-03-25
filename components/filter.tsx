@@ -17,7 +17,6 @@ interface FilterProps {
 	coordenadorias: ICoordenadoria[];
 }
 export function Filter({ coordenadorias, motivos }: FilterProps) {
-	console.log({ coordenadorias });
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
 
@@ -41,14 +40,16 @@ export function Filter({ coordenadorias, motivos }: FilterProps) {
 		}));
 	};
 
-	console.log(params);
 	return (
 		<div className='flex flex-col md:flex-row md:items-end gap-5 md:w-fit '>
 			<AgendamentoPorMotivo
 				enviarDados={receberDadosDoFilho}
 				motivos={motivos}
 			/>
-			<AgendamentoPorCoordenadoria enviarDados={receberDadosDoFilho} />
+			<AgendamentoPorCoordenadoria
+				coordenadorias={coordenadorias}
+				enviarDados={receberDadosDoFilho}
+			/>
 			<AgendamentoPorData enviarDados={receberDadosDoFilho} />
 			<Button
 				onClick={() => startTransition(() => handleClick())}

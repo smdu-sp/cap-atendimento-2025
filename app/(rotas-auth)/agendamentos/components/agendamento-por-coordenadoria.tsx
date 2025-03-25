@@ -9,10 +9,18 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/components/ui/select';
-import { FilterEnviaDados } from '@/types/filter-enviar-dados';
+import { ICoordenadoria } from '@/types/coordenadoria';
 import { useEffect, useState } from 'react';
 
-export function AgendamentoPorCoordenadoria({ enviarDados }: FilterEnviaDados) {
+interface AgendamentoPorCoordenadoriaProps {
+	coordenadorias: ICoordenadoria[];
+	enviarDados: (id: string, valor: string) => void;
+}
+
+export function AgendamentoPorCoordenadoria({
+	enviarDados,
+	coordenadorias,
+}: AgendamentoPorCoordenadoriaProps) {
 	const [coordenadoria, setCoordenadoria] = useState('all');
 
 	useEffect(() => {
@@ -30,33 +38,21 @@ export function AgendamentoPorCoordenadoria({ enviarDados }: FilterEnviaDados) {
 					<SelectTrigger className='w-full md:w-60 text-nowrap bg-background'>
 						<SelectValue placeholder='Selecione a coordenadoria' />
 					</SelectTrigger>
-
 					<SelectContent>
 						<SelectItem
 							value='all'
 							className='text-nowrap'>
 							Todas as coordenadorias
 						</SelectItem>
-						<SelectItem value='RESID'>RESID</SelectItem>
-						<SelectItem value='SERVIN'>SERVIN</SelectItem>
-						<SelectItem value='GTEC'>GTEC</SelectItem>
-						<SelectItem value='PARHIS'>PARHIS</SelectItem>
-						<SelectItem value='CAP'>CAP</SelectItem>
-						<SelectItem value='COMIN'>COMIN</SelectItem>
-						<SelectItem value='CONTRU'>CONTRU</SelectItem>
-						<SelectItem value='CAEPP'>CAEPP</SelectItem>
-						<SelectItem value='ASCOM'>ASCOM</SelectItem>
-						<SelectItem value='ATECC'>ATECC</SelectItem>
-						<SelectItem value='ATIC'>ATIC</SelectItem>
-						<SelectItem value='CASE'>CASE</SelectItem>
-						<SelectItem value='DEUSO'>DEUSO</SelectItem>
-						<SelectItem value='GAB'>COMIN</SelectItem>
-						<SelectItem value='GAB_CI'>GAB/CI</SelectItem>
-						<SelectItem value='GEOINFO'>GEOINFO</SelectItem>
-						<SelectItem value='LICEN'>LICEN</SelectItem>
-						<SelectItem value='PLANURB'>PLANURB</SelectItem>
-						<SelectItem value='STEL'>STEL</SelectItem>
-						<SelectItem value='URB'>URB</SelectItem>
+						{coordenadorias.map((item) => {
+							return (
+								<SelectItem
+									key={item.id}
+									value={item.id}>
+									{item.sigla}
+								</SelectItem>
+							);
+						})}
 					</SelectContent>
 				</Select>
 			</div>
