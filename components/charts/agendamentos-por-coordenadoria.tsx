@@ -17,37 +17,35 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-	{ motivo: 'RESID', Agendamentos: 275, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'SERVIN', Agendamentos: 200, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'GTEC', Agendamentos: 187, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'PARHIS', Agendamentos: 173, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'CAP', Agendamentos: 90, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'COMIN', Agendamentos: 190, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'CONTRU', Agendamentos: 170, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'CAEPP', Agendamentos: 150, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'ASCOM', Agendamentos: 145, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'ATIC', Agendamentos: 86, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'ATECC', Agendamentos: 92, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'CASE', Agendamentos: 96, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'DEUSO', Agendamentos: 160, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'GAB', Agendamentos: 140, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'GAB/CI', Agendamentos: 130, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'GEOINFO', Agendamentos: 120, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'LICEN', Agendamentos: 110, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'PLANURB', Agendamentos: 124, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'STEL', Agendamentos: 144, fill: 'var(--color-agendamentos)' },
-	{ motivo: 'URB', Agendamentos: 122, fill: 'var(--color-agendamentos)' },
-];
+import { IChart } from '@/types/agendamentos';
 
-const chartConfig = {
-	agendamentos: {
-		label: 'Agendamentos',
-		color: 'hsl(var(--chart-1))',
-	},
-} satisfies ChartConfig;
+interface AgendamentosPorCategoriaProps {
+	coordenadorias: IChart[];
+}
 
-export function AgendamentosPorCoordenadoria() {
+export function AgendamentosPorCoordenadoria({ coordenadorias }: AgendamentosPorCategoriaProps) {
+	const chartConfig: any = {
+		Agendamentos: {
+			label: 'Agendamentos',
+		},
+	} satisfies ChartConfig;
+
+	coordenadorias.sort((a, b) => b.value - a.value);
+	coordenadorias.forEach((item, index) => {
+		chartConfig[item.label] = {
+			label: item.label,
+			color: `hsl(var(--chart-${index + 1}))`,
+		};
+	});
+
+	const chartData = coordenadorias.map((item, index) => {
+		return {
+			motivo: item.label,
+			Agendamentos: item.value,
+			fill: `hsl(var(--chart-${index + 1}))`,
+		};
+	});
+	
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-start pb-0'>

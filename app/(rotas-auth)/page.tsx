@@ -68,7 +68,7 @@ export default async function Home({
 				<BigNumbers numbers={[data.totalAno, data.totalMes, data.totalDia]} />
 				<div className='grid gap-5'>
 					<AgendamentosPorMotivo motivos={data.motivos} />
-					<AgendamentosPorCoordenadoria />
+					<AgendamentosPorCoordenadoria coordenadorias={data.coordenadorias} />
 					<AgendamentoNoTempo />
 				</div>
 			</div>
