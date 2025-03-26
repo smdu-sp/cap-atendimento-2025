@@ -21,12 +21,12 @@ export default async function RotasAuth({
 	const session = await auth();
 	if (!session) redirect('/login');
 	return (
-		<div className='relative  w-full pb-10 md:pb-0'>
+		<div className='relative w-full overflow-hidden'>
 			<ModeToggle className='absolute top-4 right-4 z-50' />
 			<SidebarProvider>
 				<AppSidebar />
 				<SidebarInset>
-					<header className='h-16 bg-muted dark:bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 hidden sm:flex'>
+					<header className='h-16 bg-muted/50 dark:bg-background shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 hidden sm:flex'>
 						<div className='flex items-center gap-2 px-4'>
 							<SidebarTrigger className='-ml-1 md:hidden' />
 							<Separator
@@ -36,10 +36,8 @@ export default async function RotasAuth({
 							<Breadcrumbs />
 						</div>
 					</header>
-					<div className='flex flex-1 flex-col gap-4 p-4 sm:pt-0 relative items-center w-full bg-muted dark:bg-background'>
-						<div className='min-h-100 w-full  flex-1 md:min-h-min pt-10 sm:pt-0'>
-							{children}
-						</div>
+					<div className='h-full gap-4 p-4 sm:pt-0 items-center w-full bg-muted/50 dark:bg-background pt-10'>
+						{children}
 					</div>
 				</SidebarInset>
 				<DrawerMenu />

@@ -79,7 +79,7 @@ export function DrawerMenu() {
 					<ChevronsUp className='scale-150' />
 				</Button>
 			</DrawerTrigger>
-			<DrawerContent className='h-5/6 bg-sidebar'>
+			<DrawerContent className='h-5/6 bg-sidebar border-2'>
 				<DrawerHeader>
 					<DrawerTitle className='flex w-full justify-end items-center'>
 						<DrawerClose asChild>

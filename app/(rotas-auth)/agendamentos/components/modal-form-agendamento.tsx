@@ -14,8 +14,21 @@ import {
 import { CalendarPlus } from 'lucide-react';
 import { useState } from 'react';
 import FormAgendamento from './form-agendamento';
+import { ICoordenadoria } from '@/types/coordenadoria';
+import { IMotivo } from '@/types/motivo';
+import { IUsuarioTecnico } from '@/types/usuario';
 
-export default function ModalFormAgendamento() {
+interface FormAgendamentoProps {
+	motivos: IMotivo[];
+	coordenadorias: ICoordenadoria[];
+	tecnicos: IUsuarioTecnico[];
+}
+
+export default function ModalFormAgendamento({
+	motivos,
+	coordenadorias,
+	tecnicos,
+}: FormAgendamentoProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	return (
 		<Dialog
@@ -31,14 +44,18 @@ export default function ModalFormAgendamento() {
 					Novo Agendadamento
 				</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent className='sm:max-w-md md:max-w-2xl'>
 				<DialogHeader>
 					<DialogTitle>Cadastrar Agendamento</DialogTitle>
 					<DialogDescription>
 						Preencha os dados para cadastrar novo agendamento{' '}
 					</DialogDescription>
 				</DialogHeader>
-				<FormAgendamento />
+				<FormAgendamento
+					motivos={motivos}
+					coordenadorias={coordenadorias}
+					tecnicos={tecnicos}
+				/>
 			</DialogContent>
 		</Dialog>
 	);

@@ -35,9 +35,11 @@ export default async function ListaAgendamentoPage({
 	}
 
 	return (
-		<div className=' w-full relative h-full px-4 md:px-8 '>
-			<h1 className='text-4xl font-bold mt-5'>Lista de Agendamentos</h1>
-			<div className='flex flex-col gap-5 my-10'>
+		<div className=' w-full px-0 md:px-8 relative h-full'>
+			<h1 className='text-xl md:text-4xl font-bold mt-5'>
+				Lista de Agendamentos
+			</h1>
+			<div className='flex flex-col gap-5 my-10 md:w-full '>
 				<FilterAgendamento />
 				{dados && (
 					<DataTable
@@ -53,9 +55,9 @@ export default async function ListaAgendamentoPage({
 						limite={+limite}
 					/>
 				)}
-			</div>
-			<div className='absolute bottom-5 right-5 hover:scale-110 z-50'>
-				<ModalImportacao />
+				<div className='absolute bottom-5 right-5 hover:scale-110 z-50'>
+					<ModalImportacao />
+				</div>
 			</div>
 		</div>
 	);

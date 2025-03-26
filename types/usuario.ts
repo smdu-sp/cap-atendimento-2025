@@ -52,6 +52,11 @@ export interface INovoUsuario {
 	email: string;
 }
 
+export interface IUsuarioTecnico {
+	id: string;
+	nome: string;
+}
+
 export interface IRespostaUsuario {
 	ok: boolean;
 	error: string | null;
@@ -59,6 +64,7 @@ export interface IRespostaUsuario {
 		| INovoUsuario
 		| IUsuario
 		| IUsuario[]
+		| IUsuarioTecnico[]
 		| IPaginadoUsuario
 		| { autorizado: boolean }
 		| { desativado: boolean }

@@ -28,6 +28,10 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { criar } from '@/services/agendamentos/server-functions/criar';
+import { ICoordenadoria } from '@/types/coordenadoria';
+import { IMotivo } from '@/types/motivo';
+import { IUsuarioTecnico } from '@/types/usuario';
 // import { criar } from '@/services/agendamentos/server-functions/criar';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
@@ -38,40 +42,88 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-const formSchema = z.object({
-	municipe: z.string({
-		coerce: true,
-		required_error: 'Este campo é obrigatório',
-	}),
-	rg: z.string().optional(),
-	cpf: z.string().optional(),
-	processo: z.string({
-		coerce: true,
-		required_error: 'Este campo é obrigatório',
-	}),
-	motivoId: z.string({
-		coerce: true,
-		required_error: 'Este campo é obrigatório',
-	}),
-	coordenadoriaId: z.string({
-		coerce: true,
-		message: 'Este campo é obrigatório',
-	}),
-	tecnicoId: z.string({
-		coerce: true,
-		required_error: 'Este campo é obrigatório',
-	}),
-	data: z.date({ coerce: true, message: 'Este campo é obrigatório' }),
-	startTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-		message: 'Horário deve estar no formato HH:MM',
-	}),
-	endTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
-		message: 'Horário deve estar no formato HH:MM',
-	}),
-	resumo: z.string(),
-});
+const formSchema = z
+	.object({
+		municipe: z.string({
+			coerce: true,
+			required_error: 'Este campo é obrigatório',
+		}),
+		rg: z.string().optional(),
+		cpf: z.string().optional(),
+		processo: z.string({
+			coerce: true,
+			required_error: 'Este campo é obrigatório',
+		}),
+		motivoId: z.string({
+			coerce: true,
+			required_error: 'Este campo é obrigatório',
+		}),
+		coordenadoriaId: z.string({
+			coerce: true,
+			message: 'Este campo é obrigatório',
+		}),
+		tecnicoId: z.string({
+			coerce: true,
+			required_error: 'Este campo é obrigatório',
+		}),
+		data: z.date({ coerce: true, message: 'Este campo é obrigatório' }),
+		startTime: z
+			.string()
+			.regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+				message: 'Horário deve estar no formato HH:MM',
+			})
+			.refine(
+				(time: string) => {
+					const [hours] = time.split(':').map(Number);
+					return hours >= 10;
+				},
+				{
+					message: 'O horário inicial não pode ser anterior às 10:00',
+				},
+			),
+		endTime: z
+			.string()
+			.regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, {
+				message: 'Horário deve estar no formato HH:MM',
+			})
+			.refine(
+				(time: string) => {
+					const [hours, minutes] = time.split(':').map(Number);
+					return hours < 17 || (hours === 17 && minutes === 0);
+				},
+				{
+					message: 'O horário final não pode ser superior às 17:00',
+				},
+			),
+		resumo: z.string(),
+	})
+	.refine(
+		(data) => {
+			const [startHours, startMinutes] = data.startTime.split(':').map(Number);
+			const [endHours, endMinutes] = data.endTime.split(':').map(Number);
 
-export default function FormAgendamento() {
+			const startTotalMinutes = startHours * 60 + startMinutes;
+			const endTotalMinutes = endHours * 60 + endMinutes;
+
+			return endTotalMinutes - startTotalMinutes >= 15;
+		},
+		{
+			message: 'A reunião deve ter no mínimo 15 minutos',
+			path: ['endTime'],
+		},
+	);
+
+interface FormAgendamentoProps {
+	motivos: IMotivo[];
+	coordenadorias: ICoordenadoria[];
+	tecnicos: IUsuarioTecnico[];
+}
+export default function FormAgendamento({
+	coordenadorias,
+	motivos,
+	tecnicos,
+}: FormAgendamentoProps) {
+	console.log(tecnicos);
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -130,8 +182,21 @@ export default function FormAgendamento() {
 
 		console.log({ dataInicio, dataFim });
 
-		startTransition(() => {
-			toast.success('seus dados', {
+		startTransition(async () => {
+			const resp = await criar({
+				coordenadoriaId,
+				dataFim,
+				dataInicio,
+				motivoId,
+				municipe,
+				processo,
+				tecnicoId,
+				cpf,
+				rg,
+			});
+
+			console.log(resp);
+			toast.success('Seus Dados', {
 				description: `${coordenadoriaId} - ${data}-${motivoId}-${municipe}-${tecnicoId}-${dataInicio} - ${dataFim}`,
 			});
 		});
@@ -139,7 +204,7 @@ export default function FormAgendamento() {
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<div className='grid grid-cols-2 gap-5 w-full mb-5'>
+				<div className='grid md:grid-cols-2 gap-5 items-end w-full mb-5'>
 					<FormField
 						control={form.control}
 						name='municipe'
@@ -217,31 +282,20 @@ export default function FormAgendamento() {
 									onValueChange={field.onChange}
 									defaultValue={field.value}>
 									<FormControl>
-										<SelectTrigger className='w-56 text-nowrap bg-background'>
+										<SelectTrigger className='w-full text-nowrap bg-background'>
 											<SelectValue placeholder='Selecione a coordenadoria' />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value='RESID'>RESID</SelectItem>
-										<SelectItem value='SERVIN'>SERVIN</SelectItem>
-										<SelectItem value='GTEC'>GTEC</SelectItem>
-										<SelectItem value='PARHIS'>PARHIS</SelectItem>
-										<SelectItem value='CAP'>CAP</SelectItem>
-										<SelectItem value='COMIN'>COMIN</SelectItem>
-										<SelectItem value='CONTRU'>CONTRU</SelectItem>
-										<SelectItem value='CAEPP'>CAEPP</SelectItem>
-										<SelectItem value='ASCOM'>ASCOM</SelectItem>
-										<SelectItem value='ATECC'>ATECC</SelectItem>
-										<SelectItem value='ATIC'>ATIC</SelectItem>
-										<SelectItem value='CASE'>CASE</SelectItem>
-										<SelectItem value='DEUSO'>DEUSO</SelectItem>
-										<SelectItem value='GAB'>COMIN</SelectItem>
-										<SelectItem value='GAB_CI'>GAB/CI</SelectItem>
-										<SelectItem value='GEOINFO'>GEOINFO</SelectItem>
-										<SelectItem value='LICEN'>LICEN</SelectItem>
-										<SelectItem value='PLANURB'>PLANURB</SelectItem>
-										<SelectItem value='STEL'>STEL</SelectItem>
-										<SelectItem value='URB'>URB</SelectItem>
+										{coordenadorias.map((item) => {
+											return (
+												<SelectItem
+													key={item.id}
+													value={item.id}>
+													{item.sigla}
+												</SelectItem>
+											);
+										})}
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -259,32 +313,20 @@ export default function FormAgendamento() {
 									onValueChange={field.onChange}
 									defaultValue={field.value}>
 									<FormControl>
-										<SelectTrigger className='w-56 text-nowrap bg-background'>
+										<SelectTrigger className='w-full text-nowrap bg-background'>
 											<SelectValue placeholder='Selecione o motivo' />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value='1'>
-											Atendimento Técnico - Comunicado
-										</SelectItem>
-										<SelectItem value='2'>
-											Atendimento Técnico - Recurso
-										</SelectItem>
-										<SelectItem value='3'>
-											Sala Arthur Saboya (Consulta Pré-Projeto)
-										</SelectItem>
-										<SelectItem value='4'>
-											Protocolo (Entrega / Retirada de Documentos Físicos)
-										</SelectItem>
-										<SelectItem value='5'>
-											Protocolo (Comunicado / Indeferimento)
-										</SelectItem>
-										<SelectItem value='6'>
-											Notificação - Função Social da Propriedade
-										</SelectItem>
-										<SelectItem value='7'>Visita Institucional</SelectItem>
-										<SelectItem value='8'>Evento</SelectItem>
-										<SelectItem value='9'>Vistas a Processo Físico</SelectItem>
+										{motivos.map((item) => {
+											return (
+												<SelectItem
+													key={item.id}
+													value={item.id}>
+													{item.texto}
+												</SelectItem>
+											);
+										})}
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -310,11 +352,15 @@ export default function FormAgendamento() {
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										<SelectItem value='t1'>Técnico 1</SelectItem>
-										<SelectItem value='t2'>Técnico 2</SelectItem>
-										<SelectItem value='t3'>Técnico 3</SelectItem>
-										<SelectItem value='t4'>Técnico 4</SelectItem>
-										<SelectItem value='t5'>Técnico 5</SelectItem>
+										{tecnicos.map((item) => {
+											return (
+												<SelectItem
+													key={item.id}
+													value={item.id}>
+													{item.nome}
+												</SelectItem>
+											);
+										})}
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -333,7 +379,7 @@ export default function FormAgendamento() {
 											<Button
 												variant={'outline'}
 												className={cn(
-													'w-[240px] pl-3 text-left font-normal text-foreground',
+													'w-full pl-3 text-left font-normal text-foreground',
 													!field.value && 'text-muted-foreground',
 												)}>
 												{field.value ? (
@@ -364,7 +410,7 @@ export default function FormAgendamento() {
 						)}
 					/>
 				</div>
-				<div className='flex w-full items-center justify-between gap-5 mb-5'>
+				<div className='flex flex-col md:flex-row w-full md:items-center justify-between gap-5 mb-5'>
 					<FormField
 						control={form.control}
 						name='startTime'
@@ -373,12 +419,13 @@ export default function FormAgendamento() {
 								<FormLabel>Horário Inicial</FormLabel>
 								<FormControl>
 									<Input
-										className='w-56'
+										className='md:w-76'
 										placeholder='HH:MM'
 										{...field}
 										type='time'
 									/>
 								</FormControl>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -391,13 +438,12 @@ export default function FormAgendamento() {
 								<FormLabel>Horário Final</FormLabel>
 								<FormControl>
 									<Input
-										className='w-56'
+										className='md:w-76'
 										placeholder='HH:MM'
 										{...field}
 										type='time'
 									/>
 								</FormControl>
-
 								<FormMessage />
 							</FormItem>
 						)}

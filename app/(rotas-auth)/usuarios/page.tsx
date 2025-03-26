@@ -30,7 +30,7 @@ async function Usuarios({
 	let ok = false;
 	const { busca = '' } = await searchParams;
 	let dados: IUsuario[] = [];
-	
+
 	const session = await auth();
 	if (session && session.access_token) {
 		const response = await usuario.buscarTudo(
@@ -55,29 +55,26 @@ async function Usuarios({
 	}
 
 	return (
-		<>
-			<div className='mx-auto w-full relative h-full px-4 md:px-8'>
-				<h1 className='text-4xl font-bold mt-5'>Usuários</h1>
-
-				<div className='flex flex-col gap-10 my-10'>
-					{dados && (
-						<DataTable
-							columns={columns}
-							data={dados || []}
-						/>
-					)}
-					{dados && dados.length > 0 && (
-						<Pagination
-							total={+total}
-							limite={+limite}
-							pagina={+pagina}
-						/>
-					)}
-				</div>
+		<div className='mx-auto w-full relative h-full px-4 md:px-8'>
+			<h1 className='text-4xl font-bold mt-5'>Usuários</h1>
+			<div className='flex flex-col  gap-10 my-10'>
+				{dados && (
+					<DataTable
+						columns={columns}
+						data={dados || []}
+					/>
+				)}
+				{dados && dados.length > 0 && (
+					<Pagination
+						total={+total}
+						limite={+limite}
+						pagina={+pagina}
+					/>
+				)}
 			</div>
 			<div className='absolute bottom-5 right-5 hover:scale-110'>
 				<ModalUpdateAndCreate isUpdating={false} />
 			</div>
-		</>
+		</div>
 	);
 }

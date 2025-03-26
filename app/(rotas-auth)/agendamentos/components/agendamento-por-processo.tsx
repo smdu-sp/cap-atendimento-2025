@@ -31,7 +31,7 @@ export function AgendamentoPorProcesso() {
 	function onSubmit(data: z.infer<typeof FormSchema>) {
 		toast('You submitted the following values:', {
 			description: (
-				<pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
+				<pre className='mt-2 w-full md:w-[340px] rounded-md bg-slate-950 p-4'>
 					<code className='text-white'>{JSON.stringify(data, null, 2)}</code>
 				</pre>
 			),
@@ -42,12 +42,12 @@ export function AgendamentoPorProcesso() {
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className='flex items-end gap-5'>
+				className='flex w-full md:w-fit md:items-end gap-5'>
 				<FormField
 					control={form.control}
 					name='processo'
 					render={({ field }) => (
-						<FormItem className='flex flex-col'>
+						<FormItem className='flex flex-col w-full'>
 							<FormLabel>Processo</FormLabel>
 							<FormControl>
 								<Input
