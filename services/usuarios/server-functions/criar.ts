@@ -13,6 +13,7 @@ export async function criar(
 	const session = await auth();
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	if (!session) redirect('/login');
+	console.log(data);
 	const response: Response = await fetch(`${baseURL}usuarios/criar`, {
 		method: 'POST',
 		headers: {

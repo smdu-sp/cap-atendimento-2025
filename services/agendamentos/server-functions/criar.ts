@@ -11,17 +11,15 @@ export async function criar(data: ICreateAgendamento) {
 	const session = await auth();
 	if (!session) redirect('/login');
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
-	console.log({ data });
 	try {
 		const response: Response = await fetch(`${baseURL}agendamentos/criar`, {
 			method: 'POST',
 			headers: {
+				'Content-Type': 'application/json',
 				Authorization: `Bearer ${session?.access_token}`,
 			},
 			body: JSON.stringify(data),
 		});
-
-		console.log(response);
 		if (response.status === 201) {
 			revalidateTag('agendamentos');
 			return {
