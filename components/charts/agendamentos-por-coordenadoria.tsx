@@ -42,10 +42,10 @@ export function AgendamentosPorCoordenadoria({ coordenadorias }: AgendamentosPor
 		return {
 			motivo: item.label,
 			Agendamentos: item.value,
-			fill: `hsl(var(--chart-${index + 1}))`,
+			fill: `hsl(var(--chart-1))`,
 		};
 	});
-	
+
 	return (
 		<Card className='flex flex-col'>
 			<CardHeader className='items-start pb-0'>
