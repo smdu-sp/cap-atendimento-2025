@@ -26,6 +26,7 @@ export async function importarIcs(data: FormData) {
 			return {
 				ok: true,
 				error: null,
+				data: await response.json(),
 				status: response.status,
 			};
 		}

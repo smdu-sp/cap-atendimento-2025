@@ -69,7 +69,7 @@ export default async function Home({
 				<div className='grid gap-5'>
 					<AgendamentosPorMotivo motivos={data.motivos} />
 					<AgendamentosPorCoordenadoria coordenadorias={data.coordenadorias} />
-					<AgendamentoNoTempo />
+					<AgendamentoNoTempo agendamentosMes={data.agendamentosMes} />
 				</div>
 			</div>
 		</div>

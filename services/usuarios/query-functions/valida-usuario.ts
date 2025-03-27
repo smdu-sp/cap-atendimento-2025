@@ -1,15 +1,19 @@
 /** @format */
 
+import { auth } from "@/lib/auth/auth";
 import { IRespostaUsuario, IUsuario } from "@/types/usuario";
+import { redirect } from "next/navigation";
 
-export async function validaUsuario(access_token: string): Promise<IRespostaUsuario> {
+export async function validaUsuario(): Promise<IRespostaUsuario> {
+	const session = await auth();
+	if (!session) redirect('/login');
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	try {
 		const usuario = await fetch(`${baseURL}usuarios/valida-usuario`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: `Bearer ${access_token}`,
+				Authorization: `Bearer ${session.access_token}`,
 			},
 		});
 		const data = await usuario.json();

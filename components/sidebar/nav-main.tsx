@@ -1,6 +1,7 @@
 /** @format */
 
 import {
+	CalendarCheck,
 	CalendarSearch,
 	ChevronRight,
 	House,
@@ -25,8 +26,16 @@ import {
 } from '@/components/ui/sidebar';
 import Link from '../link';
 import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { validaUsuario } from '@/services/usuarios';
+import { IPermissao, IUsuario } from '@/types/usuario';
 
-export function NavMain() {
+export async function NavMain() {
+	let usuario: IUsuario | null = null;
+	const { ok, data, error, status } = await validaUsuario();
+	if (ok && data) {
+		usuario = data as IUsuario;
+		console.log(usuario.permissao);
+	}
 	interface IMenu {
 		icone: ForwardRefExoticComponent<
 			Omit<LucideProps, 'ref'> & RefAttributes<SVGSVGElement>
@@ -48,11 +57,15 @@ export function NavMain() {
 			titulo: 'Página Inicial',
 			url: '/',
 		},
-
 		{
 			icone: CalendarSearch,
 			titulo: 'Agendamentos',
 			url: '/agendamentos',
+		},
+		{
+			icone: CalendarCheck,
+			titulo: 'Agendamentos do dia',
+			url: '/hoje',
 		},
 	];
 
@@ -117,7 +130,7 @@ export function NavMain() {
 						</SidebarMenu>
 					</>
 				)}
-				{menuAdmin && (
+				{menuAdmin && usuario && usuario.permissao && ['DEV', 'ADM'].includes(usuario.permissao.toString()) && (
 					<>
 						<SidebarGroupLabel>Administração</SidebarGroupLabel>
 						<SidebarMenu>

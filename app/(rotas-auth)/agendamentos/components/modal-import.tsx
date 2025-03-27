@@ -30,7 +30,8 @@ export default function ModalImportAgendamento() {
 				console.log(resp.error);
 				toast.error('Algo deu errado');
 			} else {
-				toast.success('Arquivo importado com sucesso');
+				const { agendamentos, duplicados } = resp.data as { agendamentos: number, duplicados: number };
+				toast.success(`${agendamentos} agendamento${agendamentos > 1 && 's'} importado${agendamentos > 1 && 's'} com sucesso, ${duplicados} agendamento${duplicados > 1 && 's'} duplicado${duplicados > 1 && 's'} e não inserido${duplicados > 1 && 's'}.`);
 				setIsOpen(false);
 			}
 		});

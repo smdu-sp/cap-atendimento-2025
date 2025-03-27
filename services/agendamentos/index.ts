@@ -1,3 +1,4 @@
 /** @format */
 
-export { buscarTudo } from './query-functions';
+export { buscarTudo, dashboard, agendaDia } from './query-functions';
+

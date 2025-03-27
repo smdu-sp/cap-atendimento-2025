@@ -17,23 +17,26 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-	{ month: 'January', Agendamentos: 186 },
-	{ month: 'February', Agendamentos: 305 },
-	{ month: 'March', Agendamentos: 237 },
-	{ month: 'April', Agendamentos: 73 },
-	{ month: 'May', Agendamentos: 209 },
-	{ month: 'June', Agendamentos: 214 },
-];
+import { IChart } from '@/types/agendamentos';
+interface AgendamentosNoTempoProps {
+	agendamentosMes: IChart[];
+}
 
-const chartConfig = {
-	Agendamentos: {
-		label: 'Agendamentos',
-		color: 'hsl(var(--chart-1))',
-	},
-} satisfies ChartConfig;
+export function AgendamentoNoTempo({ agendamentosMes }: AgendamentosNoTempoProps) {
+	const chartConfig: any = {
+		Agendamentos: {
+			label: 'Agendamentos',
+			color: 'hsl(var(--chart-1))',
+		},
+	} satisfies ChartConfig;
 
-export function AgendamentoNoTempo() {
+	const chartData = agendamentosMes.map((item, index) => {
+		return {
+			month: item.label,
+			Agendamentos: item.value,
+		};
+	});
+
 	return (
 		<Card>
 			<CardHeader>
@@ -50,8 +53,8 @@ export function AgendamentoNoTempo() {
 						accessibilityLayer
 						data={chartData}
 						margin={{
-							left: 12,
-							right: 12,
+							left: 24,
+							right: 24,
 							top: 20,
 						}}>
 						<defs>

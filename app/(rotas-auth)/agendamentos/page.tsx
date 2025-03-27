@@ -4,7 +4,6 @@ import DataTable from '@/components/data-table';
 import Pagination from '@/components/pagination';
 import { columns } from './components/columns';
 import { FilterAgendamento } from './components/filter-agendamento';
-// import { data } from './mock/data';
 import { Separator } from '@/components/ui/separator';
 import { buscarTudo } from '@/services/agendamentos';
 import { IAgendamento, IPaginadoAgendamento } from '@/types/agendamentos';
