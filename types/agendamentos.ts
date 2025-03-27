@@ -68,3 +68,16 @@ export interface IRespostaAgendamento {
 		| null;
 	status: number;
 }
+
+export interface IUpdateAgendamento {
+	municipe?: string;
+	rg?: string;
+	cpf?: string;
+	processo?: string;
+	motivoId?: string;
+	coordenadoriaId?: string;
+	tecnicoId?: string;
+	dataInicio?: Date;
+	dataFim?: Date;
+	resumo?: string;
+}

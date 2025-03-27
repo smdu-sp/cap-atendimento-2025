@@ -23,6 +23,7 @@ interface AgendamentosNoTempoProps {
 }
 
 export function AgendamentoNoTempo({ agendamentosMes }: AgendamentosNoTempoProps) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const chartConfig: any = {
 		Agendamentos: {
 			label: 'Agendamentos',
@@ -30,7 +31,7 @@ export function AgendamentoNoTempo({ agendamentosMes }: AgendamentosNoTempoProps
 		},
 	} satisfies ChartConfig;
 
-	const chartData = agendamentosMes.map((item, index) => {
+	const chartData = agendamentosMes.map((item) => {
 		return {
 			month: item.label,
 			Agendamentos: item.value,
@@ -42,7 +43,7 @@ export function AgendamentoNoTempo({ agendamentosMes }: AgendamentosNoTempoProps
 			<CardHeader>
 				<CardTitle className='text-xl'>Agendamentos</CardTitle>
 				<CardDescription>
-					Número de agendamentos no tempo definido
+					Número de agendamentos por mês
 				</CardDescription>
 			</CardHeader>
 			<CardContent>

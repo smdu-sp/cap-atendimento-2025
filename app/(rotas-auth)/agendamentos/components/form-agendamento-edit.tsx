@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
-import { criar } from '@/services/agendamentos/server-functions/criar';
+import { atualizar } from '@/services/agendamentos/server-functions/atualizar';
 import { IAgendamento } from '@/types/agendamentos';
 import { ICoordenadoria } from '@/types/coordenadoria';
 import { IMotivo } from '@/types/motivo';
@@ -48,24 +48,29 @@ const formSchema = z
 		municipe: z.string({
 			coerce: true,
 			required_error: 'Este campo é obrigatório',
+			message: 'Este campo é obrigatório',
 		}),
 		rg: z.string().optional(),
 		cpf: z.string().optional(),
 		processo: z.string({
 			coerce: true,
 			required_error: 'Este campo é obrigatório',
+			message: 'Este campo é obrigatório',
 		}),
 		motivoId: z.string({
 			coerce: true,
 			required_error: 'Este campo é obrigatório',
+			message: 'Este campo é obrigatório',
 		}),
 		coordenadoriaId: z.string({
 			coerce: true,
+			required_error: 'Este campo é obrigatório',
 			message: 'Este campo é obrigatório',
 		}),
 		tecnicoId: z.string({
 			coerce: true,
 			required_error: 'Este campo é obrigatório',
+			message: 'Este campo é obrigatório',
 		}),
 		data: z.date({ coerce: true, message: 'Este campo é obrigatório' }),
 		startTime: z
@@ -163,6 +168,7 @@ export default function FormEditAgendamento({
 			municipe,
 			processo,
 			tecnicoId,
+			resumo,
 			cpf,
 			rg,
 		} = values;
@@ -191,22 +197,29 @@ export default function FormEditAgendamento({
 		console.log({ dataInicio, dataFim });
 
 		startTransition(async () => {
-			const resp = await criar({
+			if (!agendamento.id) {
+				toast.error('ID do agendamento não encontrado');
+				return;
+			}
+			const resp = await atualizar(agendamento.id, {
 				coordenadoriaId,
+				cpf,
 				dataFim,
 				dataInicio,
 				motivoId,
 				municipe,
 				processo,
-				tecnicoId,
-				cpf,
+				resumo,
 				rg,
+				tecnicoId,
 			});
 
-			console.log(resp);
-			toast.success('Seus Dados', {
-				description: `${coordenadoriaId} - ${data}-${motivoId}-${municipe}-${tecnicoId}-${dataInicio} - ${dataFim}`,
-			});
+			if (!resp.ok) {
+				console.log(resp.error);
+				toast.error('Algo deu errado');
+			} else {
+				toast.success('Agendamento atualizado com sucesso');
+			}
 		});
 	}
 	return (
@@ -481,7 +494,7 @@ export default function FormEditAgendamento({
 					<Button
 						disabled={isPending}
 						type='submit'>
-						Cadastrar {isPending && <Loader2 className='animate-spin' />}
+						Atualizar {isPending && <Loader2 className='animate-spin' />}
 					</Button>
 				</div>
 			</form>

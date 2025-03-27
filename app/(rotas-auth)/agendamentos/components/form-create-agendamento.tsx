@@ -194,10 +194,12 @@ export default function FormAgendamento({
 				rg,
 			});
 
-			console.log(resp);
-			toast.success('Seus Dados', {
-				description: `${coordenadoriaId} - ${data}-${motivoId}-${municipe}-${tecnicoId}-${dataInicio} - ${dataFim}`,
-			});
+			if (!resp.ok) {
+				console.log(resp.error);
+				toast.error('Algo deu errado');
+			} else {
+				toast.success('Agendamento criado com sucesso');
+			}
 		});
 	}
 	return (

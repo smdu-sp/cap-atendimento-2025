@@ -9,16 +9,16 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { IAgendamento } from '@/types/agendamentos';
-import { Pencil } from 'lucide-react';
 import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
 import { listaCompleta as listaMotivos } from '@/services/motivos/query-functions/lista-completa';
-import FormEditAgendamento from './form-agendamento-edit';
 import { buscarTecnicos } from '@/services/usuarios/query-functions/buscar-tecnicos';
-import { redirect } from 'next/navigation';
+import { IAgendamento } from '@/types/agendamentos';
 import { IUsuarioTecnico } from '@/types/usuario';
-import { useSession } from 'next-auth/react';
 import { useQuery } from '@tanstack/react-query';
+import { SquarePen } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { redirect } from 'next/navigation';
+import FormEditAgendamento from './form-agendamento-edit';
 
 interface ModalEditAgendamentoProps {
 	agendamento: Partial<IAgendamento>;
@@ -68,8 +68,14 @@ export default function ModalEditAgendamento({
 			<DialogTrigger
 				asChild
 				className='flex items-center gap-3 cursor-pointer'>
-				<Button variant={'ghost'}>
-					<Pencil />
+				<Button
+					size={'icon'}
+					variant={'outline'}
+					className='bg-background hover:bg-primary group transition-all ease-linear duration-200'>
+					<SquarePen
+						size={28}
+						className='text-primary group-hover:text-white group'
+					/>
 					<span className='sr-only'>Edição de Agendamento</span>
 				</Button>
 			</DialogTrigger>
