@@ -34,7 +34,7 @@ export default async function ListaAgendamentoPage({
 	}
 
 	return (
-		<div className=' w-full px-0 md:px-8 relative h-full'>
+		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
 			<h1 className='text-xl md:text-4xl font-bold mt-5'>
 				Lista de Agendamentos
 			</h1>
@@ -54,9 +54,9 @@ export default async function ListaAgendamentoPage({
 						limite={+limite}
 					/>
 				)}
-				<div className='absolute bottom-5 right-5 hover:scale-110 z-50'>
-					<ModalImportacao />
-				</div>
+			</div>
+			<div className='absolute bottom-5 right-5 hover:scale-110 z-50'>
+				<ModalImportacao />
 			</div>
 		</div>
 	);

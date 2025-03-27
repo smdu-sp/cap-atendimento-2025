@@ -11,6 +11,7 @@ export default function ToogleSidebarBtn() {
 	const { toggleSidebar } = useSidebar();
 	return (
 		<SidebarMenuButton
+			className='cursor-pointer'
 			size='lg'
 			onClick={() => toggleSidebar()}>
 			<MiniLogo />

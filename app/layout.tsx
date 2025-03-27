@@ -1,18 +1,16 @@
 /** @format */
 
+import { Toaster } from '@/components/ui/sonner';
+import { AuthProvider } from '@/providers/AuthProvider';
+import { QueryProvider } from '@/providers/QueryProvider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 import type { Metadata } from 'next';
-import { Sora } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 
-import { AuthProvider } from '@/providers/AuthProvider';
-import { ThemeProvider } from '@/providers/ThemeProvider';
-import { Toaster } from '@/components/ui/sonner';
-
-const sora = Sora({
-	subsets: ['latin'],
-	weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
+const myFont = localFont({
+	src: './Sora-VariableFont_wght.woff2',
 	display: 'swap',
-	adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -28,17 +26,20 @@ export default function RootLayout({
 	return (
 		<html
 			lang='pt-BR'
-			suppressHydrationWarning>
-			<body className={`${sora.className} antialised `}>
+			suppressHydrationWarning
+			className={`${myFont.className} antialised `}>
+			<body>
 				<AuthProvider>
-					<ThemeProvider
-						attribute='class'
-						defaultTheme='system'
-						enableSystem
-						disableTransitionOnChange>
-						{children}
-						<Toaster richColors />
-					</ThemeProvider>
+					<QueryProvider>
+						<ThemeProvider
+							attribute='class'
+							defaultTheme='system'
+							enableSystem
+							disableTransitionOnChange>
+							{children}
+							<Toaster richColors />
+						</ThemeProvider>
+					</QueryProvider>
 				</AuthProvider>
 			</body>
 		</html>

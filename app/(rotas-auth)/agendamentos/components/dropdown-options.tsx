@@ -10,7 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Plus } from 'lucide-react';
-import ModalFormAgendamento from './modal-form-agendamento';
+import ModalFormAgendamento from './modal-create-agendamento';
 import ModalImportAgendamento from './modal-import';
 import { auth } from '@/lib/auth/auth';
 import { redirect } from 'next/navigation';

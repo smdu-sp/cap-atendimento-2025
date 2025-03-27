@@ -4,6 +4,7 @@
 
 import { IAgendamento } from '@/types/agendamentos';
 import { ColumnDef } from '@tanstack/react-table';
+import ModalEditAgendamento from './modal-edit-agendamento';
 
 export const columns: ColumnDef<IAgendamento>[] = [
 	{
@@ -79,5 +80,10 @@ export const columns: ColumnDef<IAgendamento>[] = [
 				{row.original.motivo?.texto}
 			</p>
 		),
+	},
+	{
+		accessorKey: 'actions',
+		header: () => <p className='text-center'>Ações</p>,
+		cell: ({ row }) => <ModalEditAgendamento agendamento={row.original} />,
 	},
 ];

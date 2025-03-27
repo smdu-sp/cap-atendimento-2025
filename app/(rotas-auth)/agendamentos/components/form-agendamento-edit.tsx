@@ -29,6 +29,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { criar } from '@/services/agendamentos/server-functions/criar';
+import { IAgendamento } from '@/types/agendamentos';
 import { ICoordenadoria } from '@/types/coordenadoria';
 import { IMotivo } from '@/types/motivo';
 import { IUsuarioTecnico } from '@/types/usuario';
@@ -113,32 +114,39 @@ const formSchema = z
 		},
 	);
 
-interface FormAgendamentoProps {
+interface FormEditAgendamentoProps {
+	agendamento: Partial<IAgendamento>;
 	motivos: IMotivo[];
 	coordenadorias: ICoordenadoria[];
 	tecnicos: IUsuarioTecnico[];
 }
-export default function FormAgendamento({
+export default function FormEditAgendamento({
+	agendamento,
 	coordenadorias,
 	motivos,
 	tecnicos,
-}: FormAgendamentoProps) {
-	console.log(tecnicos);
+}: FormEditAgendamentoProps) {
 	const [isPending, startTransition] = useTransition();
+
+	const startDate = new Date(agendamento?.dataInicio ?? Date.now());
+	const endDate = new Date(agendamento?.dataFim ?? Date.now());
+	const startTime = startDate.toTimeString().slice(0, 5);
+	const endTime = endDate.toTimeString().slice(0, 5);
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			coordenadoriaId: '',
-			cpf: '',
-			data: new Date(),
-			motivoId: '',
-			municipe: '',
-			processo: '',
-			rg: '',
-			tecnicoId: '',
-			resumo: '',
-			startTime: '',
-			endTime: '',
+			coordenadoriaId: agendamento.coordenadoriaId ?? '',
+			cpf: agendamento.cpf ?? '',
+			data: agendamento.dataInicio ?? new Date(),
+			motivoId: agendamento.motivoId ?? '',
+			municipe: agendamento.municipe ?? '',
+			processo: agendamento.processo ?? '',
+			rg: agendamento.rg ?? '',
+			tecnicoId: agendamento.tecnicoId ?? '',
+			resumo: agendamento.resumo ?? '',
+			startTime: startTime ?? '',
+			endTime: endTime ?? '',
 		},
 	});
 

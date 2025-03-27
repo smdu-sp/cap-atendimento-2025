@@ -1,0 +1,92 @@
+/** @format */
+'use client';
+import { Button } from '@/components/ui/button';
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from '@/components/ui/dialog';
+import { IAgendamento } from '@/types/agendamentos';
+import { Pencil } from 'lucide-react';
+import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
+import { listaCompleta as listaMotivos } from '@/services/motivos/query-functions/lista-completa';
+import FormEditAgendamento from './form-agendamento-edit';
+import { buscarTecnicos } from '@/services/usuarios/query-functions/buscar-tecnicos';
+import { redirect } from 'next/navigation';
+import { IUsuarioTecnico } from '@/types/usuario';
+import { useSession } from 'next-auth/react';
+import { useQuery } from '@tanstack/react-query';
+
+interface ModalEditAgendamentoProps {
+	agendamento: Partial<IAgendamento>;
+}
+
+export default function ModalEditAgendamento({
+	agendamento,
+}: ModalEditAgendamentoProps) {
+	const session = useSession();
+	if (!session.data) {
+		redirect('/login');
+	}
+
+	const access_token = session.data.access_token;
+
+	const { data: motivos, error } = useQuery({
+		queryKey: ['motivos', access_token],
+		queryFn: () => listaMotivos(access_token),
+		staleTime: 1000 * 60 * 5, // Cache por 5 minutos
+	});
+
+	const { data: coordenadorias, error: coordenadoriasError } = useQuery({
+		queryKey: ['coordenadorias', access_token],
+		queryFn: () => listaCoordenadorias(access_token),
+		staleTime: 1000 * 60 * 5, // Cache por 5 minutos
+	});
+
+	const { data: tecnicosResp, error: tecnicosRespError } = useQuery({
+		queryKey: ['tecnicos', access_token],
+		queryFn: () => buscarTecnicos(access_token),
+		staleTime: 1000 * 60 * 5, // Cache por 5 minutos
+	});
+
+	if (error || coordenadoriasError || tecnicosRespError) {
+		console.log(error, coordenadoriasError, tecnicosRespError);
+		return null;
+	}
+
+	if (!motivos?.data || !coordenadorias?.data || !tecnicosResp?.data) {
+		console.log('dados não encontrados');
+		return null;
+	}
+
+	const tecnicos = tecnicosResp.data as IUsuarioTecnico[];
+	return (
+		<Dialog>
+			<DialogTrigger
+				asChild
+				className='flex items-center gap-3 cursor-pointer'>
+				<Button variant={'ghost'}>
+					<Pencil />
+					<span className='sr-only'>Edição de Agendamento</span>
+				</Button>
+			</DialogTrigger>
+			<DialogContent className='sm:max-w-md md:max-w-2xl'>
+				<DialogHeader>
+					<DialogTitle>Editar Agendamento</DialogTitle>
+					<DialogDescription>
+						Preencha os dados para editar agendamento{' '}
+					</DialogDescription>
+				</DialogHeader>
+				<FormEditAgendamento
+					agendamento={agendamento}
+					motivos={motivos.data}
+					coordenadorias={coordenadorias.data}
+					tecnicos={tecnicos}
+				/>
+			</DialogContent>
+		</Dialog>
+	);
+}

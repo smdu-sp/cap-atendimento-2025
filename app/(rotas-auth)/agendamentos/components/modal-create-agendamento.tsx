@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dialog';
 import { CalendarPlus } from 'lucide-react';
 import { useState } from 'react';
-import FormAgendamento from './form-agendamento';
+import FormAgendamento from './form-create-agendamento';
 import { ICoordenadoria } from '@/types/coordenadoria';
 import { IMotivo } from '@/types/motivo';
 import { IUsuarioTecnico } from '@/types/usuario';

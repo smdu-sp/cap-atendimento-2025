@@ -47,7 +47,7 @@ export default async function Home({
 	}
 
 	const data = resp.data as IDashboardAgendamento;
-	console.log('DASHBOARD_DATA', data);
+
 	if (!data) {
 		return (
 			<p className='text-muted-foreground text-sm italic'>
