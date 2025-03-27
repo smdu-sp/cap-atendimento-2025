@@ -11,10 +11,9 @@ export async function buscarTudo(
 	pagina: number = 1,
 	limite: number = 10,
 	busca: string = '',
-	access_token?: string,
 ): Promise<IRespostaAgendamento> {
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
-	console.log(access_token);
+
 	const session = await auth();
 	if (!session) {
 		redirect('/login');

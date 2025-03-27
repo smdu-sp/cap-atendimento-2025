@@ -194,8 +194,6 @@ export default function FormEditAgendamento({
 			`Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
 		);
 
-		console.log({ dataInicio, dataFim });
-
 		startTransition(async () => {
 			if (!agendamento.id) {
 				toast.error('ID do agendamento não encontrado');

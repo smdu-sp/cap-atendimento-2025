@@ -179,8 +179,6 @@ export default function FormAgendamento({
 			`Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
 		);
 
-		console.log({ dataInicio, dataFim });
-
 		startTransition(async () => {
 			const resp = await criar({
 				coordenadoriaId,

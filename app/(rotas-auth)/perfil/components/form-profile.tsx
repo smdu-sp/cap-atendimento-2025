@@ -54,7 +54,6 @@ export default function FormProfile({ user, id }: FormProfileProps) {
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		startTransition(async () => {
-			console.log(values);
 			const { nomeSocial } = values;
 			try {
 				const resp = await atualizar(id, { nomeSocial: nomeSocial });

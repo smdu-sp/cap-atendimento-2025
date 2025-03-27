@@ -28,7 +28,6 @@ export async function atualizar(
 			},
 		);
 		const dataResponse = await response.json();
-    console.log(response, data);
 		if (response.status === 200) {
 			revalidatePath('/');
 			return {

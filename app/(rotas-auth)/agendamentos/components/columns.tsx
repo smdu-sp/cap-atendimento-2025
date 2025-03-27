@@ -12,8 +12,6 @@ function statusAleatorio(): string {
 	const index = Math.floor(Math.random() * status.length);
 	return status[index];
 }
-
-console.log(statusAleatorio());
 export const columns: ColumnDef<IAgendamento>[] = [
 	{
 		accessorKey: 'municipe',

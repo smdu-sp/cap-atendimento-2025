@@ -7,13 +7,11 @@ import { ICreateUsuario, IRespostaUsuario, IUsuario } from '@/types/usuario';
 import { auth } from '@/lib/auth/auth';
 import { revalidateTag } from 'next/cache';
 
-export async function criar(
-	data: ICreateUsuario,
-): Promise<IRespostaUsuario> {
+export async function criar(data: ICreateUsuario): Promise<IRespostaUsuario> {
 	const session = await auth();
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 	if (!session) redirect('/login');
-	console.log(data);
+
 	const response: Response = await fetch(`${baseURL}usuarios/criar`, {
 		method: 'POST',
 		headers: {
@@ -23,14 +21,15 @@ export async function criar(
 		body: JSON.stringify(data),
 	});
 	const dataResponse = await response.json();
-	if (response.status === 201){
+	if (response.status === 201) {
 		revalidateTag('users');
 		return {
 			ok: true,
 			error: null,
 			data: dataResponse as IUsuario,
 			status: 201,
-	}};
+		};
+	}
 	if (!dataResponse)
 		return {
 			ok: false,
