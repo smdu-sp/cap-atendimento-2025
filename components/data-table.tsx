@@ -33,7 +33,7 @@ export default function DataTable<TData, TValue>({
 		getCoreRowModel: getCoreRowModel(),
 	});
 	return (
-		<div>
+	
 			<div className='rounded-md border'>
 				<Table className='bg-background dark:bg-muted/50 '>
 					<TableHeader className='bg-primary hover:bg-primary'>
@@ -89,7 +89,7 @@ export default function DataTable<TData, TValue>({
 					</TableBody>
 				</Table>
 			</div>
-		</div>
+		
 	);
 }
 

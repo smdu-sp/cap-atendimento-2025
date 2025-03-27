@@ -1,9 +1,11 @@
 /** @format */
 
 import {
+	Building,
 	CalendarCheck,
 	CalendarSearch,
 	ChevronRight,
+	GitPullRequestDraft,
 	House,
 	LucideProps,
 	Users,
@@ -73,6 +75,18 @@ export async function NavMain() {
 			icone: Users,
 			titulo: 'Usuários',
 			url: '/usuarios',
+			permissao: 'usuario_buscar_tudo',
+		},
+		{
+			icone: GitPullRequestDraft,
+			titulo: 'Motivos',
+			url: '/motivos',
+			permissao: 'usuario_buscar_tudo',
+		},
+		{
+			icone: Building,
+			titulo: 'Coordenadorias',
+			url: '/coordenadorias',
 			permissao: 'usuario_buscar_tudo',
 		},
 	];

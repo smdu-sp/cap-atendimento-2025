@@ -57,7 +57,7 @@ async function Usuarios({
 	return (
 		<div className='mx-auto w-full relative h-full px-4 md:px-8'>
 			<h1 className='text-4xl font-bold mt-5'>Usuários</h1>
-			<div className='flex flex-col  gap-10 my-10'>
+			<div className='flex flex-col  gap-8 my-10 container w-full mx-auto'>
 				{dados && (
 					<DataTable
 						columns={columns}

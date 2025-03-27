@@ -38,7 +38,7 @@ export default async function ListaAgendamentoPage({
 			<h1 className='text-xl md:text-4xl font-bold mt-5'>
 				Lista de Agendamentos
 			</h1>
-			<div className='flex flex-col gap-5 my-10 md:w-full '>
+			<div className='flex flex-col  gap-8 my-10 container w-full mx-auto'>
 				<FilterAgendamento />
 				{dados && (
 					<DataTable

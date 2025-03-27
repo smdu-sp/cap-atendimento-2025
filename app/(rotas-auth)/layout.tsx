@@ -21,7 +21,7 @@ export default async function RotasAuth({
 	const session = await auth();
 	if (!session) redirect('/login');
 	return (
-		<div className='relative w-full overflow-hidden'>
+		<div className='relative w-full'>
 			<ModeToggle className='absolute top-4 right-4 z-50' />
 			<SidebarProvider>
 				<AppSidebar />
