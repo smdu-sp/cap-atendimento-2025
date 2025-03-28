@@ -20,6 +20,7 @@ import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import FormEditAgendamento from './form-agendamento-edit';
 import { IMotivo } from '@/types/motivo';
+import { ICoordenadoria } from '@/types/coordenadoria';
 
 interface ModalEditAgendamentoProps {
 	agendamento: Partial<IAgendamento>;
@@ -65,6 +66,7 @@ export default function ModalEditAgendamento({
 
 	const tecnicos = tecnicosResp.data as IUsuarioTecnico[];
 	const motivosData = motivos.data as IMotivo[];
+	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
 	return (
 		<Dialog>
 			<DialogTrigger
@@ -91,7 +93,7 @@ export default function ModalEditAgendamento({
 				<FormEditAgendamento
 					agendamento={agendamento}
 					motivos={motivosData}
-					coordenadorias={coordenadorias.data}
+					coordenadorias={coordenadoriasData}
 					tecnicos={tecnicos}
 				/>
 			</DialogContent>

@@ -9,17 +9,17 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '@/components/ui/dialog';
-import { IMotivo } from '@/types/motivo';
+import { ICoordenadoria } from '@/types/coordenadoria';
 import { Plus, SquarePen } from 'lucide-react';
-import FormMotivo from './form-motivo';
+import FormCoornadoria from './form-coordenadoria';
 // import FormUsuario from './form-usuario';
 
 export default function ModalUpdateAndCreate({
 	isUpdating,
-	motivo,
+	coordenadoria,
 }: {
 	isUpdating: boolean;
-	motivo?: Partial<IMotivo>;
+	coordenadoria?: Partial<ICoordenadoria>;
 }) {
 	return (
 		<Dialog>
@@ -47,13 +47,15 @@ export default function ModalUpdateAndCreate({
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>{isUpdating ? 'Editar ' : 'Criar '}Motivo</DialogTitle>
+					<DialogTitle>
+						{isUpdating ? 'Editar ' : 'Criar '}Coordenadoria
+					</DialogTitle>
 					<DialogDescription>
-						Gerencie as informações do motivo selecionado
+						Gerencie as informações da coordenadoria selecionada
 					</DialogDescription>
 				</DialogHeader>
-				<FormMotivo
-					motivo={motivo}
+				<FormCoornadoria
+					coordenadoria={coordenadoria}
 					isUpdating={isUpdating}
 				/>
 			</DialogContent>

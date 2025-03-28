@@ -50,7 +50,7 @@ export async function NavUser() {
 						<DropdownMenuTrigger asChild>
 							<SidebarMenuButton
 								size='lg'
-								className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'>
+								className='data-[state=open]:bg-sidebar-accent cursor-pointer data-[state=open]:text-sidebar-accent-foreground'>
 								<Avatar className='h-8 w-8 rounded-full aspect-square'>
 									<AvatarImage src={session.usuario.avatar} />
 									<AvatarFallback className='rounded-full'>

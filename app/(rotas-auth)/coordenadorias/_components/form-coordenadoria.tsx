@@ -12,9 +12,9 @@ import {
 	FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { atualizar } from '@/services/motivos/server-functions/atualizar';
-import { criar } from '@/services/motivos/server-functions/criar';
-import { IMotivo } from '@/types/motivo';
+import { atualizar } from '@/services/coordenadorias/server-functions/atualizar';
+import { criar } from '@/services/coordenadorias/server-functions/criar';
+import { ICoordenadoria } from '@/types/coordenadoria';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useTransition } from 'react';
@@ -23,48 +23,54 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 const formSchema = z.object({
-	texto: z.string().min(4).max(50),
+	sigla: z.string().min(4).max(50),
 	status: z.boolean().optional(),
 });
 
 interface FormMotivoProps {
 	isUpdating: boolean;
-	motivo?: Partial<IMotivo>;
+	coordenadoria?: Partial<ICoordenadoria>;
 }
 
-export default function FormMotivo({ isUpdating, motivo }: FormMotivoProps) {
+export default function FormCoornadoria({
+	isUpdating,
+	coordenadoria,
+}: FormMotivoProps) {
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			texto: motivo?.texto ?? '',
-			status: motivo?.status ?? true,
+			sigla: coordenadoria?.sigla ?? '',
+			status: coordenadoria?.status ?? true,
 		},
 	});
 
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		startTransition(async () => {
-			if (isUpdating && motivo?.id) {
-				const resp = await atualizar(motivo.id, {
-					texto: values.texto,
+			if (isUpdating && coordenadoria?.id) {
+				const resp = await atualizar(coordenadoria.id, {
+					sigla: values.sigla,
 					status: values.status,
 				});
+
 				if (resp.error) {
 					toast.error('Algo deu errado', { description: resp.error });
 				}
 				if (resp.ok) {
-					toast.success('Motivo Atualizado', { description: values.texto });
+					toast.success('Coordenadoria Atualizado', {
+						description: values.sigla,
+					});
 					window.location.reload();
 				}
 			} else {
 				//CRIA MOTIVO
-				const { texto } = values;
-				const resp = await criar({ texto });
+				const { sigla } = values;
+				const resp = await criar({ sigla });
 				if (resp.error) {
 					toast.error('Algo deu errado', { description: resp.error });
 				}
 				if (resp.ok) {
-					toast.success('Motivo Criado', { description: texto });
+					toast.success('Coordenadoria Criada', { description: sigla });
 					window.location.reload();
 				}
 			}
@@ -78,13 +84,13 @@ export default function FormMotivo({ isUpdating, motivo }: FormMotivoProps) {
 				className=' flex flex-col gap-5 w-full mb-5'>
 				<FormField
 					control={form.control}
-					name='texto'
+					name='sigla'
 					render={({ field }) => (
 						<FormItem className='w-full'>
-							<FormLabel>Motivo</FormLabel>
+							<FormLabel>Coordenadoria</FormLabel>
 							<FormControl>
 								<Input
-									placeholder='Motivo para agendamento'
+									placeholder='Siga da coordenadoria para agendamento'
 									{...field}
 								/>
 							</FormControl>
