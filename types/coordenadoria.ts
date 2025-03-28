@@ -17,3 +17,8 @@ export interface IResponseCoordenadoria {
 	data: ICoordenadoria[] | null;
 	status: number;
 }
+
+export interface ICreateCoordenadoria {
+	sigla: 		string;
+	status?: boolean;
+}
