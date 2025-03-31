@@ -17,7 +17,6 @@ import { IUsuarioTecnico } from '@/types/usuario';
 import { useQuery } from '@tanstack/react-query';
 import { SquarePen } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import FormEditAgendamento from './form-agendamento-edit';
 import { IMotivo } from '@/types/motivo';
 import { ICoordenadoria } from '@/types/coordenadoria';
@@ -30,11 +29,8 @@ export default function ModalEditAgendamento({
 	agendamento,
 }: ModalEditAgendamentoProps) {
 	const session = useSession();
-	if (!session.data) {
-		redirect('/login');
-	}
 
-	const access_token = session.data.access_token;
+	const access_token = session.data ? session.data.access_token : '';
 
 	const { data: motivos, error } = useQuery({
 		queryKey: ['motivos', access_token],

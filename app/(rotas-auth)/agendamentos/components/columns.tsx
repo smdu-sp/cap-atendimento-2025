@@ -2,16 +2,11 @@
 
 'use client';
 
-import { IAgendamento } from '@/types/agendamentos';
+import { IAgendamento, IStatus } from '@/types/agendamentos';
 import { ColumnDef } from '@tanstack/react-table';
 import ModalEditAgendamento from './modal-edit-agendamento';
 import { Badge } from '@/components/ui/badge';
 
-function statusAleatorio(): string {
-	const status = ['Cancelado', 'Concluído', 'Agendado'];
-	const index = Math.floor(Math.random() * status.length);
-	return status[index];
-}
 export const columns: ColumnDef<IAgendamento>[] = [
 	{
 		accessorKey: 'municipe',
@@ -90,16 +85,21 @@ export const columns: ColumnDef<IAgendamento>[] = [
 	{
 		accessorKey: 'status',
 		header: () => <p className='text-center'>Status</p>,
-		cell: () => {
-			const status = statusAleatorio();
+		cell: ({ row }) => {
+			const status = row.original.status;
+			if (!status) {
+				return (
+					<p className='italic text-muted-foreground'>Sem status definido</p>
+				);
+			}
 			return (
 				<div className='flex items-center justify-center w-full'>
 					<Badge
 						className='text-center'
 						variant={`${
-							status == 'Cancelado'
+							status == IStatus.CANCELADO
 								? 'destructive'
-								: status === 'Concluído'
+								: status === IStatus.CONCLUIDO
 								? 'success'
 								: 'default'
 						}`}>

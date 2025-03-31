@@ -21,6 +21,13 @@ export interface IAgendamento {
 	motivo?: IMotivo;
 	coordenadoria?: ICoordenadoria;
 	tecnico?: IUsuario;
+	status?: IStatus;
+}
+
+export enum IStatus {
+	AGENDADO,
+	CANCELADO,
+	CONCLUIDO,
 }
 
 export interface IPaginadoAgendamento {
@@ -41,6 +48,7 @@ export interface ICreateAgendamento {
 	dataInicio: Date;
 	dataFim: Date;
 	resumo?: string;
+	status?: IStatus;
 }
 export interface IDashboardAgendamento {
 	coordenadorias: IChart[];
@@ -80,4 +88,5 @@ export interface IUpdateAgendamento {
 	dataInicio?: Date;
 	dataFim?: Date;
 	resumo?: string;
+	status?: IStatus;
 }
