@@ -33,8 +33,8 @@ export default async function Home({
 	const resp = await dashboard(
 		motivoId.toString(),
 		coordenadoriaId.toString(),
-		dataInicio ? String(dataInicio) : '',
-		dataFim ? String(dataFim) : '',
+		dataInicio ? dataInicio.toString() : '',
+		dataFim ? dataFim.toString() : '',
 	);
 
 	const motivos = await listaMotivos(session.access_token);
@@ -66,6 +66,7 @@ export default async function Home({
 					<Filter
 						motivos={motivosData}
 						coordenadorias={coordenadoriasData}
+						page={'HOME'}
 					/>
 				)}
 				<BigNumbers numbers={[data.totalAno, data.totalMes, data.totalDia]} />

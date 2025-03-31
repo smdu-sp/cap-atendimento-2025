@@ -5,29 +5,29 @@
 import { Input } from '@/components/ui/input';
 import { useEffect, useState } from 'react';
 
-interface AgendamentoPorProcessoProps {
+interface AgendamentoPorTecnicoProps {
 	enviarDados: (id: string, valor: string) => void;
 }
 
-export function AgendamentoPorProcesso({
+export function AgendamentoPorTecnico({
 	enviarDados,
-}: AgendamentoPorProcessoProps) {
-	const [processo, setProcesso] = useState('');
+}: AgendamentoPorTecnicoProps) {
+	const [tecnico, setTecnico] = useState('');
 
 	useEffect(() => {
-		return enviarDados('processo', processo);
+		return enviarDados('tecnico', tecnico);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [processo]);
+	}, [tecnico]);
 
 	return (
 		<div className='flex w-full gap-5'>
 			<div className='flex flex-col w-full md:w-60 '>
-				<p>Busca</p>
+				<p>Técnico</p>
 				<Input
-					value={processo}
-					onChange={(e) => setProcesso(e.target.value)}
+					value={tecnico}
+					onChange={(e) => setTecnico(e.target.value)}
 					className='bg-background'
-					placeholder='Buscar por processo'
+					placeholder='Buscar por técnico -  nome/RF'
 				/>
 			</div>
 		</div>

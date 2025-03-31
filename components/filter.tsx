@@ -5,6 +5,8 @@
 import { AgendamentoPorCoordenadoria } from '@/app/(rotas-auth)/agendamentos/components/agendamento-por-coordenadoria';
 import { AgendamentoPorData } from '@/app/(rotas-auth)/agendamentos/components/agendamento-por-data';
 import { AgendamentoPorMotivo } from '@/app/(rotas-auth)/agendamentos/components/agendamento-por-motivo';
+import { AgendamentoPorProcesso } from '@/app/(rotas-auth)/agendamentos/components/agendamento-por-processo';
+import { AgendamentoPorTecnico } from '@/app/(rotas-auth)/agendamentos/components/agendamento-por-tecnico';
 import { Button } from '@/components/ui/button';
 import { ICoordenadoria } from '@/types/coordenadoria';
 import { IMotivo } from '@/types/motivo';
@@ -15,8 +17,9 @@ import { useState, useTransition } from 'react';
 interface FilterProps {
 	motivos: IMotivo[];
 	coordenadorias: ICoordenadoria[];
+	page: string;
 }
-export function Filter({ coordenadorias, motivos }: FilterProps) {
+export function Filter({ coordenadorias, motivos, page }: FilterProps) {
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
 
@@ -25,11 +28,20 @@ export function Filter({ coordenadorias, motivos }: FilterProps) {
 		coordenadoriaId: '',
 		dataInicio: '',
 		dataFim: '',
+		processo: '',
+		tecnico: '',
 	});
 
 	function handleClick() {
 		router.push(
-			`/?motivoId=${params.motivoId}&coordenadoriaId=${params.coordenadoriaId}&dataInicio=${params.dataInicio}&dataFim=${params.dataFim}`,
+			`?motivoId=${params.motivoId}&coordenadoriaId=${
+				params.coordenadoriaId
+			}&dataInicio=${params.dataInicio.replaceAll(
+				'/',
+				'-',
+			)}&dataFim=${params.dataFim.replaceAll('/', '-')}&tecnico=${
+				params.tecnico
+			}&busca=${params.processo}`,
 		);
 	}
 
@@ -41,7 +53,8 @@ export function Filter({ coordenadorias, motivos }: FilterProps) {
 	};
 
 	return (
-		<div className='flex flex-col md:flex-row md:items-end gap-5 md:w-fit '>
+		<div className='flex flex-col md:flex-row md:items-end gap-5  md:w-fit  justify-start'>
+			<AgendamentoPorData enviarDados={receberDadosDoFilho} />
 			<AgendamentoPorMotivo
 				enviarDados={receberDadosDoFilho}
 				motivos={motivos}
@@ -50,7 +63,12 @@ export function Filter({ coordenadorias, motivos }: FilterProps) {
 				coordenadorias={coordenadorias}
 				enviarDados={receberDadosDoFilho}
 			/>
-			<AgendamentoPorData enviarDados={receberDadosDoFilho} />
+			{page == 'AGENDAMENTOS' && (
+				<>
+					<AgendamentoPorProcesso enviarDados={receberDadosDoFilho} />
+					<AgendamentoPorTecnico enviarDados={receberDadosDoFilho} />
+				</>
+			)}
 			<Button
 				onClick={() => startTransition(() => handleClick())}
 				disabled={isPending}
