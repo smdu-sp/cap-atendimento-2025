@@ -8,6 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { buscarTudo } from '@/services/agendamentos';
 import { IAgendamento, IPaginadoAgendamento } from '@/types/agendamentos';
 import ModalImportacao from './components/dropdown-options';
+import { Filtros } from './components/filtros';
 export default async function ListaAgendamentoPage({
 	searchParams,
 }: {
@@ -39,7 +40,8 @@ export default async function ListaAgendamentoPage({
 				Lista de Agendamentos
 			</h1>
 			<div className='flex flex-col  gap-8 my-10 container w-full mx-auto'>
-				<FilterAgendamento />
+				<Filtros />
+				{/* <FilterAgendamento /> */}
 				{dados && (
 					<DataTable
 						columns={columns}

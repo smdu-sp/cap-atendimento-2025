@@ -34,22 +34,26 @@ import { IMotivo } from '@/types/motivo';
 import { IUsuarioTecnico } from '@/types/usuario';
 // import { criar } from '@/services/agendamentos/server-functions/criar';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CalendarIcon, Loader2 } from 'lucide-react';
-import { useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+const participanteSchema = z.object({
+	nome: z.string({
+		required_error: 'Este campo é obrigatório',
+	}),
+	cpf: z.string(),
+	email: z.string({
+		required_error: 'Este campo é obrigatório',
+	}).email(),
+})
 const formSchema = z
 	.object({
-		municipe: z.string({
-			coerce: true,
-			required_error: 'Este campo é obrigatório',
-		}),
-		rg: z.string().optional(),
-		cpf: z.string().optional(),
+		participantes: z.array(participanteSchema).min(1).max(3),
 		processo: z.string({
 			coerce: true,
 			required_error: 'Este campo é obrigatório',
@@ -118,28 +122,37 @@ interface FormAgendamentoProps {
 	coordenadorias: ICoordenadoria[];
 	tecnicos: IUsuarioTecnico[];
 }
+
 export default function FormAgendamento({
 	coordenadorias,
 	motivos,
 	tecnicos,
 }: FormAgendamentoProps) {
 	const [isPending, startTransition] = useTransition();
+	const [participantesLista, setParticipantesLista] = useState<number[]>([0]);
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
+			participantes: [],
 			coordenadoriaId: '',
-			cpf: '',
 			data: new Date(),
 			motivoId: '',
-			municipe: '',
 			processo: '',
-			rg: '',
 			tecnicoId: '',
 			resumo: '',
 			startTime: '',
 			endTime: '',
 		},
 	});
+
+	function addParticipante() {
+		const ultimo = participantesLista[participantesLista.length - 1];
+		if (ultimo < 2) setParticipantesLista([...participantesLista, ultimo + 1]);
+	}
+
+	function removeParticipante(index: number) {
+		setParticipantesLista(participantesLista.filter((_, i) => i !== index));
+	}
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		// Do something with the form values.
@@ -151,11 +164,9 @@ export default function FormAgendamento({
 			startTime,
 			endTime,
 			motivoId,
-			municipe,
 			processo,
 			tecnicoId,
-			cpf,
-			rg,
+			participantes
 		} = values;
 
 		const dataInicio = new Date(
@@ -174,9 +185,12 @@ export default function FormAgendamento({
 			+endTime.split(':')[1],
 		);
 
+		const participantesString = participantes.map((participante) => {
+			return `${participante.nome}; `;
+		})
 		form.setValue(
 			'resumo',
-			`Motivo: ${motivoId}; Munícipe: ${municipe}; RG:${rg}; CPF:${cpf}; Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
+			`Motivo: ${motivoId}; Participantes: ${participantesString}Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
 		);
 
 		startTransition(async () => {
@@ -185,11 +199,9 @@ export default function FormAgendamento({
 				dataFim,
 				dataInicio,
 				motivoId,
-				municipe,
 				processo,
 				tecnicoId,
-				cpf,
-				rg,
+				// participantes
 			});
 
 			if (!resp.ok) {
@@ -204,55 +216,66 @@ export default function FormAgendamento({
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<div className='grid md:grid-cols-2 gap-5 items-end w-full mb-5'>
-					<FormField
-						control={form.control}
-						name='municipe'
-						render={({ field }) => (
-							<FormItem aria-required>
-								<FormLabel aria-required>Munícipe</FormLabel>
-								<FormControl aria-required>
-									<Input
-										required
-										placeholder='Nome do munícipe'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='rg'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>RG</FormLabel>
-								<FormControl>
-									<Input
-										placeholder='RG do munícipe'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='cpf'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>CPF</FormLabel>
-								<FormControl>
-									<Input
-										placeholder='CPF do munícipe'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					<div className='col-span-2 flex justify-between'>
+						<p>Participantes</p>
+						<Button type='button' onClick={() => addParticipante()} disabled={participantesLista.length >= 3}>+</Button>
+					</div>
+					{participantesLista.map((index) => (
+						<div className={`col-span-2 grid md:grid-cols-2 gap-5 items-end w-full`} key={index}>
+							<FormField
+								control={form.control}
+								name={`participantes.${index}.nome`}
+								render={({ field }) => (
+									<FormItem aria-required className='w-full'>
+										<FormLabel aria-required>Nome</FormLabel>
+										<FormControl aria-required>
+											<Input
+												required
+												placeholder={`Nome do participante ${index + 1}`}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>									
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name={`participantes.${index}.cpf`}
+								render={({ field }) => (
+									<FormItem className='w-full'>
+										<FormLabel>CPF</FormLabel>
+										<FormControl>
+											<Input
+												placeholder={`CPF do participante ${index + 1}`}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name={`participantes.${index}.email`}
+								render={({ field }) => (
+									<FormItem className='w-full col-span-2'>
+										<FormLabel>Email</FormLabel>
+										<FormControl>
+											<Input
+												placeholder={`E-mail do participante ${index + 1}`}
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+										{index > 0 && (
+											<Button type='button' onClick={() => removeParticipante(index)}>x</Button>
+										)}
+									</FormItem>
+								)}
+							/>
+						</div>
+					))}
 					<FormField
 						control={form.control}
 						name='processo'

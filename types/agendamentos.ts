@@ -31,7 +31,7 @@ export interface IPaginadoAgendamento {
 }
 
 export interface ICreateAgendamento {
-	municipe: string;
+	municipe?: string;
 	rg?: string;
 	cpf?: string;
 	processo: string;
