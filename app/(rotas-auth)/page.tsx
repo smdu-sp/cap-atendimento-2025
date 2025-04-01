@@ -10,6 +10,8 @@ import { dashboard } from '@/services/agendamentos/query-functions/dashboard';
 import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
 import { listaCompleta as listaMotivos } from '@/services/motivos/query-functions/lista-completa';
 import { IDashboardAgendamento } from '@/types/agendamentos';
+import { ICoordenadoria } from '@/types/coordenadoria';
+import { IMotivo } from '@/types/motivo';
 import { redirect } from 'next/navigation';
 
 export default async function Home({
@@ -31,8 +33,8 @@ export default async function Home({
 	const resp = await dashboard(
 		motivoId.toString(),
 		coordenadoriaId.toString(),
-		dataInicio ? String(dataInicio) : '',
-		dataFim ? String(dataFim) : '',
+		dataInicio ? dataInicio.toString() : '',
+		dataFim ? dataFim.toString() : '',
 	);
 
 	const motivos = await listaMotivos(session.access_token);
@@ -47,7 +49,8 @@ export default async function Home({
 	}
 
 	const data = resp.data as IDashboardAgendamento;
-
+	const motivosData = motivos.data as IMotivo[];
+	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
 	if (!data) {
 		return (
 			<p className='text-muted-foreground text-sm italic'>
@@ -61,8 +64,9 @@ export default async function Home({
 			<div className='flex flex-col gap-5 my-10 w-full'>
 				{motivos.data && coordenadorias.data && (
 					<Filter
-						motivos={motivos.data}
-						coordenadorias={coordenadorias.data}
+						motivos={motivosData}
+						coordenadorias={coordenadoriasData}
+						page={'HOME'}
 					/>
 				)}
 				<BigNumbers numbers={[data.totalAno, data.totalMes, data.totalDia]} />

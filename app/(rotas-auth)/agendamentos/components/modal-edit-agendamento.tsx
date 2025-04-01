@@ -17,8 +17,9 @@ import { IUsuarioTecnico } from '@/types/usuario';
 import { useQuery } from '@tanstack/react-query';
 import { SquarePen } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
 import FormEditAgendamento from './form-agendamento-edit';
+import { IMotivo } from '@/types/motivo';
+import { ICoordenadoria } from '@/types/coordenadoria';
 
 interface ModalEditAgendamentoProps {
 	agendamento: Partial<IAgendamento>;
@@ -28,11 +29,8 @@ export default function ModalEditAgendamento({
 	agendamento,
 }: ModalEditAgendamentoProps) {
 	const session = useSession();
-	if (!session.data) {
-		redirect('/login');
-	}
 
-	const access_token = session.data.access_token;
+	const access_token = session.data ? session.data.access_token : '';
 
 	const { data: motivos, error } = useQuery({
 		queryKey: ['motivos', access_token],
@@ -63,6 +61,8 @@ export default function ModalEditAgendamento({
 	}
 
 	const tecnicos = tecnicosResp.data as IUsuarioTecnico[];
+	const motivosData = motivos.data as IMotivo[];
+	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
 	return (
 		<Dialog>
 			<DialogTrigger
@@ -88,8 +88,8 @@ export default function ModalEditAgendamento({
 				</DialogHeader>
 				<FormEditAgendamento
 					agendamento={agendamento}
-					motivos={motivos.data}
-					coordenadorias={coordenadorias.data}
+					motivos={motivosData}
+					coordenadorias={coordenadoriasData}
 					tecnicos={tecnicos}
 				/>
 			</DialogContent>

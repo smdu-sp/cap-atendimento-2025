@@ -18,6 +18,8 @@ import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/
 import { listaCompleta as listaMotivos } from '@/services/motivos/query-functions/lista-completa';
 import { buscarTecnicos } from '@/services/usuarios/query-functions/buscar-tecnicos';
 import { IUsuarioTecnico } from '@/types/usuario';
+import { IMotivo } from '@/types/motivo';
+import { ICoordenadoria } from '@/types/coordenadoria';
 
 export default async function DropdownImportacao() {
 	const session = await auth();
@@ -39,6 +41,9 @@ export default async function DropdownImportacao() {
 	}
 
 	const tecnicos = tecnicosResp.data as IUsuarioTecnico[];
+	const motivosData = motivos.data as IMotivo[];
+	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
+	
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -55,8 +60,8 @@ export default async function DropdownImportacao() {
 				<DropdownMenuItem asChild>
 					<ModalFormAgendamento
 						tecnicos={tecnicos}
-						motivos={motivos.data}
-						coordenadorias={coordenadorias.data}
+						motivos={motivosData}
+						coordenadorias={coordenadoriasData}
 					/>
 				</DropdownMenuItem>
 			</DropdownMenuContent>

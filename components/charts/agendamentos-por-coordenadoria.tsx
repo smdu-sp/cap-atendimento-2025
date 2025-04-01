@@ -2,7 +2,14 @@
 
 'use client';
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts';
+import {
+	Bar,
+	BarChart,
+	CartesianGrid,
+	LabelList,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
 import {
 	Card,
@@ -18,12 +25,16 @@ import {
 	ChartTooltipContent,
 } from '@/components/ui/chart';
 import { IChart } from '@/types/agendamentos';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface AgendamentosPorCategoriaProps {
 	coordenadorias: IChart[];
 }
 
-export function AgendamentosPorCoordenadoria({ coordenadorias }: AgendamentosPorCategoriaProps) {
+export function AgendamentosPorCoordenadoria({
+	coordenadorias,
+}: AgendamentosPorCategoriaProps) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const chartConfig: any = {
 		Agendamentos: {
 			label: 'Agendamentos',
@@ -38,16 +49,18 @@ export function AgendamentosPorCoordenadoria({ coordenadorias }: AgendamentosPor
 		};
 	});
 
-	const chartData = coordenadorias.map((item, index) => {
+	const chartData = coordenadorias.map((item) => {
 		return {
-			motivo: item.label,
+			coordenadoria: item.label,
 			Agendamentos: item.value,
 			fill: `hsl(var(--chart-1))`,
 		};
 	});
 
+	const isMobile = useIsMobile();
+
 	return (
-		<Card className='flex flex-col'>
+		<Card className='flex flex-col h-[800px] md:h-full'>
 			<CardHeader className='items-start pb-0'>
 				<CardTitle className='text-xl'>
 					Agendamentos Por Coordenadoria
@@ -57,61 +70,90 @@ export function AgendamentosPorCoordenadoria({ coordenadorias }: AgendamentosPor
 				</CardDescription>
 			</CardHeader>
 			<CardContent className='flex-1 pb-0'>
-				<ChartContainer
-					config={chartConfig}
-					className='mx-auto w-full max-h-[300px] flex items-center justify-center'>
-					<BarChart
-						accessibilityLayer
-						data={chartData}
-						margin={{
-							top: 20,
-						}}>
-						<defs>
-							<linearGradient
-								id='fillCoordenadoria'
-								x1='0'
-								y1='1'
-								x2='0'
-								y2='1'>
-								<stop
-									offset='5%'
-									stopColor='var(--color-agendamentos)'
-									stopOpacity={0.8}
-								/>
-								<stop
-									offset='95%'
-									stopColor='var(--color-agendamentos)'
-									stopOpacity={0.1}
-								/>
-							</linearGradient>
-						</defs>
-						<ChartTooltip
-							cursor={false}
-							content={<ChartTooltipContent indicator='line' />}
-						/>
-						<CartesianGrid vertical={false} />
-						<XAxis
-							dataKey='motivo'
-							tickLine={false}
-							tickMargin={12}
-							axisLine={false}
-						/>
-
-						<Bar
+				{isMobile ? (
+					<ChartContainer
+						config={chartConfig}
+						className='mx-auto w-full max-h-full h-full'>
+						<BarChart
+							accessibilityLayer
 							data={chartData}
-							fill='url(#fillCoordenadoria'
-							radius={8}
-							strokeWidth={2}
-							dataKey='Agendamentos'>
-							<LabelList
-								position='top'
-								offset={8}
-								className='fill-foreground'
-								fontSize={12}
+							layout='vertical'
+							margin={{
+								left: 20,
+								right: 40,
+							}}>
+							<ChartTooltip
+								cursor={false}
+								content={<ChartTooltipContent indicator='line' />}
 							/>
-						</Bar>
-					</BarChart>
-				</ChartContainer>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey='Agendamentos'
+								type='number'
+								hide
+							/>
+							<YAxis
+								dataKey='coordenadoria'
+								type='category'
+								tickLine={false}
+								tickMargin={10}
+								height={400}
+								axisLine={false}
+							/>
+
+							<Bar
+								data={chartData}
+								fill='var(--color-coordenadoria)'
+								radius={8}
+								strokeWidth={2}
+								dataKey='Agendamentos'>
+								<LabelList
+									position='right'
+									offset={8}
+									className='fill-foreground'
+									fontSize={12}
+								/>
+							</Bar>
+						</BarChart>
+					</ChartContainer>
+				) : (
+					<ChartContainer
+						config={chartConfig}
+						className='mx-auto w-full max-h-[300px] flex items-center justify-center'>
+						<BarChart
+							accessibilityLayer
+							data={chartData}
+							margin={{
+								top: 20,
+							}}>
+							<ChartTooltip
+								cursor={false}
+								content={<ChartTooltipContent indicator='line' />}
+							/>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey='coordenadoria'
+								tickLine={false}
+								tickMargin={12}
+								axisLine={false}
+							/>
+
+							<Bar
+								data={chartData}
+								fill='var(--color-agendamentos)'
+								radius={8}
+								strokeWidth={2}
+								dataKey='Agendamentos'>
+								<LabelList
+									position='top'
+									offset={8}
+									className='fill-foreground'
+									fontSize={12}
+								/>
+							</Bar>
+						</BarChart>
+					</ChartContainer>
+				)}
 			</CardContent>
 		</Card>
 	);

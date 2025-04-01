@@ -25,8 +25,14 @@ export function AgendamentoPorData({ enviarDados }: FilterEnviaDados) {
 
 	useEffect(() => {
 		if (data && data.from && data.to) {
-			enviarDados('dataInicio', data?.from?.toLocaleDateString('pt-BR'));
-			enviarDados('dataFim', data?.to?.toLocaleDateString('pt-BR'));
+			enviarDados(
+				'dataInicio',
+				data?.from?.toLocaleDateString('pt-BR', { dateStyle: 'short' }),
+			);
+			enviarDados(
+				'dataFim',
+				data?.to?.toLocaleDateString('pt-BR', { dateStyle: 'short' }),
+			);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data]);

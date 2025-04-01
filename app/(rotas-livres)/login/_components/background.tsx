@@ -20,8 +20,8 @@ export default function Background() {
     }
 
     return <Image
-            width={1200}
-            height={1200}
+            width={800}
+            height={800}
             src={tema === "dark" ? escuro.src : claro.src}
             alt="Edíficio Martinelli"
             className="absolute inset-0 h-full w-full object-cover md:hidden"

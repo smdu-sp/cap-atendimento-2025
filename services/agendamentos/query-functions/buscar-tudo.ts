@@ -11,6 +11,12 @@ export async function buscarTudo(
 	pagina: number = 1,
 	limite: number = 10,
 	busca: string = '',
+	tecnico: string = '',
+	motivoId: string = '',
+	coordenadoriaId: string = '',
+	status: string = '',
+	dataInicio: string = '',
+	dataFim: string = '',
 ): Promise<IRespostaAgendamento> {
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -20,7 +26,7 @@ export async function buscarTudo(
 	}
 	try {
 		const agendamentos = await fetch(
-			`${baseURL}agendamentos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}`,
+			`${baseURL}agendamentos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&motivoId=${motivoId}&coordenadoriaId=${coordenadoriaId}&dataInicio=${dataInicio}&dataFim=${dataFim}&tecnico=${tecnico}&status=${status}`,
 			{
 				method: 'GET',
 				headers: {
@@ -47,7 +53,7 @@ export async function buscarTudo(
 	} catch (error) {
 		return {
 			ok: false,
-			error: 'Não foi possível buscar a lista de usuários:' + error,
+			error: 'Não foi possível buscar a lista de agendamentos:' + error,
 			data: null,
 			status: 400,
 		};

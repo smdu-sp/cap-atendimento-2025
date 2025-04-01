@@ -13,6 +13,7 @@ export async function listaCompleta(
 				'Content-Type': 'application/json',
 				Authorization: `Bearer ${access_token}`,
 			},
+			next: { tags: ['coordenadorias'], revalidate: 120 },
 		});
 		const data = await motivos.json();
 		return {
