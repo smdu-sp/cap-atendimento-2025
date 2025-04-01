@@ -1,7 +1,6 @@
 /** @format */
 
 import DataTable from '@/components/data-table';
-import { Filter } from '@/components/filter';
 import Pagination from '@/components/pagination';
 import { Separator } from '@/components/ui/separator';
 import { auth } from '@/lib/auth/auth';
@@ -15,7 +14,7 @@ import ModalImportacao from './components/dropdown-options';
 import { IMotivo } from '@/types/motivo';
 import { ICoordenadoria } from '@/types/coordenadoria';
 
-import { Filtros } from './components/filtros';
+import { Filtros } from '@/components/filtros';
 export default async function ListaAgendamentoPage({
 	searchParams,
 }: {
@@ -66,8 +65,8 @@ export default async function ListaAgendamentoPage({
 	const motivos = await listaMotivos(session.access_token);
 	const coordenadorias = await listaCoordenadorias(session.access_token);
 
-	const motivosData = motivos.data as IMotivo[];
-	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
+	const motivosData = (motivos.data as IMotivo[]).map((motivo) => ({ value: motivo.id, label: motivo.texto }));
+	const coordenadoriasData = (coordenadorias.data as ICoordenadoria[]).map((coordenadoria) => ({ value: coordenadoria.id, label: coordenadoria.sigla }));
 
 	return (
 		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
@@ -75,10 +74,13 @@ export default async function ListaAgendamentoPage({
 				Lista de Agendamentos
 			</h1>
 			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
-				<Filter
-					motivos={motivosData}
-					coordenadorias={coordenadoriasData}
-					page={'AGENDAMENTOS'}
+				<Filtros
+					camposFiltraveis={[
+						{ tag: 'busca', nome: 'Busca', tipo: 0, placeholder: 'Buscar por processo, municipe ou documento' },
+						{ tag: 'tecnico', nome: 'Técnico', tipo: 0, placeholder: 'Buscar por técnico -  nome/RF' },
+						{ tag: 'motivoId', nome: 'Motivo', tipo: 2, valores: motivosData, placeholder: 'Motivos' },
+						{ tag: 'coordenadoriaId', nome: 'Coordenadoria', tipo: 2, valores: coordenadoriasData, placeholder: 'Coordenadorias' },
+					]}
 				/>
 				{dados && (
 					<DataTable
