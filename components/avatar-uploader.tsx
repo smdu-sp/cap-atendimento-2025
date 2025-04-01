@@ -33,7 +33,6 @@ export function AvatarUploader({ avatarUrl, id }: AvatarUploaderProps) {
 			const resp = await atualizar(id, { avatar: inputUrl });
 
 			if (!resp.ok) {
-				console.log(resp.error);
 				toast.error('Algo deu errado');
 			} else {
 				if (session?.usuario && resp.data) {
@@ -53,7 +52,6 @@ export function AvatarUploader({ avatarUrl, id }: AvatarUploaderProps) {
 			// Se você tiver uma função específica para atualizar a sessão
 			// await updateSession(updatedSession);
 
-			console.log(resp);
 			toast.success('Avatar atualizado com sucesso');
 		} catch (error) {
 			console.log(error);

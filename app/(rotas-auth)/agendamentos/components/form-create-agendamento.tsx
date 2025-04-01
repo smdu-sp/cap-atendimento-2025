@@ -205,7 +205,6 @@ export default function FormAgendamento({
 			});
 
 			if (!resp.ok) {
-				console.log(resp.error);
 				toast.error('Algo deu errado');
 			} else {
 				toast.success('Agendamento criado com sucesso');

@@ -29,7 +29,6 @@ export default function ModalDelete({
 			? await atualizar(id, { status: false })
 			: await atualizar(id, { status: true });
 		if (!resp.ok) {
-			console.log(resp.error);
 			toast.error('Algo deu errado', { description: resp.error });
 		} else {
 			window.location.reload();

@@ -29,7 +29,6 @@ export default function ModalDelete({
 			? await usuario.autorizar(id)
 			: await usuario.desativar(id);
 		if (!resp.ok) {
-			console.log(resp.error);
 			toast.error('Algo deu errado', { description: resp.error });
 		} else {
 			toast.success(

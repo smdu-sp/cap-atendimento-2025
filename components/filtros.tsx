@@ -38,7 +38,6 @@ interface FiltrosProps {
 }
 
 export function Filtros({ camposFiltraveis }: FiltrosProps) {
-	console.log(camposFiltraveis);
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();

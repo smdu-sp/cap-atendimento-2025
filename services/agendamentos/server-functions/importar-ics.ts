@@ -20,7 +20,6 @@ export async function importarIcs(data: FormData) {
 			body: data,
 		});
 
-		console.log(response);
 		if (response.status === 201) {
 			revalidateTag('agendamentos');
 			return {

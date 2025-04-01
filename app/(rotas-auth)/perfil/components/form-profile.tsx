@@ -59,8 +59,6 @@ export default function FormProfile({ user, id }: FormProfileProps) {
 				const resp = await atualizar(id, { nomeSocial: nomeSocial });
 
 				if (!resp.ok) {
-					console.log(resp);
-					console.log(resp.error);
 					toast.error('Algo deu errado');
 				} else {
 					if (session?.usuario && resp.data) {

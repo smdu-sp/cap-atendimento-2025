@@ -38,7 +38,6 @@ export async function atualizar(
 			};
 		}
 		if (!dataResponse) {
-			console.log(response);
 			return {
 				ok: false,
 				error: 'Erro ao atualizar motivo.',

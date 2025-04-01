@@ -6,6 +6,7 @@ export async function listaCompleta(
 	access_token: string,
 ): Promise<IRespostaMotivo> {
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
+	console.log(baseURL);
 	try {
 		const motivos = await fetch(`${baseURL}motivos/lista-completa`, {
 			method: 'GET',

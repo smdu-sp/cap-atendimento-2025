@@ -213,7 +213,6 @@ export default function FormEditAgendamento({
 			});
 
 			if (!resp.ok) {
-				console.log(resp.error);
 				toast.error('Algo deu errado');
 			} else {
 				toast.success('Agendamento atualizado com sucesso');

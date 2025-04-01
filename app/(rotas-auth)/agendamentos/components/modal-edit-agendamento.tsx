@@ -51,12 +51,10 @@ export default function ModalEditAgendamento({
 	});
 
 	if (error || coordenadoriasError || tecnicosRespError) {
-		console.log(error, coordenadoriasError, tecnicosRespError);
 		return null;
 	}
 
 	if (!motivos?.data || !coordenadorias?.data || !tecnicosResp?.data) {
-		console.log('dados não encontrados');
 		return null;
 	}
 

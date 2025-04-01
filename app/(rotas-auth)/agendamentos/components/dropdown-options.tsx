@@ -26,18 +26,15 @@ export default async function DropdownImportacao() {
 	if (!session) {
 		redirect('/login');
 	}
-	console.log(session);
 	const motivos = await listaMotivos(session.access_token);
 	const coordenadorias = await listaCoordenadorias(session.access_token);
 	const tecnicosResp = await buscarTecnicos(session.access_token);
 
 	if (!motivos.ok || !coordenadorias.ok || !tecnicosResp.ok) {
-		console.log(motivos.error, coordenadorias.error, tecnicosResp.error);
 		return null;
 	}
 
 	if (!motivos.data || !coordenadorias.data || !tecnicosResp.data) {
-		console.log('Motivos, técnicos e coordenadorias não encontrados');
 		return null;
 	}
 

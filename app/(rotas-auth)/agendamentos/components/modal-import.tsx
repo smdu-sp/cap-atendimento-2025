@@ -27,7 +27,6 @@ export default function ModalImportAgendamento() {
 			const data = new FormData(e.target as HTMLFormElement);
 			const resp = await importarIcs(data);
 			if (!resp || !resp.ok) {
-				console.log(resp.error);
 				toast.error('Algo deu errado');
 			} else {
 				const { agendamentos, duplicados } = resp.data as { agendamentos: number, duplicados: number };
