@@ -5,15 +5,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CalendarIcon, RefreshCw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState, useTransition } from 'react';
-import { DatePickerWithRange } from './ui/date-range';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Calendar } from './ui/calendar';
-import { ptBR } from 'date-fns/locale';
-import { format } from 'path';
-import { cn } from '@/lib/utils';
 
 interface CampoFiltravel {
 	nome: string;
@@ -61,7 +55,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 				[key]: value,
 			}));
 		}
-	}, []);
+	}, [searchParams]);
 
 	function handleClick() {
 		let urlParams = '';
@@ -133,6 +127,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 	}
 
 	function renderData(campo: CampoFiltravel) {
+		console.log(campo);
 		return null;
 	}
 
