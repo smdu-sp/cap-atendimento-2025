@@ -26,6 +26,7 @@ export default async function DropdownImportacao() {
 	if (!session) {
 		redirect('/login');
 	}
+	console.log(session);
 	const motivos = await listaMotivos(session.access_token);
 	const coordenadorias = await listaCoordenadorias(session.access_token);
 	const tecnicosResp = await buscarTecnicos(session.access_token);
