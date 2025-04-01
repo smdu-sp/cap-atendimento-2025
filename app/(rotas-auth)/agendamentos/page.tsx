@@ -9,13 +9,12 @@ import { buscarTudo } from '@/services/agendamentos';
 import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
 import { listaCompleta as listaMotivos } from '@/services/motivos/query-functions/lista-completa';
 import { IAgendamento, IPaginadoAgendamento } from '@/types/agendamentos';
+import { ICoordenadoria } from '@/types/coordenadoria';
+import { IMotivo } from '@/types/motivo';
 import { redirect } from 'next/navigation';
 import { columns } from './components/columns';
 import ModalImportacao from './components/dropdown-options';
-import { IMotivo } from '@/types/motivo';
-import { ICoordenadoria } from '@/types/coordenadoria';
 
-import { Filtros } from './components/filtros';
 export default async function ListaAgendamentoPage({
 	searchParams,
 }: {

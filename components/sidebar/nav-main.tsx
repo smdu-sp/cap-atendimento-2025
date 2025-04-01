@@ -3,6 +3,7 @@
 import {
 	Building,
 	CalendarCheck,
+	CalendarClock,
 	CalendarSearch,
 	ChevronRight,
 	GitPullRequestDraft,
@@ -67,6 +68,11 @@ export async function NavMain() {
 			icone: CalendarCheck,
 			titulo: 'Agendamentos do dia',
 			url: '/hoje',
+		},
+		{
+			icone: CalendarClock,
+			titulo: 'Meus Agendamentos',
+			url: '/escala',
 		},
 	];
 
