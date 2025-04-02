@@ -3,7 +3,6 @@
 import DataTable from '@/components/data-table';
 import { auth } from '@/lib/auth/auth';
 import { buscarTudo } from '@/services/coordenadorias/query-functions/buscar-tudo';
-import { redirect } from 'next/navigation';
 import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
 import { ICoordenadoria, IPaginadoCoordenadoria } from '@/types/coordenadoria';

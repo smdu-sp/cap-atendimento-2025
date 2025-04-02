@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { CalendarIcon, RefreshCw, X } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState, useTransition } from 'react';
-import { DateRange, SelectRangeEventHandler } from 'react-day-picker';
+import { DateRange } from 'react-day-picker';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Calendar } from './ui/calendar';
 import { format } from 'date-fns';
@@ -89,7 +89,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 				filtros.push(renderTexto(campo));
 				break;
 			  case TiposFiltros.DATA:
-				filtros.push(renderDataRange(campo));
+				filtros.push(RenderDataRange(campo));
 				break;
 			  case TiposFiltros.SELECT:
 				filtros.push(renderSelect(campo));
@@ -141,7 +141,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 		</div>
 	}
 
-	function renderDataRange(campo: CampoFiltravel) {
+	function RenderDataRange(campo: CampoFiltravel) {
 		const param = searchParams.get(campo.tag);
 		const datas = param ? param.split(',') : ['', ''];
 
