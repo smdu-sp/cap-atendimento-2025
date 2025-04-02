@@ -83,7 +83,7 @@ async function Usuarios({
 	return (
 		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
 			<h1 className='text-xl md:text-4xl font-bold mt-5'>
-				Coordenadorias
+				Usuários
 			</h1>
 			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
 				<Filtros
