@@ -117,7 +117,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 			<p>{campo.nome}</p>
 			<Select
 				onValueChange={(value) => setFiltros((prev) => ({ ...prev, [campo.tag]: value }))}
-				defaultValue={filtros[campo.tag]}>
+				value={filtros[campo.tag]}>
 				<SelectTrigger className='w-full md:w-60 text-nowrap bg-background'>
 					<SelectValue placeholder={campo.placeholder} />
 				</SelectTrigger>
@@ -156,6 +156,13 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 			if (periodo === '') toast.error('Selecione um período para filtrar por data');
 			setFiltros((prev) => ({ ...prev, [campo.tag]: periodo }));
 		}
+
+		useEffect(() => {
+			const paramUpdate = searchParams.get(campo.tag);
+			const datas = paramUpdate && paramUpdate !== '' ? paramUpdate.split(',') : ['', ''];
+			const [from, to] = verificaData(datas[0], datas[1]);
+			setDate(datas[0] !== '' && datas[1] !== '' ? {from, to} : undefined);
+		}, [searchParams])
 
 		return (
 			<div className={"flex flex-col grid gap-2"} key={campo.tag}>
