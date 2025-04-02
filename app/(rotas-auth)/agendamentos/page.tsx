@@ -2,7 +2,6 @@
 
 import DataTable from '@/components/data-table';
 import Pagination from '@/components/pagination';
-import { Separator } from '@/components/ui/separator';
 import { auth } from '@/lib/auth/auth';
 import { buscarTudo } from '@/services/agendamentos';
 import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
@@ -63,22 +62,55 @@ export default async function ListaAgendamentoPage({
 	const motivos = await listaMotivos(session.access_token);
 	const coordenadorias = await listaCoordenadorias(session.access_token);
 
-	const motivosData = (motivos.data as IMotivo[]).map((motivo) => ({ value: motivo.id, label: motivo.texto }));
-	const coordenadoriasData = (coordenadorias.data as ICoordenadoria[]).map((coordenadoria) => ({ value: coordenadoria.id, label: coordenadoria.sigla }));
+	const motivosData = (motivos.data as IMotivo[]).map((motivo) => ({
+		value: motivo.id,
+		label: motivo.texto,
+	}));
+	const coordenadoriasData = (coordenadorias.data as ICoordenadoria[]).map(
+		(coordenadoria) => ({
+			value: coordenadoria.id,
+			label: coordenadoria.sigla,
+		}),
+	);
 
 	return (
-		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
-			<h1 className='text-xl md:text-4xl font-bold mt-5'>
-				Lista de Agendamentos
-			</h1>
-			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
+		<div className=' w-full px-0 md:px-8 relative mb-14 h-full md:container mx-auto'>
+			<h1 className='text-xl md:text-4xl font-bold'>Lista de Agendamentos</h1>
+			<div className='flex flex-col max-w-sm md:max-w-full  gap-3 my-5   w-full mx-auto'>
 				<Filtros
 					camposFiltraveis={[
-						{ tag: 'periodo', nome: 'Período', tipo: 1, placeholder: 'Período' },
-						{ tag: 'busca', nome: 'Busca', tipo: 0, placeholder: 'Buscar por processo, municipe ou documento' },
-						{ tag: 'tecnico', nome: 'Técnico', tipo: 0, placeholder: 'Buscar por técnico -  nome/RF' },
-						{ tag: 'motivoId', nome: 'Motivo', tipo: 2, valores: motivosData, placeholder: 'Motivos' },
-						{ tag: 'coordenadoriaId', nome: 'Coordenadoria', tipo: 2, valores: coordenadoriasData, placeholder: 'Coordenadorias' },
+						{
+							tag: 'periodo',
+							nome: 'Período',
+							tipo: 1,
+							placeholder: 'Período',
+						},
+						{
+							tag: 'busca',
+							nome: 'Busca',
+							tipo: 0,
+							placeholder: 'Buscar por processo, municipe ou documento',
+						},
+						{
+							tag: 'tecnico',
+							nome: 'Técnico',
+							tipo: 0,
+							placeholder: 'Buscar por técnico -  nome/RF',
+						},
+						{
+							tag: 'motivoId',
+							nome: 'Motivo',
+							tipo: 2,
+							valores: motivosData,
+							placeholder: 'Motivos',
+						},
+						{
+							tag: 'coordenadoriaId',
+							nome: 'Coordenadoria',
+							tipo: 2,
+							valores: coordenadoriasData,
+							placeholder: 'Coordenadorias',
+						},
 					]}
 				/>
 				{dados && (
@@ -87,7 +119,6 @@ export default async function ListaAgendamentoPage({
 						data={dados || []}
 					/>
 				)}
-				<Separator />
 				{dados && dados.length > 0 && (
 					<Pagination
 						total={+total}
@@ -96,7 +127,7 @@ export default async function ListaAgendamentoPage({
 					/>
 				)}
 			</div>
-			<div className='absolute bottom-5 right-5 hover:scale-110 z-50'>
+			<div className='absolute bottom-0 right-8 hover:scale-110 z-50'>
 				<ModalImportacao />
 			</div>
 		</div>

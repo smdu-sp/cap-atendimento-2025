@@ -1,14 +1,13 @@
 /** @format */
 
 import DataTable from '@/components/data-table';
+import { Filtros } from '@/components/filtros';
+import Pagination from '@/components/pagination';
 import { auth } from '@/lib/auth/auth';
 import { buscarTudo } from '@/services/motivos/query-functions/buscar-tudo';
+import { IMotivo, IPaginadoMotivo } from '@/types/motivo';
 import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
-import { IMotivo, IPaginadoMotivo } from '@/types/motivo';
-import { Filtros } from '@/components/filtros';
-import { Separator } from '@/components/ui/separator';
-import Pagination from '@/components/pagination';
 
 export default async function MotivosPage({
 	searchParams,
@@ -43,31 +42,43 @@ export default async function MotivosPage({
 		}
 	}
 
-	const statusSelect = [{
-		label: 'Ativo',
-		value: 'ATIVO',
-	}, {
-		label: 'Inativo',
-		value: 'INATIVO',
-	}]
+	const statusSelect = [
+		{
+			label: 'Ativo',
+			value: 'ATIVO',
+		},
+		{
+			label: 'Inativo',
+			value: 'INATIVO',
+		},
+	];
 
 	return (
-		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
-			<h1 className='text-xl md:text-4xl font-bold mt-5'>
-				Motivos
-			</h1>
-			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
+		<div className=' w-full px-0 md:px-8 relative mb-14 h-full md:container mx-auto'>
+			<h1 className='text-xl md:text-4xl font-bold'>Motivos</h1>
+			<div className='flex flex-col max-w-sm md:max-w-full gap-3 my-5   w-full '>
 				<Filtros
 					camposFiltraveis={[
-						{ nome: 'Busca', tag: 'busca', tipo: 0, placeholder: 'Busca por motivo' },
-						{ nome: 'Status', tag: 'status', tipo: 2, valores: statusSelect, default: 'ATIVO' },
+						{
+							nome: 'Busca',
+							tag: 'busca',
+							tipo: 0,
+							placeholder: 'Busca por motivo',
+						},
+						{
+							nome: 'Status',
+							tag: 'status',
+							tipo: 2,
+							valores: statusSelect,
+							default: 'ATIVO',
+						},
 					]}
 				/>
 				<DataTable
 					columns={columns}
 					data={dados || []}
 				/>
-				<Separator />
+
 				{dados && dados.length > 0 && (
 					<Pagination
 						total={+total}
@@ -76,7 +87,7 @@ export default async function MotivosPage({
 					/>
 				)}
 			</div>
-			<div className='absolute bottom-5 right-5 hover:scale-110'>
+			<div className='absolute bottom-2 right-8 hover:scale-110'>
 				<ModalUpdateAndCreate isUpdating={false} />
 			</div>
 		</div>

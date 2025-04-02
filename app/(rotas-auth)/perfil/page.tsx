@@ -35,7 +35,7 @@ export default async function Perfil() {
 		<div className='mx-auto px-0 md:px-8 w-full'>
 			<h1 className='font-bold text-4xl mt-5'>Perfil</h1>
 
-			<div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-10'>
+			<div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-5'>
 				{/* Avatar section */}
 				<Card className='md:col-span-1 h-full '>
 					<CardHeader>
