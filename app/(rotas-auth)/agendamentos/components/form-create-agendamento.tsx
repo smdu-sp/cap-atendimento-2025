@@ -32,7 +32,7 @@ import { criar } from '@/services/agendamentos/server-functions/criar';
 import { ICoordenadoria } from '@/types/coordenadoria';
 import { IMotivo } from '@/types/motivo';
 import { IUsuarioTecnico } from '@/types/usuario';
-// import { criar } from '@/services/agendamentos/server-functions/criar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -47,10 +47,12 @@ const participanteSchema = z.object({
 		required_error: 'Este campo é obrigatório',
 	}),
 	cpf: z.string(),
-	email: z.string({
-		required_error: 'Este campo é obrigatório',
-	}).email(),
-})
+	email: z
+		.string({
+			required_error: 'Este campo é obrigatório',
+		})
+		.email(),
+});
 const formSchema = z
 	.object({
 		participantes: z.array(participanteSchema).min(1).max(3),
@@ -166,7 +168,7 @@ export default function FormAgendamento({
 			motivoId,
 			processo,
 			tecnicoId,
-			participantes
+			participantes,
 		} = values;
 
 		const dataInicio = new Date(
@@ -187,7 +189,7 @@ export default function FormAgendamento({
 
 		const participantesString = participantes.map((participante) => {
 			return `${participante.nome}; `;
-		})
+		});
 		form.setValue(
 			'resumo',
 			`Motivo: ${motivoId}; Participantes: ${participantesString}Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
@@ -212,292 +214,331 @@ export default function FormAgendamento({
 		});
 	}
 	return (
-		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)}>
-				<div className='grid md:grid-cols-2 gap-5 items-end w-full mb-5'>
-					<div className='col-span-2 flex justify-between'>
-						<p>Participantes</p>
-						<Button type='button' onClick={() => addParticipante()} disabled={participantesLista.length >= 3}>+</Button>
-					</div>
-					{participantesLista.map((index) => (
-						<div className={`col-span-2 grid md:grid-cols-2 gap-5 items-end w-full`} key={index}>
-							<FormField
-								control={form.control}
-								name={`participantes.${index}.nome`}
-								render={({ field }) => (
-									<FormItem aria-required className='w-full'>
-										<FormLabel aria-required>Nome</FormLabel>
-										<FormControl aria-required>
-											<Input
-												required
-												placeholder={`Nome do participante ${index + 1}`}
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>									
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name={`participantes.${index}.cpf`}
-								render={({ field }) => (
-									<FormItem className='w-full'>
-										<FormLabel>CPF</FormLabel>
-										<FormControl>
-											<Input
-												placeholder={`CPF do participante ${index + 1}`}
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name={`participantes.${index}.email`}
-								render={({ field }) => (
-									<FormItem className='w-full col-span-2'>
-										<FormLabel>Email</FormLabel>
-										<FormControl>
-											<Input
-												placeholder={`E-mail do participante ${index + 1}`}
-												{...field}
-											/>
-										</FormControl>
-										<FormMessage />
-										{index > 0 && (
-											<Button type='button' onClick={() => removeParticipante(index)}>x</Button>
-										)}
-									</FormItem>
-								)}
-							/>
-						</div>
-					))}
-					<FormField
-						control={form.control}
-						name='processo'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Nº do Processo</FormLabel>
-								<FormControl>
-									<Input
-										required
-										placeholder='Número do processo'
-										{...field}
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='coordenadoriaId'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Coordenadoria</FormLabel>
-								<Select
-									required
-									onValueChange={field.onChange}
-									defaultValue={field.value}>
-									<FormControl>
-										<SelectTrigger className='w-full text-nowrap bg-background'>
-											<SelectValue placeholder='Selecione a coordenadoria' />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{coordenadorias.map((item) => {
-											return (
-												<SelectItem
-													key={item.id}
-													value={item.id}>
-													{item.sigla}
-												</SelectItem>
-											);
-										})}
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='motivoId'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Motivo</FormLabel>
-								<Select
-									required
-									onValueChange={field.onChange}
-									defaultValue={field.value}>
-									<FormControl>
-										<SelectTrigger className='w-full text-nowrap bg-background'>
-											<SelectValue placeholder='Selecione o motivo' />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{motivos.map((item) => {
-											return (
-												<SelectItem
-													key={item.id}
-													value={item.id}>
-													{item.texto}
-												</SelectItem>
-											);
-										})}
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='tecnicoId'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Técnico</FormLabel>
-								<Select
-									required
-									onValueChange={field.onChange}
-									defaultValue={field.value}>
-									<FormControl>
-										<SelectTrigger className='w-full text-nowrap bg-background'>
-											<SelectValue
-												defaultValue={undefined}
-												placeholder='Selecione o técnico'
-											/>
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{tecnicos.map((item) => {
-											return (
-												<SelectItem
-													key={item.id}
-													value={item.id}>
-													{item.nome}
-												</SelectItem>
-											);
-										})}
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name='data'
-						render={({ field }) => (
-							<FormItem className='flex flex-col'>
-								<FormLabel>Data</FormLabel>
-								<Popover>
-									<PopoverTrigger asChild>
-										<FormControl>
-											<Button
-												variant={'outline'}
-												className={cn(
-													'w-full pl-3 text-left font-normal text-foreground',
-													!field.value && 'text-muted-foreground',
-												)}>
-												{field.value ? (
-													format(field.value, 'PPP', { locale: ptBR })
-												) : (
-													<span>Escolha uma data</span>
-												)}
-												<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-											</Button>
-										</FormControl>
-									</PopoverTrigger>
-									<PopoverContent
-										className='w-auto p-0'
-										align='start'>
-										<Calendar
-											mode='single'
-											selected={field.value}
-											onSelect={field.onChange}
-											disabled={(date) =>
-												date < new Date() || date < new Date('1900-01-01')
-											}
-											initialFocus
+		<div>
+			<Tabs defaultValue='participantes'>
+				<TabsList className='w-full'>
+					<TabsTrigger
+						className='w-full'
+						value='participantes'>
+						Dados Pessoais
+					</TabsTrigger>
+					<TabsTrigger
+						className='w-full'
+						value='processo'>
+						Dados do Processo
+					</TabsTrigger>
+				</TabsList>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)}>
+						<TabsContent value='participantes'>
+							<div className='grid md:grid-cols-2 gap-5 items-end w-full mb-5'>
+								<div className='col-span-2 flex justify-between'>
+									<p>Participantes</p>
+									<Button
+										type='button'
+										onClick={() => addParticipante()}
+										disabled={participantesLista.length >= 3}>
+										+
+									</Button>
+								</div>
+								{participantesLista.map((index) => (
+									<div
+										className={`col-span-2 grid md:grid-cols-2 gap-5 items-end w-full`}
+										key={index}>
+										<FormField
+											control={form.control}
+											name={`participantes.${index}.nome`}
+											render={({ field }) => (
+												<FormItem
+													aria-required
+													className='w-full'>
+													<FormLabel aria-required>Nome</FormLabel>
+													<FormControl aria-required>
+														<Input
+															required
+															placeholder={`Nome do participante ${index + 1}`}
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
 										/>
-									</PopoverContent>
-								</Popover>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				</div>
-				<div className='flex flex-col md:flex-row w-full md:items-center justify-between gap-5 mb-5'>
-					<FormField
-						control={form.control}
-						name='startTime'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Horário Inicial</FormLabel>
-								<FormControl>
-									<Input
-										className='md:w-76'
-										placeholder='HH:MM'
-										{...field}
-										type='time'
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					<FormField
-						control={form.control}
-						name='endTime'
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Horário Final</FormLabel>
-								<FormControl>
-									<Input
-										className='md:w-76'
-										placeholder='HH:MM'
-										{...field}
-										type='time'
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-				</div>
-				<FormField
-					control={form.control}
-					name='resumo'
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Resumo</FormLabel>
-							<FormControl>
-								<Textarea
-									placeholder='resumo e observações do agendamento'
-									{...field}
+										<FormField
+											control={form.control}
+											name={`participantes.${index}.cpf`}
+											render={({ field }) => (
+												<FormItem className='w-full'>
+													<FormLabel>CPF</FormLabel>
+													<FormControl>
+														<Input
+															placeholder={`CPF do participante ${index + 1}`}
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name={`participantes.${index}.email`}
+											render={({ field }) => (
+												<FormItem className='w-full col-span-2'>
+													<FormLabel>Email</FormLabel>
+													<FormControl>
+														<Input
+															placeholder={`E-mail do participante ${
+																index + 1
+															}`}
+															{...field}
+														/>
+													</FormControl>
+													<FormMessage />
+													{index > 0 && (
+														<Button
+															variant={'destructive'}
+															type='button'
+															onClick={() => removeParticipante(index)}>
+															x
+														</Button>
+													)}
+												</FormItem>
+											)}
+										/>
+									</div>
+								))}
+							</div>
+						</TabsContent>
+						<TabsContent value='processo'>
+							<div className='grid md:grid-cols-2 gap-5 items-end w-full my-5'>
+								<FormField
+									control={form.control}
+									name='processo'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Nº do Processo</FormLabel>
+											<FormControl>
+												<Input
+													required
+													placeholder='Número do processo'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
 								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+								<FormField
+									control={form.control}
+									name='coordenadoriaId'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Coordenadoria</FormLabel>
+											<Select
+												required
+												onValueChange={field.onChange}
+												defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger className='w-full text-nowrap bg-background'>
+														<SelectValue placeholder='Selecione a coordenadoria' />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{coordenadorias.map((item) => {
+														return (
+															<SelectItem
+																key={item.id}
+																value={item.id}>
+																{item.sigla}
+															</SelectItem>
+														);
+													})}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='motivoId'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Motivo</FormLabel>
+											<Select
+												required
+												onValueChange={field.onChange}
+												defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger className='w-full text-nowrap bg-background'>
+														<SelectValue placeholder='Selecione o motivo' />
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{motivos.map((item) => {
+														return (
+															<SelectItem
+																key={item.id}
+																value={item.id}>
+																{item.texto}
+															</SelectItem>
+														);
+													})}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='tecnicoId'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Técnico</FormLabel>
+											<Select
+												required
+												onValueChange={field.onChange}
+												defaultValue={field.value}>
+												<FormControl>
+													<SelectTrigger className='w-full text-nowrap bg-background'>
+														<SelectValue
+															defaultValue={undefined}
+															placeholder='Selecione o técnico'
+														/>
+													</SelectTrigger>
+												</FormControl>
+												<SelectContent>
+													{tecnicos.map((item) => {
+														return (
+															<SelectItem
+																key={item.id}
+																value={item.id}>
+																{item.nome}
+															</SelectItem>
+														);
+													})}
+												</SelectContent>
+											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='data'
+									render={({ field }) => (
+										<FormItem className='flex flex-col'>
+											<FormLabel>Data</FormLabel>
+											<Popover>
+												<PopoverTrigger asChild>
+													<FormControl>
+														<Button
+															variant={'outline'}
+															className={cn(
+																'w-full pl-3 text-left font-normal text-foreground',
+																!field.value && 'text-muted-foreground',
+															)}>
+															{field.value ? (
+																format(field.value, 'PPP', { locale: ptBR })
+															) : (
+																<span>Escolha uma data</span>
+															)}
+															<CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+														</Button>
+													</FormControl>
+												</PopoverTrigger>
+												<PopoverContent
+													className='w-auto p-0'
+													align='start'>
+													<Calendar
+														mode='single'
+														selected={field.value}
+														onSelect={field.onChange}
+														disabled={(date) =>
+															date < new Date() || date < new Date('1900-01-01')
+														}
+														initialFocus
+													/>
+												</PopoverContent>
+											</Popover>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+							<div className='flex flex-col md:flex-row w-full md:items-center justify-between gap-5 mb-5'>
+								<FormField
+									control={form.control}
+									name='startTime'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Horário Inicial</FormLabel>
+											<FormControl>
+												<Input
+													className='md:w-76'
+													placeholder='HH:MM'
+													{...field}
+													type='time'
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-				<div className='flex items-center gap-3 justify-end mt-10'>
-					<DialogClose asChild>
-						<Button variant='outline'>Sair</Button>
-					</DialogClose>
-					<Button
-						disabled={isPending}
-						type='submit'>
-						Cadastrar {isPending && <Loader2 className='animate-spin' />}
-					</Button>
-				</div>
-			</form>
-		</Form>
+								<FormField
+									control={form.control}
+									name='endTime'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Horário Final</FormLabel>
+											<FormControl>
+												<Input
+													className='md:w-76'
+													placeholder='HH:MM'
+													{...field}
+													type='time'
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</div>
+
+							<FormField
+								control={form.control}
+								name='resumo'
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Resumo</FormLabel>
+										<FormControl>
+											<Textarea
+												placeholder='resumo e observações do agendamento'
+												{...field}
+											/>
+										</FormControl>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<div className='flex items-center gap-3 justify-end mt-10 '>
+								<DialogClose asChild>
+									<Button variant='outline'>Sair</Button>
+								</DialogClose>
+								<Button
+									disabled={isPending}
+									type='submit'>
+									Cadastrar {isPending && <Loader2 className='animate-spin' />}
+								</Button>
+							</div>
+						</TabsContent>
+					</form>
+				</Form>
+			</Tabs>
+		</div>
 	);
 }
