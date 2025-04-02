@@ -32,8 +32,7 @@ export default async function ListaAgendamentoPage({
 		motivoId = '',
 		coordenadoriaId = '',
 		status = '',
-		dataInicio = '',
-		dataFim = '',
+		periodo = '',
 	} = await searchParams;
 	let dados: IAgendamento[] = [];
 
@@ -45,8 +44,7 @@ export default async function ListaAgendamentoPage({
 		motivoId as string,
 		coordenadoriaId as string,
 		status as string,
-		dataInicio as string,
-		dataFim as string,
+		periodo as string,
 	);
 	const { data } = response;
 	ok = response.ok;
@@ -76,6 +74,7 @@ export default async function ListaAgendamentoPage({
 			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
 				<Filtros
 					camposFiltraveis={[
+						{ tag: 'periodo', nome: 'Período', tipo: 1, placeholder: 'Período' },
 						{ tag: 'busca', nome: 'Busca', tipo: 0, placeholder: 'Buscar por processo, municipe ou documento' },
 						{ tag: 'tecnico', nome: 'Técnico', tipo: 0, placeholder: 'Buscar por técnico -  nome/RF' },
 						{ tag: 'motivoId', nome: 'Motivo', tipo: 2, valores: motivosData, placeholder: 'Motivos' },

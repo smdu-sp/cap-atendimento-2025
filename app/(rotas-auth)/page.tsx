@@ -4,7 +4,7 @@ import BigNumbers from '@/components/big-numbers';
 import { AgendamentoNoTempo } from '@/components/charts/agendamentos-no-tempo';
 import { AgendamentosPorCoordenadoria } from '@/components/charts/agendamentos-por-coordenadoria';
 import { AgendamentosPorMotivo } from '@/components/charts/agendamentos-por-motivo';
-import { Filter } from '@/components/filter';
+import { Filtros } from '@/components/filtros';
 import { auth } from '@/lib/auth/auth';
 import { dashboard } from '@/services/agendamentos/query-functions/dashboard';
 import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
@@ -24,8 +24,7 @@ export default async function Home({
 		redirect('/login');
 	}
 	const {
-		dataInicio,
-		dataFim,
+		periodo = '',
 		motivoId = '',
 		coordenadoriaId = '',
 	} = await searchParams;
@@ -33,8 +32,7 @@ export default async function Home({
 	const resp = await dashboard(
 		motivoId.toString(),
 		coordenadoriaId.toString(),
-		dataInicio ? dataInicio.toString() : '',
-		dataFim ? dataFim.toString() : '',
+		periodo.toString(),
 	);
 
 	const motivos = await listaMotivos(session.access_token);
@@ -49,8 +47,8 @@ export default async function Home({
 	}
 
 	const data = resp.data as IDashboardAgendamento;
-	const motivosData = motivos.data as IMotivo[];
-	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
+	const motivosData = motivos.data ? (motivos.data as IMotivo[]).map((motivo) => ({ value: motivo.id, label: motivo.texto })) : [];
+	const coordenadoriasData = coordenadorias.data ? (coordenadorias.data as ICoordenadoria[]).map((coordenadoria) => ({ value: coordenadoria.id, label: coordenadoria.sigla })) : [];
 	if (!data) {
 		return (
 			<p className='text-muted-foreground text-sm italic'>
@@ -62,13 +60,13 @@ export default async function Home({
 		<div className=' w-full relative px-0 md:px-8 '>
 			<h1 className='text-4xl font-bold mt-5'>Home</h1>
 			<div className='flex flex-col gap-5 my-10 w-full'>
-				{motivos.data && coordenadorias.data && (
-					<Filter
-						motivos={motivosData}
-						coordenadorias={coordenadoriasData}
-						page={'HOME'}
-					/>
-				)}
+				<Filtros
+					camposFiltraveis={[
+						{ tag: 'periodo', nome: 'Período', tipo: 1, placeholder: 'Período' },
+						{ tag: 'motivoId', nome: 'Motivo', tipo: 2, valores: motivosData || [], placeholder: 'Motivos' },
+						{ tag: 'coordenadoriaId', nome: 'Coordenadoria', tipo: 2, valores: coordenadoriasData, placeholder: 'Coordenadorias' },
+					]}
+				/>
 				<BigNumbers numbers={[data.totalAno, data.totalMes, data.totalDia]} />
 				<div className='grid gap-5'>
 					<AgendamentosPorMotivo motivos={data.motivos} />
