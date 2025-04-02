@@ -22,12 +22,14 @@ interface FormAgendamentoProps {
 	motivos: IMotivo[];
 	coordenadorias: ICoordenadoria[];
 	tecnicos: IUsuarioTecnico[];
+	children?: React.ReactNode;
 }
 
 export default function ModalFormAgendamento({
 	motivos,
 	coordenadorias,
 	tecnicos,
+	children
 }: FormAgendamentoProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	return (
@@ -37,12 +39,12 @@ export default function ModalFormAgendamento({
 			<DialogTrigger
 				asChild
 				className='flex items-center gap-3 cursor-pointer'>
-				<Button
+				{children || <Button
 					onClick={() => setIsOpen(true)}
 					variant={'ghost'}>
 					<CalendarPlus />
-					Novo Agendadamento
-				</Button>
+					Novo Agendamento
+				</Button>}
 			</DialogTrigger>
 			<DialogContent className='sm:max-w-md md:max-w-2xl'>
 				<DialogHeader>

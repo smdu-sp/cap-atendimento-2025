@@ -15,8 +15,7 @@ export async function buscarTudo(
 	motivoId: string = '',
 	coordenadoriaId: string = '',
 	status: string = '',
-	dataInicio: string = '',
-	dataFim: string = '',
+	periodo: string = '',
 ): Promise<IRespostaAgendamento> {
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -26,7 +25,7 @@ export async function buscarTudo(
 	}
 	try {
 		const agendamentos = await fetch(
-			`${baseURL}agendamentos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&motivoId=${motivoId}&coordenadoriaId=${coordenadoriaId}&dataInicio=${dataInicio}&dataFim=${dataFim}&tecnico=${tecnico}&status=${status}`,
+			`${baseURL}agendamentos/buscar-tudo?pagina=${pagina}&limite=${limite}&busca=${busca}&motivoId=${motivoId}&coordenadoriaId=${coordenadoriaId}&periodo=${periodo}&tecnico=${tecnico}&status=${status}`,
 			{
 				method: 'GET',
 				headers: {

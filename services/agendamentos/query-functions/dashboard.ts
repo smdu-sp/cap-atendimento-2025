@@ -10,8 +10,7 @@ import { redirect } from 'next/navigation';
 export async function dashboard(
 	motivoId?: string,
 	coordenadoriaId?: string,
-	dataInicio?: string,
-	dataFim?: string,
+	periodo?: string
 ): Promise<IRespostaAgendamento> {
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,7 +20,7 @@ export async function dashboard(
 	}
 	try {
 		const agendamentos = await fetch(
-			`${baseURL}agendamentos/dashboard?motivoId=${motivoId}&coordenadoriaId=${coordenadoriaId}&dataInicio=${dataInicio}&dataFim=${dataFim}`,
+			`${baseURL}agendamentos/dashboard?motivoId=${motivoId}&coordenadoriaId=${coordenadoriaId}&periodo=${periodo}`,
 			{
 				method: 'GET',
 				headers: {

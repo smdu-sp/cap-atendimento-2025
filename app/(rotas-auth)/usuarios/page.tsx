@@ -8,6 +8,8 @@ import { IPaginadoUsuario, IUsuario } from '@/types/usuario';
 import { Suspense } from 'react';
 import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
+import { Filtros } from '@/components/filtros';
+import { Separator } from '@/components/ui/separator';
 
 export default async function UsuariosSuspense({
 	searchParams,
@@ -28,7 +30,7 @@ async function Usuarios({
 }) {
 	let { pagina = 1, limite = 10, total = 0 } = await searchParams;
 	let ok = false;
-	const { busca = '' } = await searchParams;
+	const { busca = '', status = '', permissao = '' } = await searchParams;
 	let dados: IUsuario[] = [];
 
 	const session = await auth();
@@ -38,6 +40,8 @@ async function Usuarios({
 			+pagina,
 			+limite,
 			busca as string,
+			status as string,
+			permissao as string,
 		);
 		const { data } = response;
 		ok = response.ok;
@@ -54,21 +58,51 @@ async function Usuarios({
 		}
 	}
 
+	const statusSelect = [{
+		label: 'Ativo',
+		value: 'ATIVO',
+	}, {
+		label: 'Inativo',
+		value: 'INATIVO',
+	}]
+
+	const permissaoSelect = [{
+		label: 'Desenvolvedor',
+		value: 'DEV',
+	}, {
+		label: 'Administrador',
+		value: 'ADM',
+	}, {
+		label: 'Técnico',
+		value: 'TEC',
+	}, {
+		label: 'Usuário',
+		value: 'USR',
+	}];
+	
 	return (
-		<div className='mx-auto w-full relative h-full px-4 md:px-8'>
-			<h1 className='text-4xl font-bold mt-5'>Usuários</h1>
-			<div className='flex flex-col  gap-8 my-10 container w-full mx-auto'>
-				{dados && (
-					<DataTable
-						columns={columns}
-						data={dados || []}
-					/>
-				)}
+		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
+			<h1 className='text-xl md:text-4xl font-bold mt-5'>
+				Coordenadorias
+			</h1>
+			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
+				<Filtros
+					camposFiltraveis={[
+						{ nome: 'Busca', tag: 'busca', tipo: 0, placeholder: 'Digite o nome, email ou login' },
+						{ nome: 'Status', tag: 'status', tipo: 2, valores: statusSelect, default: 'ATIVO' },
+						{ nome: 'Permissão', tag: 'permissao', tipo: 2, valores: permissaoSelect },
+					]}
+				/>
+				<DataTable
+					columns={columns}
+					data={dados || []}
+				/>
+				<Separator />
 				{dados && dados.length > 0 && (
 					<Pagination
 						total={+total}
-						limite={+limite}
 						pagina={+pagina}
+						limite={+limite}
 					/>
 				)}
 			</div>

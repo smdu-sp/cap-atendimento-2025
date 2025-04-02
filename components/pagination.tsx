@@ -50,7 +50,7 @@ export default function Pagination(props: {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
-	const [limites, setLimites] = useState([5, 10, 15, 20, 50]);
+	const limites = [5, 10, 15, 20, 50];
 
 	const total = props.total || +(searchParams.get('total') || 0);
 	const [pagina, setPagina] = useState(
@@ -61,24 +61,12 @@ export default function Pagination(props: {
 	);
 	const [paginas, setPaginas] = useState(retornaPaginas(pagina, limite, total));
 
-	function buscaLimites(total: number): void {
-		const limitesTemp = [5, 10, 15, 20, 50];
-		for (let i = 0; i < limitesTemp.length; i++) {
-			if (limitesTemp[i] >= total) {
-				setLimites(limitesTemp.slice(0, i));
-				return;
-			}
-		}
-		setLimites(limites);
-	}
-
 	useEffect(() => {
 		const params = new URLSearchParams(searchParams.toString());
 		params.set('pagina', String(pagina));
 		params.set('limite', String(limite));
 		params.set('total', String(total));
 		router.push(pathname + '?' + params.toString(), { scroll: false });
-		buscaLimites(total);
 		setPaginas(retornaPaginas(pagina, limite, total));
 	}, [pagina, limite, searchParams, pathname, total, router]);
 

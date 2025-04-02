@@ -37,3 +37,29 @@ export function validaCPF_CNPJ(cpf_cnpj: string) {
   }
   return false;
 }
+
+
+export function verificaData(dataInicio: string, dataFim: string): [Date, Date] {
+  let inicio: Date, fim: Date;
+  if (!dataInicio) inicio = new Date();
+  else {
+    var dataSeparada = dataInicio.split('-');
+    inicio = new Date(
+      +dataSeparada[2],
+      +dataSeparada[1] - 1,
+      +dataSeparada[0],
+      0, 0, 0
+    )
+  }
+  if (!dataFim) fim = new Date();
+  else {
+    var dataSeparada = dataFim.split('-');
+    fim = new Date(
+      +dataSeparada[2],
+      +dataSeparada[1] - 1,
+      +dataSeparada[0],
+      23, 59, 59, 999
+    )
+  }
+  return [inicio, fim];
+}

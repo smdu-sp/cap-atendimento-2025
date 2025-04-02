@@ -50,10 +50,9 @@ export function LoginForm() {
 	async function onSubmit({ login, senha }: z.infer<typeof formSchema>) {
 		try {
 			const resp = await signIn('credentials', { login, senha });
-			if (!resp?.ok) {
-				toast.error('Não foi possível realizar o login.');
-			}
-			toast.success('Login realizado com sucesso.');
+			console.log(resp);
+			if (!resp?.ok) toast.error('Não foi possível realizar o login.');
+			else toast.success('Login realizado com sucesso.');
 		} catch (e) {
 			console.log(e);
 			toast.error('Não foi possível realizar o login.');

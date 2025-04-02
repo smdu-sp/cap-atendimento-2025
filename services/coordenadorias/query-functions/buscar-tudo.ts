@@ -11,12 +11,12 @@ interface buscarTudoProps {
 	status: 'ATIVO' | 'INATIVO' | '';
 }
 
-export async function buscarTudo({
+export async function buscarTudo(
 	pagina = 1,
 	limite = 10,
 	busca = '',
-	status = '',
-}: buscarTudoProps): Promise<IResponseCoordenadoria> {
+	status = ''
+): Promise<IResponseCoordenadoria> {
 	const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 	const session = await auth();

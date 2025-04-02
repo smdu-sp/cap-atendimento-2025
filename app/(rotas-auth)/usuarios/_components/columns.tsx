@@ -6,6 +6,7 @@ import { IUsuario } from '@/types/usuario';
 import { ColumnDef } from '@tanstack/react-table';
 import ModalUpdateCreate from './modal-update-create';
 import ModalDelete from './modal-delete';
+import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<IUsuario>[] = [
 	{
@@ -19,6 +20,20 @@ export const columns: ColumnDef<IUsuario>[] = [
 	{
 		accessorKey: 'email',
 		header: 'E-mail',
+	},
+	{
+		accessorKey: 'status',
+		header: () => <p className='text-center'>Status</p>,
+		cell: ({ row }) => {
+			const status = row.original.status;
+			return (
+				<div className='flex items-center justify-center'>
+					<Badge variant={`${status == false ? 'destructive' : 'default'}`}>
+						{status ? 'Ativo' : 'Inativo'}
+					</Badge>
+				</div>
+			);
+		},
 	},
 	{
 		accessorKey: 'actions',

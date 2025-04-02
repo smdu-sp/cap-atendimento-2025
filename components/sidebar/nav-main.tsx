@@ -69,11 +69,6 @@ export async function NavMain() {
 			titulo: 'Agendamentos do dia',
 			url: '/hoje',
 		},
-		{
-			icone: CalendarClock,
-			titulo: 'Meus Agendamentos',
-			url: '/escala',
-		},
 	];
 
 	const menuAdmin: IMenu[] = [
@@ -96,6 +91,15 @@ export async function NavMain() {
 			permissao: 'usuario_buscar_tudo',
 		},
 	];
+
+	const menuTecnico: IMenu[] = [
+		{
+			icone: CalendarClock,
+			titulo: 'Meus Agendamentos',
+			url: '/escala',
+		},
+	];
+
 	return (
 		<SidebarContent>
 			<SidebarGroup className='space-y-2'>
@@ -202,7 +206,61 @@ export async function NavMain() {
 							</SidebarMenu>
 						</>
 					)}
+					{menuTecnico &&
+					usuario &&
+					usuario.permissao &&
+					['TEC'].includes(usuario.permissao.toString()) && (
+						<>
+							<SidebarGroupLabel>Técnico</SidebarGroupLabel>
+							<SidebarMenu>
+								{menuTecnico.map((item) =>
+									item.subItens ? (
+										<Collapsible
+											key={item.titulo}
+											asChild
+											className='group/collapsible'>
+											<SidebarMenuItem>
+												<CollapsibleTrigger asChild>
+													<SidebarMenuButton tooltip={item.titulo}>
+														{item.icone && <item.icone />}
+														<span>{item.titulo}</span>
+														{item.subItens && (
+															<ChevronRight className='ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90' />
+														)}
+													</SidebarMenuButton>
+												</CollapsibleTrigger>
+												{item.subItens && (
+													<CollapsibleContent>
+														<SidebarMenuSub>
+															{item.subItens?.map((subItem) => (
+																<SidebarMenuSubItem key={subItem.titulo}>
+																	<Link href={item.url || '#'}>
+																		{item.icone && <item.icone />}
+																		<span>{item.titulo}</span>
+																	</Link>
+																</SidebarMenuSubItem>
+															))}
+														</SidebarMenuSub>
+													</CollapsibleContent>
+												)}
+											</SidebarMenuItem>
+										</Collapsible>
+									) : (
+										<SidebarMenuItem
+											key={item.titulo}
+											className='z-50'>
+											<Link href={item.url || '#'}>
+												{item.icone && <item.icone />}
+												<span>{item.titulo}</span>
+											</Link>
+										</SidebarMenuItem>
+									),
+								)}
+							</SidebarMenu>
+						</>
+					)}
 			</SidebarGroup>
+			
 		</SidebarContent>
 	);
 }

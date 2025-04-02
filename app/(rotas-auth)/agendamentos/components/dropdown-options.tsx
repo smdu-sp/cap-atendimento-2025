@@ -17,9 +17,10 @@ import { redirect } from 'next/navigation';
 import { listaCompleta as listaCoordenadorias } from '@/services/coordenadorias/query-functions/lista-completa';
 import { listaCompleta as listaMotivos } from '@/services/motivos/query-functions/lista-completa';
 import { buscarTecnicos } from '@/services/usuarios/query-functions/buscar-tecnicos';
-import { IUsuarioTecnico } from '@/types/usuario';
+import { IUsuario, IUsuarioTecnico } from '@/types/usuario';
 import { IMotivo } from '@/types/motivo';
 import { ICoordenadoria } from '@/types/coordenadoria';
+import { validaUsuario } from '@/services/usuarios';
 
 export default async function DropdownImportacao() {
 	const session = await auth();
@@ -29,6 +30,7 @@ export default async function DropdownImportacao() {
 	const motivos = await listaMotivos(session.access_token);
 	const coordenadorias = await listaCoordenadorias(session.access_token);
 	const tecnicosResp = await buscarTecnicos(session.access_token);
+	const { data } = await validaUsuario();
 
 	if (!motivos.ok || !coordenadorias.ok || !tecnicosResp.ok) {
 		return null;
@@ -41,8 +43,9 @@ export default async function DropdownImportacao() {
 	const tecnicos = tecnicosResp.data as IUsuarioTecnico[];
 	const motivosData = motivos.data as IMotivo[];
 	const coordenadoriasData = coordenadorias.data as ICoordenadoria[];
+	const usuario = data as IUsuario;
 	
-	return (
+	return ['DEV', 'ADM'].includes(usuario.permissao.toString()) ? (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<Button>
@@ -51,10 +54,12 @@ export default async function DropdownImportacao() {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align='start'>
 				<DropdownMenuLabel className='font-semibold'>Opções</DropdownMenuLabel>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem asChild>
-					<ModalImportAgendamento />
-				</DropdownMenuItem>
+				{['DEV', 'ADM'].includes(usuario.permissao.toString()) && <>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem asChild>
+						<ModalImportAgendamento />
+					</DropdownMenuItem>
+				</>}
 				<DropdownMenuItem asChild>
 					<ModalFormAgendamento
 						tecnicos={tecnicos}
@@ -64,5 +69,15 @@ export default async function DropdownImportacao() {
 				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
+	) : (
+		<ModalFormAgendamento
+			tecnicos={tecnicos}
+			motivos={motivosData}
+			coordenadorias={coordenadoriasData}
+		>
+			<Button>
+				<Plus />
+			</Button>
+		</ModalFormAgendamento>
 	);
 }

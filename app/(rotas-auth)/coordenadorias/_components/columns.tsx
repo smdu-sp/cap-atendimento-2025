@@ -36,18 +36,20 @@ export const columns: ColumnDef<ICoordenadoria>[] = [
 		},
 	},
 	{
-		accessorKey: 'id',
-		header: () => <p className='text-center'>Ações</p>,
+		accessorKey: 'actions',
+		header: () => <p></p>,
 		cell: ({ row }) => {
 			return (
-				<div className='flex items-center justify-center gap-5'>
+				<div
+					className='flex gap-2 items-center justify-end'
+					key={row.id}>
 					<ModalUpdateAndCreate
 						coordenadoria={row.original}
 						isUpdating={true}
 					/>
-					<ModalDelete
-						id={row.original.id}
+					<ModalDelete 
 						status={row.original.status}
+						id={row.original.id}
 					/>
 				</div>
 			);
