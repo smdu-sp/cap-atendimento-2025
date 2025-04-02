@@ -153,7 +153,7 @@ export default function FormAgendamento({
 	}
 
 	function removeParticipante(index: number) {
-		setParticipantesLista(participantesLista.filter((_, i) => i !== index));
+		setParticipantesLista(participantesLista.filter((number) => number !== index));
 	}
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
@@ -295,7 +295,7 @@ export default function FormAgendamento({
 														/>
 													</FormControl>
 													<FormMessage />
-													{index > 0 && (
+													{index === participantesLista.length - 1 && index > 0 && (
 														<Button
 															variant={'destructive'}
 															type='button'
