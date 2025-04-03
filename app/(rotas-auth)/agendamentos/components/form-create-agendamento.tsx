@@ -132,6 +132,11 @@ export default function FormAgendamento({
 }: FormAgendamentoProps) {
 	const [isPending, startTransition] = useTransition();
 	const [participantesLista, setParticipantesLista] = useState<number[]>([0]);
+
+	const motivosKV: { [key: string]: string } = motivos.reduce((acc, cur) => ({ ...acc, [cur.id]: cur.texto }), {});
+	const coordenadoriasKV: { [key: string]: string } = coordenadorias.reduce((acc, cur) => ({ ...acc, [cur.id]: cur.sigla }), {});
+	const tecnicosKV: { [key: string]: string } = tecnicos.reduce((acc, cur) => ({ ...acc, [cur.id]: cur.nome }), {});
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
@@ -187,13 +192,13 @@ export default function FormAgendamento({
 			+endTime.split(':')[1],
 		);
 
-		const participantesString = participantes.map((participante) => {
-			return `${participante.nome}; `;
+		const participantesString = participantes.map((participante, index) => {
+			return `${participante.nome}${index < participantes.length - 1 ? ', ' : ''}`;
 		});
-		form.setValue(
-			'resumo',
-			`Motivo: ${motivoId}; Participantes: ${participantesString}Técnico:${tecnicoId}; Coordenadoria: ${coordenadoriaId}; Processo:${processo}`,
-		);
+
+		const resumo = `Participantes: ${participantesString}; Motivo: ${motivosKV[motivoId]}; Técnico: ${tecnicosKV[tecnicoId]}; Coordenadoria: ${coordenadoriasKV[coordenadoriaId]}; Processo:${processo}`;
+		form.setValue('resumo', resumo);
+		navigator.clipboard.writeText(resumo);
 
 		startTransition(async () => {
 			const resp = await criar({
@@ -203,8 +208,10 @@ export default function FormAgendamento({
 				motivoId,
 				processo,
 				tecnicoId,
-				// participantes
+				participantes,
+				resumo,
 			});
+
 
 			if (!resp.ok) {
 				toast.error('Algo deu errado');

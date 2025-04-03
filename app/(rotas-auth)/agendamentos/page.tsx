@@ -77,8 +77,8 @@ export default async function ListaAgendamentoPage({
 						{ tag: 'periodo', nome: 'Período', tipo: 1, placeholder: 'Período' },
 						{ tag: 'busca', nome: 'Busca', tipo: 0, placeholder: 'Buscar por processo, municipe ou documento' },
 						{ tag: 'tecnico', nome: 'Técnico', tipo: 0, placeholder: 'Buscar por técnico -  nome/RF' },
-						{ tag: 'motivoId', nome: 'Motivo', tipo: 2, valores: motivosData, placeholder: 'Motivos' },
-						{ tag: 'coordenadoriaId', nome: 'Coordenadoria', tipo: 2, valores: coordenadoriasData, placeholder: 'Coordenadorias' },
+						{ tag: 'motivoId', nome: 'Motivo', tipo: 3, valores: motivosData, placeholder: 'Motivos' },
+						{ tag: 'coordenadoriaId', nome: 'Coordenadoria', tipo: 3, valores: coordenadoriasData, placeholder: 'Coordenadorias' },
 					]}
 				/>
 				{dados && (

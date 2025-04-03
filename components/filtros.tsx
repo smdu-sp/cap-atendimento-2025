@@ -5,7 +5,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { CalendarIcon, RefreshCw, X } from 'lucide-react';
+import { CalendarIcon, Check, ChevronsUpDown, RefreshCw, X } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState, useTransition } from 'react';
 import { DateRange } from 'react-day-picker';
@@ -15,6 +15,7 @@ import { format } from 'date-fns';
 import { cn, verificaData } from '@/lib/utils';
 import { ptBR } from 'date-fns/locale';
 import { toast } from 'sonner';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from './ui/command';
 
 interface CampoFiltravel {
 	nome: string;
@@ -28,7 +29,8 @@ interface CampoFiltravel {
 export enum TiposFiltros {
 	TEXTO,
 	DATA,
-	SELECT
+	SELECT,
+	AUTOCOMPLETE
 }
 
 interface CampoSelect {
@@ -86,13 +88,16 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 		  for (const campo of camposFiltraveis) {
 			switch (campo.tipo) {
 			  case TiposFiltros.TEXTO:
-				filtros.push(renderTexto(campo));
+				filtros.push(RenderTexto(campo));
 				break;
 			  case TiposFiltros.DATA:
 				filtros.push(RenderDataRange(campo));
 				break;
 			  case TiposFiltros.SELECT:
-				filtros.push(renderSelect(campo));
+				filtros.push(RenderSelect(campo));
+				break;
+			case TiposFiltros.AUTOCOMPLETE:
+				filtros.push(RenderAutocomplete(campo));
 				break;
 			}
 		  }
@@ -100,7 +105,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 		return filtros;
 	  }
 
-	function renderTexto(campo: CampoFiltravel) {
+	function RenderTexto(campo: CampoFiltravel) {
 		return <div className='flex flex-col w-full md:w-60' key={campo.tag}>
 			<p>{campo.nome}</p>
 			<Input
@@ -112,7 +117,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 		</div>
 	}
 
-	function renderSelect(campo: CampoFiltravel) {
+	function RenderSelect(campo: CampoFiltravel) {
 		return <div className='flex flex-col w-full md:w-60' key={campo.tag}>
 			<p>{campo.nome}</p>
 			<Select
@@ -141,6 +146,59 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 		</div>
 	}
 
+	function RenderAutocomplete(campo: CampoFiltravel) {
+		const [open, setOpen] = useState(false);
+		const [value, setValue] = useState(campo.default || '');
+		const valores = campo.valores as CampoSelect[] || [];
+		return <div className='flex flex-col w-full md:w-60' key={campo.tag}>
+			<p>{campo.nome}</p>
+			<Popover open={open} onOpenChange={setOpen}>
+				<PopoverTrigger asChild>
+					<Button
+					variant="outline"
+					role="combobox"
+					aria-expanded={open}
+					className="w-[200px] justify-between"
+					>
+					{value
+						? valores.find((opcao) => opcao.label === value)?.label
+						: campo.placeholder }
+					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+					</Button>
+				</PopoverTrigger>
+				<PopoverContent className="w-[200px] p-0">
+					<Command>
+						<CommandInput placeholder="Buscar opção" />
+						<CommandList>
+							<CommandEmpty>Opção não encontrada</CommandEmpty>
+							<CommandGroup>
+								{valores.map((opcao) => (
+									<CommandItem
+										key={opcao.value}
+										value={opcao.value.toString()}
+										onSelect={(currentValue) => {
+											setValue(currentValue === value ? "" : currentValue);
+											setFiltros((prev) => ({ ...prev, [campo.tag]: value }));
+											setOpen(false);
+										}}
+									>
+										<Check
+											className={cn(
+												"mr-2 h-4 w-4",
+												value === opcao.value ? "opacity-100" : "opacity-0"
+											)}
+										/>
+										{opcao.label}
+									</CommandItem>
+								))}
+							</CommandGroup>
+						</CommandList>
+					</Command>
+				</PopoverContent>
+				</Popover>
+		</div>
+	}
+
 	function RenderDataRange(campo: CampoFiltravel) {
 		const param = searchParams.get(campo.tag);
 		const datas = param ? param.split(',') : ['', ''];
@@ -165,7 +223,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 		}, [searchParams])
 
 		return (
-			<div className={"flex flex-col grid gap-2"} key={campo.tag}>
+			<div className={"flex flex-col"} key={campo.tag}>
 				<p>{campo.nome}</p>
 				<Popover>
 					<PopoverTrigger asChild>
