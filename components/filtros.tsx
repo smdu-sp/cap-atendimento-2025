@@ -85,65 +85,78 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 	function renderFiltros() {
 		const filtros = [];
 		if (camposFiltraveis) {
-		  for (const campo of camposFiltraveis) {
-			switch (campo.tipo) {
-			  case TiposFiltros.TEXTO:
-				filtros.push(RenderTexto(campo));
-				break;
-			  case TiposFiltros.DATA:
-				filtros.push(RenderDataRange(campo));
-				break;
-			  case TiposFiltros.SELECT:
-				filtros.push(RenderSelect(campo));
-				break;
-			case TiposFiltros.AUTOCOMPLETE:
-				filtros.push(RenderAutocomplete(campo));
-				break;
+			for (const campo of camposFiltraveis) {
+				switch (campo.tipo) {
+					case TiposFiltros.TEXTO:
+						filtros.push(RenderTexto(campo));
+						break;
+					case TiposFiltros.DATA:
+						filtros.push(RenderDataRange(campo));
+						break;
+					case TiposFiltros.SELECT:
+						filtros.push(RenderSelect(campo));
+						break;
+					case TiposFiltros.AUTOCOMPLETE:
+						filtros.push(RenderAutocomplete(campo));
+						break;
+				}
 			}
-		  }
 		}
 		return filtros;
 	  }
 
 	function RenderTexto(campo: CampoFiltravel) {
-		return <div className='flex flex-col w-full md:w-60' key={campo.tag}>
-			<p>{campo.nome}</p>
-			<Input
-				value={filtros[campo.tag]}
-				onChange={(e) => setFiltros((prev) => ({ ...prev, [campo.tag]: e.target.value }))}
-				className='bg-background'
-				placeholder={campo.placeholder}
-			/>
-		</div>
+		return (
+			<div
+				className='flex flex-col w-full md:w-60'
+				key={campo.tag}>
+				<p>{campo.nome}</p>
+				<Input
+					value={filtros[campo.tag]}
+					onChange={(e) =>
+						setFiltros((prev) => ({ ...prev, [campo.tag]: e.target.value }))
+					}
+					className='bg-background'
+					placeholder={campo.placeholder}
+				/>
+			</div>
+		);
 	}
 
 	function RenderSelect(campo: CampoFiltravel) {
-		return <div className='flex flex-col w-full md:w-60' key={campo.tag}>
-			<p>{campo.nome}</p>
-			<Select
-				onValueChange={(value) => setFiltros((prev) => ({ ...prev, [campo.tag]: value }))}
-				value={filtros[campo.tag]}>
-				<SelectTrigger className='w-full md:w-60 text-nowrap bg-background'>
-					<SelectValue placeholder={campo.placeholder} />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem
-						value='all'
-						className='text-nowrap'>
-						Tudo
-					</SelectItem>
-					{campo.valores && (campo.valores as CampoSelect[]).map((item) => {
-						return (
-							<SelectItem
-								key={item.value}
-								value={item.value.toString()}>
-								{item.label}
-							</SelectItem>
-						);
-					})}
-				</SelectContent>
-			</Select>
-		</div>
+		return (
+			<div
+				className='flex flex-col w-full md:w-60'
+				key={campo.tag}>
+				<p>{campo.nome}</p>
+				<Select
+					onValueChange={(value) =>
+						setFiltros((prev) => ({ ...prev, [campo.tag]: value }))
+					}
+					value={filtros[campo.tag]}>
+					<SelectTrigger className='w-full md:w-60 text-nowrap bg-background'>
+						<SelectValue placeholder={campo.placeholder} />
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem
+							value='all'
+							className='text-nowrap'>
+							Tudo
+						</SelectItem>
+						{campo.valores &&
+							(campo.valores as CampoSelect[]).map((item) => {
+								return (
+									<SelectItem
+										key={item.value}
+										value={item.value.toString()}>
+										{item.label}
+									</SelectItem>
+								);
+							})}
+					</SelectContent>
+				</Select>
+			</div>
+		);
 	}
 
 	function RenderAutocomplete(campo: CampoFiltravel) {
@@ -219,22 +232,23 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 			const paramUpdate = searchParams.get(campo.tag);
 			const datas = paramUpdate && paramUpdate !== '' ? paramUpdate.split(',') : ['', ''];
 			const [from, to] = verificaData(datas[0], datas[1]);
-			setDate(datas[0] !== '' && datas[1] !== '' ? {from, to} : undefined);
-		}, [searchParams])
+			setDate(datas[0] !== '' && datas[1] !== '' ? { from, to } : undefined);
+		}, [searchParams]);
 
 		return (
-			<div className={"flex flex-col"} key={campo.tag}>
+			<div
+				className={'flex flex-col grid gap-2'}
+				key={campo.tag}>
 				<p>{campo.nome}</p>
 				<Popover>
 					<PopoverTrigger asChild>
 						<Button
-							id="date"
-							variant={"outline"}
+							id='date'
+							variant={'outline'}
 							className={cn(
-							"w-[300px] justify-start text-left font-normal",
-							!date && "text-muted-foreground"
-							)}
-						>
+								'w-full md:w-[300px] justify-start text-left font-normal',
+								!date && 'text-muted-foreground',
+							)}>
 							{date && date.from ? (
 								date.to ? (
 									<>
@@ -269,7 +283,7 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 					</PopoverContent>
 				</Popover>
 			</div>
-		)
+		);
 	}
 
 	return (
@@ -279,7 +293,12 @@ export function Filtros({ camposFiltraveis }: FiltrosProps) {
 				<Button className='rounded-r-none w-full md:w-fit' disabled={isPending} onClick={() => startTransition(() => atualizaFiltros())} title='Aplicar filtros'>
 					<RefreshCw className={isPending ? 'animate-spin' : ''} />
 				</Button>
-				<Button variant={'destructive'} disabled={isPending} className='rounded-l-none w-full md:w-fit' onClick={() => startTransition(() => limpaFiltros())} title='Limpar filtros'>
+				<Button
+					variant={'destructive'}
+					disabled={isPending}
+					className='rounded-l-none w-full md:w-fit'
+					onClick={() => startTransition(() => limpaFiltros())}
+					title='Limpar filtros'>
 					<X />
 				</Button>
 			</div>

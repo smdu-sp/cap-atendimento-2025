@@ -2,7 +2,14 @@
 
 'use client';
 
-import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from 'recharts';
+import {
+	Bar,
+	BarChart,
+	CartesianGrid,
+	LabelList,
+	XAxis,
+	YAxis,
+} from 'recharts';
 
 import {
 	Card,
@@ -49,48 +56,91 @@ export function AgendamentosPorMotivo({ motivos }: AgendamentosPorMotivoProps) {
 	});
 	const isMobile = useIsMobile();
 	return (
-		<Card className='flex flex-col'>
+		<Card className='flex flex-col h-[880px] md:h-full'>
 			<CardHeader className='items-start pb-0'>
 				<CardTitle className='text-xl'>Agendamentos Por Motivo</CardTitle>
 				<CardDescription>Número de agendamentos por motivo</CardDescription>
 			</CardHeader>
 			<CardContent className='flex-1 pb-0'>
-				<ChartContainer
-					config={chartConfig}
-					className='mx-auto aspect-square w-full max-h-[300px] flex items-center justify-center'>
-					<BarChart
-						accessibilityLayer
-						data={chartData}
-						margin={{
-							top: 20,
-						}}>
-						<ChartTooltip
-							cursor={false}
-							content={<ChartTooltipContent indicator='line' />}
-						/>
-						<CartesianGrid vertical={false} />
-						<XAxis
-							dataKey='motivo'
-							tickLine={false}
-							tickMargin={10}
-							fontSize={'8px'}
-							hide={isMobile}
-							axisLine={false}
-						/>
-						<Bar
+				{isMobile ? (
+					<ChartContainer
+						config={chartConfig}
+						className='mx-auto w-full max-h-full h-full'>
+						<BarChart
+							accessibilityLayer
 							data={chartData}
-							radius={8}
-							strokeWidth={2}
-							dataKey='Agendamentos'>
-							<LabelList
-								position='top'
-								offset={8}
-								className='fill-foreground'
-								fontSize={12}
+							layout='vertical'>
+							<ChartTooltip
+								cursor={false}
+								content={<ChartTooltipContent indicator='line' />}
 							/>
-						</Bar>
-					</BarChart>
-				</ChartContainer>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey='Agendamentos'
+								type='number'
+								hide
+							/>
+							<YAxis
+								dataKey='motivo'
+								type='category'
+								tickLine={false}
+								tickMargin={10}
+								height={400}
+								axisLine={false}
+								hide
+							/>
+							<Bar
+								data={chartData}
+								radius={8}
+								strokeWidth={2}
+								dataKey='Agendamentos'>
+								<LabelList
+									position='right'
+									offset={8}
+									className='fill-foreground'
+									fontSize={12}
+								/>
+							</Bar>
+						</BarChart>
+					</ChartContainer>
+				) : (
+					<ChartContainer
+						config={chartConfig}
+						className='mx-auto aspect-square w-full max-h-[300px] flex items-center justify-center'>
+						<BarChart
+							accessibilityLayer
+							data={chartData}
+							margin={{
+								top: 20,
+							}}>
+							<ChartTooltip
+								cursor={false}
+								content={<ChartTooltipContent indicator='line' />}
+							/>
+							<CartesianGrid vertical={false} />
+							<XAxis
+								dataKey='motivo'
+								tickLine={false}
+								tickMargin={10}
+								fontSize={'8px'}
+								hide={isMobile}
+								axisLine={false}
+							/>
+							<Bar
+								data={chartData}
+								radius={8}
+								strokeWidth={2}
+								dataKey='Agendamentos'>
+								<LabelList
+									position='top'
+									offset={8}
+									className='fill-foreground'
+									fontSize={12}
+								/>
+							</Bar>
+						</BarChart>
+					</ChartContainer>
+				)}
 			</CardContent>
 		</Card>
 	);

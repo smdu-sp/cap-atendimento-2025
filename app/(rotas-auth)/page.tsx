@@ -47,8 +47,18 @@ export default async function Home({
 	}
 
 	const data = resp.data as IDashboardAgendamento;
-	const motivosData = motivos.data ? (motivos.data as IMotivo[]).map((motivo) => ({ value: motivo.id, label: motivo.texto })) : [];
-	const coordenadoriasData = coordenadorias.data ? (coordenadorias.data as ICoordenadoria[]).map((coordenadoria) => ({ value: coordenadoria.id, label: coordenadoria.sigla })) : [];
+	const motivosData = motivos.data
+		? (motivos.data as IMotivo[]).map((motivo) => ({
+				value: motivo.id,
+				label: motivo.texto,
+		  }))
+		: [];
+	const coordenadoriasData = coordenadorias.data
+		? (coordenadorias.data as ICoordenadoria[]).map((coordenadoria) => ({
+				value: coordenadoria.id,
+				label: coordenadoria.sigla,
+		  }))
+		: [];
 	if (!data) {
 		return (
 			<p className='text-muted-foreground text-sm italic'>
@@ -57,14 +67,31 @@ export default async function Home({
 		);
 	}
 	return (
-		<div className=' w-full relative px-0 md:px-8 '>
-			<h1 className='text-4xl font-bold mt-5'>Home</h1>
-			<div className='flex flex-col gap-5 my-10 w-full'>
+		<div className=' w-full relative px-0 md:px-8 pb-10 md:pb-0'>
+			<h1 className='text-4xl font-bold'>Home</h1>
+			<div className='flex flex-col gap-5 my-5 w-full'>
 				<Filtros
 					camposFiltraveis={[
-						{ tag: 'periodo', nome: 'Período', tipo: 1, placeholder: 'Período' },
-						{ tag: 'motivoId', nome: 'Motivo', tipo: 2, valores: motivosData || [], placeholder: 'Motivos' },
-						{ tag: 'coordenadoriaId', nome: 'Coordenadoria', tipo: 2, valores: coordenadoriasData, placeholder: 'Coordenadorias' },
+						{
+							tag: 'periodo',
+							nome: 'Período',
+							tipo: 1,
+							placeholder: 'Período',
+						},
+						{
+							tag: 'motivoId',
+							nome: 'Motivo',
+							tipo: 2,
+							valores: motivosData || [],
+							placeholder: 'Motivos',
+						},
+						{
+							tag: 'coordenadoriaId',
+							nome: 'Coordenadoria',
+							tipo: 2,
+							valores: coordenadoriasData,
+							placeholder: 'Coordenadorias',
+						},
 					]}
 				/>
 				<BigNumbers numbers={[data.totalAno, data.totalMes, data.totalDia]} />

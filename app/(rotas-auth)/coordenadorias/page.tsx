@@ -1,14 +1,13 @@
 /** @format */
 
 import DataTable from '@/components/data-table';
-import { auth } from '@/lib/auth/auth';
-import { buscarTudo } from '@/services/coordenadorias/query-functions/buscar-tudo';
-import { columns } from './_components/columns';
-import ModalUpdateAndCreate from './_components/modal-update-create';
-import { ICoordenadoria, IPaginadoCoordenadoria } from '@/types/coordenadoria';
 import { Filtros } from '@/components/filtros';
 import Pagination from '@/components/pagination';
-import { Separator } from '@radix-ui/react-separator';
+import { auth } from '@/lib/auth/auth';
+import { buscarTudo } from '@/services/coordenadorias/query-functions/buscar-tudo';
+import { ICoordenadoria, IPaginadoCoordenadoria } from '@/types/coordenadoria';
+import { columns } from './_components/columns';
+import ModalUpdateAndCreate from './_components/modal-update-create';
 
 export default async function CoordenadoriasPage({
 	searchParams,
@@ -43,31 +42,43 @@ export default async function CoordenadoriasPage({
 		}
 	}
 
-	const statusSelect = [{
-		label: 'Ativo',
-		value: 'ATIVO',
-	}, {
-		label: 'Inativo',
-		value: 'INATIVO',
-	}]
+	const statusSelect = [
+		{
+			label: 'Ativo',
+			value: 'ATIVO',
+		},
+		{
+			label: 'Inativo',
+			value: 'INATIVO',
+		},
+	];
 
 	return (
-		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
-			<h1 className='text-xl md:text-4xl font-bold mt-5'>
-				Coordenadorias
-			</h1>
-			<div className='flex flex-col max-w-sm gap-8 my-10 md:container w-full mx-auto'>
+		<div className=' w-full px-0 md:px-8 relative pb-20 md:pb-14 h-full md:container mx-auto'>
+			<h1 className='text-xl md:text-4xl font-bold'>Coordenadorias</h1>
+			<div className='flex flex-col max-w-xs md:max-w-full gap-3 my-5 md:container w-full'>
 				<Filtros
 					camposFiltraveis={[
-						{ nome: 'Busca', tag: 'busca', tipo: 0, placeholder: 'Busca por coordenadoria' },
-						{ nome: 'Status', tag: 'status', tipo: 2, valores: statusSelect, default: 'ATIVO' },
+						{
+							nome: 'Busca',
+							tag: 'busca',
+							tipo: 0,
+							placeholder: 'Busca por coordenadoria',
+						},
+						{
+							nome: 'Status',
+							tag: 'status',
+							tipo: 2,
+							valores: statusSelect,
+							default: 'ATIVO',
+						},
 					]}
 				/>
 				<DataTable
 					columns={columns}
 					data={dados || []}
 				/>
-				<Separator />
+
 				{dados && dados.length > 0 && (
 					<Pagination
 						total={+total}
@@ -76,7 +87,7 @@ export default async function CoordenadoriasPage({
 					/>
 				)}
 			</div>
-			<div className='absolute bottom-5 right-5 hover:scale-110'>
+			<div className='absolute bottom-10 md:bottom-5 right-2 md:right-8 hover:scale-110'>
 				<ModalUpdateAndCreate isUpdating={false} />
 			</div>
 		</div>

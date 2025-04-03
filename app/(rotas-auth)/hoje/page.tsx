@@ -15,11 +15,11 @@ export default async function ListaAgendamentoPage({
 	let dados: IAgendamento[] = [];
 	if (ok) dados = data as IAgendamento[];
 	return (
-		<div className=' w-full px-0 md:px-8 relative h-full'>
-			<h1 className='text-xl md:text-4xl font-bold mt-5'>
+		<div className=' w-full px-0 md:px-8 relative pb-10 h-full  md:container mx-auto'>
+			<h1 className='text-xl md:text-4xl font-bold'>
 				Lista de Agendamentos ({new Date().toLocaleDateString()})
 			</h1>
-			<div className='flex flex-col  gap-8 my-10 container w-full mx-auto'>
+			<div className='flex flex-col max-w-xs mx-auto md:max-w-full gap-3 my-5 w-full'>
 				<Filter />
 				{dados && (
 					<DataTable

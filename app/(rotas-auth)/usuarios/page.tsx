@@ -1,6 +1,7 @@
 /** @format */
 
 import DataTable, { TableSkeleton } from '@/components/data-table';
+import { Filtros } from '@/components/filtros';
 import Pagination from '@/components/pagination';
 import { auth } from '@/lib/auth/auth';
 import * as usuario from '@/services/usuarios';
@@ -8,8 +9,6 @@ import { IPaginadoUsuario, IUsuario } from '@/types/usuario';
 import { Suspense } from 'react';
 import { columns } from './_components/columns';
 import ModalUpdateAndCreate from './_components/modal-update-create';
-import { Filtros } from '@/components/filtros';
-import { Separator } from '@/components/ui/separator';
 
 export default async function UsuariosSuspense({
 	searchParams,
@@ -58,46 +57,68 @@ async function Usuarios({
 		}
 	}
 
-	const statusSelect = [{
-		label: 'Ativo',
-		value: 'ATIVO',
-	}, {
-		label: 'Inativo',
-		value: 'INATIVO',
-	}]
+	const statusSelect = [
+		{
+			label: 'Ativo',
+			value: 'ATIVO',
+		},
+		{
+			label: 'Inativo',
+			value: 'INATIVO',
+		},
+	];
 
-	const permissaoSelect = [{
-		label: 'Desenvolvedor',
-		value: 'DEV',
-	}, {
-		label: 'Administrador',
-		value: 'ADM',
-	}, {
-		label: 'Técnico',
-		value: 'TEC',
-	}, {
-		label: 'Usuário',
-		value: 'USR',
-	}];
-	
+	const permissaoSelect = [
+		{
+			label: 'Desenvolvedor',
+			value: 'DEV',
+		},
+		{
+			label: 'Administrador',
+			value: 'ADM',
+		},
+		{
+			label: 'Técnico',
+			value: 'TEC',
+		},
+		{
+			label: 'Usuário',
+			value: 'USR',
+		},
+	];
+
 	return (
-		<div className=' w-full px-0 md:px-8 relative mb-14 h-full'>
-			<h1 className='text-xl md:text-4xl font-bold mt-5'>
-				Usuários
-			</h1>
-			<div className='flex flex-col max-w-sm  gap-8 my-10 md:container  w-full mx-auto'>
+		<div className=' w-full px-0 md:px-8 relative pb-20 md:pb-14 h-full md:container mx-auto'>
+			<h1 className='text-xl md:text-4xl font-bold'>Usuários</h1>
+			<div className='flex flex-col max-w-xs  md:max-w-full gap-3 my-5   w-full '>
 				<Filtros
 					camposFiltraveis={[
-						{ nome: 'Busca', tag: 'busca', tipo: 0, placeholder: 'Digite o nome, email ou login' },
-						{ nome: 'Status', tag: 'status', tipo: 2, valores: statusSelect, default: 'ATIVO' },
-						{ nome: 'Permissão', tag: 'permissao', tipo: 2, valores: permissaoSelect },
+						{
+							nome: 'Busca',
+							tag: 'busca',
+							tipo: 0,
+							placeholder: 'Digite o nome, email ou login',
+						},
+						{
+							nome: 'Status',
+							tag: 'status',
+							tipo: 2,
+							valores: statusSelect,
+							default: 'ATIVO',
+						},
+						{
+							nome: 'Permissão',
+							tag: 'permissao',
+							tipo: 2,
+							valores: permissaoSelect,
+						},
 					]}
 				/>
 				<DataTable
 					columns={columns}
 					data={dados || []}
 				/>
-				<Separator />
+
 				{dados && dados.length > 0 && (
 					<Pagination
 						total={+total}
@@ -106,7 +127,7 @@ async function Usuarios({
 					/>
 				)}
 			</div>
-			<div className='absolute bottom-5 right-5 hover:scale-110'>
+			<div className='absolute bottom-10 md:bottom-5 right-2 md:right-8 hover:scale-110'>
 				<ModalUpdateAndCreate isUpdating={false} />
 			</div>
 		</div>
