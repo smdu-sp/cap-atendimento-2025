@@ -16,8 +16,17 @@ export const columns: ColumnDef<IAgendamento>[] = [
 		accessorKey: 'tecnico',
 		header: 'Técnico',
 		cell: ({ row }) => (
-			<p className=' text-xs overflow-hidden text-ellipsis'>
-				{row.original.tecnico?.nome}
+			<p
+				title={
+					row.original.tecnico?.nome && row.original.tecnico?.nome?.length > 20
+						? row.original.tecnico?.nome
+						: ''
+				}
+				className=' text-xs overflow-hidden text-ellipsis'>
+				{row.original.tecnico?.nome.substring(0, 20)}
+				{row.original.tecnico?.nome &&
+					row.original.tecnico?.nome?.length > 20 &&
+					'...'}
 			</p>
 		),
 	},
@@ -63,13 +72,13 @@ export const columns: ColumnDef<IAgendamento>[] = [
 		cell: ({ row }) => (
 			<p
 				title={
-					row.original.resumo && row.original.resumo?.length > 50
+					row.original.resumo && row.original.resumo?.length > 25
 						? row.original.resumo
 						: ''
 				}
 				className='text-nowrap w-fit text-xs overflow-hidden text-ellipsis'>
-				{row.original.resumo?.substring(0, 50)}
-				{row.original.resumo && row.original.resumo?.length > 50 && '...'}
+				{row.original.resumo?.substring(0, 25)}
+				{row.original.resumo && row.original.resumo?.length > 25 && '...'}
 			</p>
 		),
 	},
@@ -77,8 +86,17 @@ export const columns: ColumnDef<IAgendamento>[] = [
 		accessorKey: 'motivo',
 		header: () => <p className='text-center'>Motivo</p>,
 		cell: ({ row }) => (
-			<p className='text-nowrap text-center text-xs overflow-hidden text-ellipsis'>
-				{row.original.motivo?.texto}
+			<p
+				title={
+					row.original.motivo?.texto && row.original.motivo?.texto?.length > 25
+						? row.original.motivo?.texto
+						: ''
+				}
+				className='text-nowrap text-center text-xs overflow-hidden text-ellipsis'>
+				{row.original.motivo?.texto.substring(0, 25)}
+				{row.original.motivo?.texto &&
+					row.original.motivo?.texto?.length > 25 &&
+					'...'}
 			</p>
 		),
 	},
@@ -95,7 +113,7 @@ export const columns: ColumnDef<IAgendamento>[] = [
 			return (
 				<div className='flex items-center justify-center w-full'>
 					<Badge
-						className='text-center'
+						className='text-center text-xs lowercase'
 						variant={`${
 							status == IStatus.CANCELADO
 								? 'destructive'

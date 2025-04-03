@@ -37,17 +37,17 @@ export const columns: ColumnDef<ICoordenadoria>[] = [
 	},
 	{
 		accessorKey: 'actions',
-		header: () => <p></p>,
+		header: () => <p className='text-center'>Ações</p>,
 		cell: ({ row }) => {
 			return (
 				<div
-					className='flex gap-2 items-center justify-end'
+					className='flex gap-2 items-center justify-center'
 					key={row.id}>
 					<ModalUpdateAndCreate
 						coordenadoria={row.original}
 						isUpdating={true}
 					/>
-					<ModalDelete 
+					<ModalDelete
 						status={row.original.status}
 						id={row.original.id}
 					/>

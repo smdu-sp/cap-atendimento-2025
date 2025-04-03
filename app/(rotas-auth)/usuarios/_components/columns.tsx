@@ -37,17 +37,20 @@ export const columns: ColumnDef<IUsuario>[] = [
 	},
 	{
 		accessorKey: 'actions',
-		header: () => <p></p>,
+		header: () => <p className='text-center'>Ações</p>,
 		cell: ({ row }) => {
 			return (
 				<div
-					className='flex gap-2 items-center justify-end'
+					className='flex gap-2 items-center justify-center'
 					key={row.id}>
 					<ModalUpdateCreate
 						user={row.original}
 						isUpdating={true}
 					/>
-					<ModalDelete status={!row.original.status} id={row.original.id} />
+					<ModalDelete
+						status={!row.original.status}
+						id={row.original.id}
+					/>
 				</div>
 			);
 		},

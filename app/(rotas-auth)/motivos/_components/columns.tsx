@@ -29,17 +29,17 @@ export const columns: ColumnDef<IMotivo>[] = [
 	},
 	{
 		accessorKey: 'actions',
-		header: () => <p></p>,
+		header: () => <p className='text-center'>Ações</p>,
 		cell: ({ row }) => {
 			return (
 				<div
-					className='flex gap-2 items-center justify-end'
+					className='flex gap-2 items-center justify-center'
 					key={row.id}>
 					<ModalUpdateAndCreate
 						motivo={row.original}
 						isUpdating={true}
 					/>
-					<ModalDelete 
+					<ModalDelete
 						status={row.original.status}
 						id={row.original.id}
 					/>

@@ -90,7 +90,7 @@ export default function FormCoornadoria({
 							<FormLabel>Coordenadoria</FormLabel>
 							<FormControl>
 								<Input
-									placeholder='Siga da coordenadoria para agendamento'
+									placeholder='Sigla da coordenadoria para agendamento'
 									{...field}
 								/>
 							</FormControl>

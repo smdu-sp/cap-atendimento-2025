@@ -22,7 +22,9 @@ interface AgendamentosNoTempoProps {
 	agendamentosMes: IChart[];
 }
 
-export function AgendamentoNoTempo({ agendamentosMes }: AgendamentosNoTempoProps) {
+export function AgendamentoNoTempo({
+	agendamentosMes,
+}: AgendamentosNoTempoProps) {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const chartConfig: any = {
 		Agendamentos: {
@@ -42,13 +44,11 @@ export function AgendamentoNoTempo({ agendamentosMes }: AgendamentosNoTempoProps
 		<Card>
 			<CardHeader>
 				<CardTitle className='text-xl'>Agendamentos</CardTitle>
-				<CardDescription>
-					Número de agendamentos por mês
-				</CardDescription>
+				<CardDescription>Número de agendamentos por mês</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<ChartContainer
-					className='w-full max-h-60'
+					className='w-3xs h-96 md:max-h-60 md:h-full md:w-full'
 					config={chartConfig}>
 					<AreaChart
 						accessibilityLayer

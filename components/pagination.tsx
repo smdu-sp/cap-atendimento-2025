@@ -72,12 +72,12 @@ export default function Pagination(props: {
 
 	return (
 		paginas.length > 0 && (
-			<ShadPagination>
+			<ShadPagination >
 				<div className='w-[120px] hidden md:block text-xs'>
 					{limite * (pagina - 1) + 1} a{' '}
 					{limite * pagina < total ? limite * pagina : total} de {total}
 				</div>
-				<PaginationContent>
+				<PaginationContent >
 					{!paginas.includes(1) && (
 						<PaginationItem>
 							<PaginationLink onClick={() => setPagina(1)}>
@@ -123,7 +123,7 @@ export default function Pagination(props: {
 						onValueChange={(value) => {
 							setLimite(+value);
 						}}>
-						<SelectTrigger className='w-[120px]'>
+						<SelectTrigger className='w-20 md:w-[120px]'>
 							<SelectValue placeholder='Registros' />
 						</SelectTrigger>
 						<SelectContent>

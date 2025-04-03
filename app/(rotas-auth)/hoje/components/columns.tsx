@@ -15,8 +15,17 @@ export const columns: ColumnDef<IAgendamento>[] = [
 		accessorKey: 'tecnico',
 		header: 'Técnico',
 		cell: ({ row }) => (
-			<p className=' text-xs overflow-hidden text-ellipsis'>
-				{row.original.tecnico?.nome}
+			<p
+				title={
+					row.original.tecnico?.nome && row.original.tecnico?.nome?.length > 20
+						? row.original.tecnico?.nome
+						: ''
+				}
+				className=' text-xs text-nowrap w-fit overflow-hidden text-ellipsis'>
+				{row.original.tecnico?.nome?.substring(0, 20)}
+				{row.original.tecnico?.nome &&
+					row.original.tecnico?.nome?.length > 20 &&
+					'...'}
 			</p>
 		),
 	},
@@ -39,7 +48,10 @@ export const columns: ColumnDef<IAgendamento>[] = [
 			const dataInicio = new Date(row.original.dataInicio);
 			const dataFim = new Date(row.original.dataFim);
 			return (
-				<p className='text-xs'>{dataInicio && moment(dataInicio).format('HH:mm')} - {dataFim && moment(dataFim).format('HH:mm')}</p>
+				<p className='text-xs'>
+					{dataInicio && moment(dataInicio).format('HH:mm')} -{' '}
+					{dataFim && moment(dataFim).format('HH:mm')}
+				</p>
 			);
 		},
 	},
@@ -58,5 +70,5 @@ export const columns: ColumnDef<IAgendamento>[] = [
 				{row.original.resumo && row.original.resumo?.length > 100 && '...'}
 			</p>
 		),
-	}
+	},
 ];
