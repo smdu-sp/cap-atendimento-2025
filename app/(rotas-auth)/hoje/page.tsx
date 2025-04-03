@@ -19,7 +19,7 @@ export default async function ListaAgendamentoPage({
 			<h1 className='text-xl md:text-4xl font-bold'>
 				Lista de Agendamentos ({new Date().toLocaleDateString()})
 			</h1>
-			<div className='flex flex-col max-w-xs mx-auto md:max-w-full gap-3 my-5 w-full'>
+			<div className='flex flex-col max-w-sm mx-auto md:max-w-full gap-3 my-5 w-full'>
 				<Filter />
 				{dados && (
 					<DataTable
