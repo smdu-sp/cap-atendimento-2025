@@ -32,7 +32,7 @@ export default async function Perfil() {
 	const userData = user as Partial<IUsuario>;
 
 	return (
-		<div className='mx-auto px-0 md:px-8 w-full'>
+		<div className='mx-auto px-0 md:px-8 pb-10 w-full'>
 			<h1 className='font-bold text-4xl mt-5'>Perfil</h1>
 
 			<div className='grid grid-cols-1 md:grid-cols-3 gap-8 my-5'>
