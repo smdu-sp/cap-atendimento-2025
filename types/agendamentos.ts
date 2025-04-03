@@ -37,10 +37,14 @@ export interface IPaginadoAgendamento {
 	limite: number;
 }
 
+export interface ICreateParticipante {
+	nome: string;
+	email: string;
+	cpf: string;
+}
+
 export interface ICreateAgendamento {
-	municipe?: string;
-	rg?: string;
-	cpf?: string;
+	participantes: ICreateParticipante[];
 	processo: string;
 	motivoId: string;
 	coordenadoriaId: string;
@@ -50,6 +54,7 @@ export interface ICreateAgendamento {
 	resumo?: string;
 	status?: IStatus;
 }
+
 export interface IDashboardAgendamento {
 	coordenadorias: IChart[];
 	motivos: IChart[];
