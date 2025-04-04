@@ -209,7 +209,7 @@ export async function NavMain() {
 					{menuTecnico &&
 					usuario &&
 					usuario.permissao &&
-					['TEC'].includes(usuario.permissao.toString()) && (
+					['TEC', 'DEV'].includes(usuario.permissao.toString()) && (
 						<>
 							<SidebarGroupLabel>Técnico</SidebarGroupLabel>
 							<SidebarMenu>
