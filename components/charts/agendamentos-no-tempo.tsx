@@ -48,7 +48,7 @@ export function AgendamentoNoTempo({
 			</CardHeader>
 			<CardContent>
 				<ChartContainer
-					className='w-3xs h-96 md:max-h-60 md:h-full md:w-full'
+					className='w-xs h-96 md:max-h-60 md:h-full md:w-full'
 					config={chartConfig}>
 					<AreaChart
 						accessibilityLayer

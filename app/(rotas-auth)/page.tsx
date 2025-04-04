@@ -68,7 +68,7 @@ export default async function Home({
 	}
 	return (
 		<div className=' w-full relative px-0 md:px-8 pb-10 md:pb-0'>
-			<h1 className='text-4xl font-bold'>Home</h1>
+			<h1 className='text-xl md:text-4xl font-bold'>Home</h1>
 			<div className='flex flex-col gap-5 my-5 w-full'>
 				<Filtros
 					camposFiltraveis={[

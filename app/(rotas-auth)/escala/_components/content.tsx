@@ -475,7 +475,7 @@ export function Content() {
 					mode='single'
 					selected={selectedDate}
 					onSelect={setSelectedDate}
-					className='border rounded-md'
+					className='border rounded-md w-full'
 					locale={ptBR}
 					disabled={(date) => {
 						// Desabilitar finais de semana
@@ -509,9 +509,17 @@ export function Content() {
 			</div>
 			<div className='border rounded-md p-4'>
 				<Tabs defaultValue='availability'>
-					<TabsList className='mb-4'>
-						<TabsTrigger value='availability'>Disponibilidade</TabsTrigger>
-						<TabsTrigger value='appointments'>Meus Agendamentos</TabsTrigger>
+					<TabsList className='mb-4 w-full  justify-between'>
+						<TabsTrigger
+							className='w-full'
+							value='availability'>
+							Disponibilidade
+						</TabsTrigger>
+						<TabsTrigger
+							className='w-full'
+							value='appointments'>
+							Meus Agendamentos
+						</TabsTrigger>
 					</TabsList>
 
 					<TabsContent
@@ -606,7 +614,7 @@ export function Content() {
 														)}
 												</div>
 											) : (
-												<span>Disponível</span>
+												<span className='text-sm'>Disponível</span>
 											)}
 										</div>
 									</div>
@@ -754,7 +762,7 @@ export function Content() {
 				<DialogContent className='sm:max-w-[500px]'>
 					<DialogHeader>
 						<DialogTitle>Marcar Indisponibilidade</DialogTitle>
-						<DialogDescription>
+						<DialogDescription className='text-balance'>
 							Informe os períodos em que você não estará disponível para
 							agendamentos.
 						</DialogDescription>
@@ -907,7 +915,7 @@ export function Content() {
 				<DialogContent className='sm:max-w-[500px]'>
 					<DialogHeader>
 						<DialogTitle>Indisponibilizar Dia Inteiro</DialogTitle>
-						<DialogDescription>
+						<DialogDescription className='text-balance'>
 							Você estará indisponível durante todo o dia{' '}
 							{selectedDate ? format(selectedDate, 'dd/MM/yyyy') : ''}.
 						</DialogDescription>
@@ -951,7 +959,7 @@ export function Content() {
 				<DialogContent className='sm:max-w-[500px]'>
 					<DialogHeader>
 						<DialogTitle>Registrar Férias ou Licença</DialogTitle>
-						<DialogDescription>
+						<DialogDescription className='text-balance'>
 							Informe o período em que você estará de férias ou licença.
 						</DialogDescription>
 					</DialogHeader>

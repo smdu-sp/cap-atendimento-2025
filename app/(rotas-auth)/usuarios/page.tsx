@@ -90,7 +90,7 @@ async function Usuarios({
 	return (
 		<div className=' w-full px-0 md:px-8 relative pb-20 md:pb-14 h-full md:container mx-auto'>
 			<h1 className='text-xl md:text-4xl font-bold'>Usuários</h1>
-			<div className='flex flex-col max-w-xs  md:max-w-full gap-3 my-5   w-full '>
+			<div className='flex flex-col max-w-sm mx-auto md:max-w-full gap-3 my-5   w-full '>
 				<Filtros
 					camposFiltraveis={[
 						{
